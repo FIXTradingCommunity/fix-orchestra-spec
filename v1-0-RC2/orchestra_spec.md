@@ -123,7 +123,9 @@ XML element and attribute names as well as FIX field and message names appear in
 
 This is a sample XML snippet:
 
-> <span id="references" class="anchor"></span>&lt;fixr:field id="59" name="TimeInForce" type="TimeInForceCodeSet"/&gt;
+```xml
+<fixr:field id="59" name="TimeInForce" type="TimeInForceCodeSet"/>
+```
 
 References
 ----------
@@ -179,7 +181,7 @@ Interfaces
 
 The interface metamodel is an abstraction of a service offerings and session provisioning. This UML model depicts the main classes.
 
-<img src="media/intefaces.png" width="399" height="642" />
+<img src="media/Intefaces.png" width="399" height="642" />
 
 ### Interface abstractions
 
@@ -703,7 +705,7 @@ A field valuation rule sets a state variable when tripped
 <fixr:fieldRef id="44" name="Price">
   <fixr:rule name="tick">
     <fixr:assign>$validator.ViolationGrp[].ruleViolated="tick"</fixr:assign>
-    <!-- price not even tick increment of .05 ->
+    <!-- price not even tick increment of .05 -->
     <fixr:when>(Price * 100) % 5 != 0</fixr:when>
   </fixr:rule>
 </fixr:fieldRef>
