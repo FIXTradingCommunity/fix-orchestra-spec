@@ -181,7 +181,7 @@ Interfaces
 
 The interface metamodel is an abstraction of a service offerings and session provisioning. This UML model depicts the main classes.
 
-<img src="media/Intefaces.png" width="399" height="642" />
+<img src="media/Interfaces.png" width="399" height="642" />
 
 ### Interface abstractions
 
