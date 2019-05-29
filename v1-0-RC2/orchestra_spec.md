@@ -822,7 +822,7 @@ The optional reliability attribute describes the delivery guarantee of messages 
 Example of actors and flows
 
 ```xml
-<;fixr:actors>
+<fixr:actors>
   <fixr:actor name="BuySide"/>
   <fixr:actor name="SellSide">
   <fixr:flow name="OrderEntry" source="BuySide" destination="SellSide" messageCast="unicast" reliability="idempotent"/>
