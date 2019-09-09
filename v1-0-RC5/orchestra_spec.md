@@ -1782,8 +1782,6 @@ a wide range of applications, even with non-FIX protocols. Most elements
 allow addition of attributes, and types allow additional child elements,
 possibly conformant to other XML schemas.
 
-## 
-
 ### Provenance
 
 The `<metadata>` element is used to identify a particular Interfaces
@@ -2252,7 +2250,6 @@ Example Orchestra files are provided in the GitHub project
   - New features: metadata with provenance, actors, workflow, semantic
     concepts.
 
-  - 
   - An Orchestra file supports a single protocol version. If an
     organization supports multiple protocols, it should issue an
     Orchestra file for each.
@@ -2269,8 +2266,12 @@ Example Orchestra files are provided in the GitHub project
     called a discriminator, that modifies the value space of another
     field.
 
+  - Repeating groups were moved to their own parent element from other components.
+
   - Scenarios overload the layout of a message or component for
     different use cases.
+
+  - The interfaces schema is new.
 
 ## Compliance
 
