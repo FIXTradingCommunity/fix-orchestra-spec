@@ -14,7 +14,15 @@ Issues may be entered here in GitHub or in a discussion forum on the [FIX Tradin
 
 ## Versions
 
-### Current version: Release Candidate 4
+### Current version: Release Candidate 5
+
+Release Candidate 5 was approved by the Global Technical Committee on Sept. 19, 2019 for 90 day public review.  The key enhancements in Release Candidate 5 were:
+
+* Security keys for sessions
+* Support for XML Inclusions (XInclude)
+* Syntax for mututally exclusive message elements
+
+### Release Candidate 4
 
 Release Candidate 4 was approved by the Global Technical Committee on Feb. 21, 2019 for 90 day public review.  The key enhancements in Release Candidate 4 were:
 
@@ -46,6 +54,3 @@ FIX Orchestra specifications are © Copyright 2016-2019 FIX Protocol Ltd.
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nd/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">FIX Orchestra Technical Specification</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://www.fixtradingcommunity.org/" property="cc:attributionName" rel="cc:attributionURL">FIX Protocol Ltd.</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/">Creative Commons Attribution-NoDerivatives 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/FIXTradingCommunity/fix-orchestra-spec" rel="dct:source">https://github.com/FIXTradingCommunity/fix-orchestra-spec</a>.
 
-## Implementations
-We will post links to implementations of FIX Orchestra. Implementors, contact one
-of the owners of this repository.
