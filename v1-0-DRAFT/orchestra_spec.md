@@ -2,17 +2,9 @@
 
 FIX Orchestra Technical Specification
 
-Version 1.0 Release Candidate 5
+Version 1.0 Draft Standard
 
-**THIS DOCUMENT IS A RELEASE CANDIDATE FOR A PROPOSED FIX TECHNICAL
-STANDARD. A RELEASE CANDIDATE HAS BEEN APPROVED BY THE GLOBAL TECHNICAL
-COMMITTEE AS AN INITIAL STEP IN CREATING A NEW FIX TECHNICAL STANDARD.
-POTENTIAL ADOPTERS ARE STRONGLY ENCOURAGED TO BEGIN WORKING WITH THE
-RELEASE CANDIDATE AND TO PROVIDE FEEDBACK TO THE GLOBAL TECHNICAL
-COMMITTEE AND THE WORKING GROUP THAT SUBMITTED THE PROPOSAL. THE
-FEEDBACK TO THE RELEASE CANDIDATE WILL DETERMINE IF ANOTHER REVISION AND
-RELEASE CANDIDATE IS NECESSARY OR IF THE RELEASE CANDIDATE CAN BE
-PROMOTED TO BECOME A FIX TECHNICAL STANDARD DRAFT.**
+**THIS DOCUMENT IS A DRAFT STANDARD FOR A PROPOSED FIX TECHNICAL STANDARD. A DRAFT STANDARD HAS BEEN APPROVED BY THE GLOBAL TECHNICAL COMMITTEE AS THE FINAL STEP IN CREATING A NEW FIX TECHNICAL STANDARD. POTENTIAL ADOPTERS ARE STRONGLY ENCOURAGED TO BEGIN WORKING WITH THE DRAFT STANDARD AND TO PROVIDE FEEDBACK TO THE GLOBAL TECHNICAL COMMITTEE AND THE WORKING GROUP THAT SUBMITTED THE PROPOSAL. THE FEEDBACK TO THE DRAFT STANDARD WILL DETERMINE WHEN TWO INTEROPERABLE IMPLEMENTATIONS HAVE BEEN ESTABLISHED AND THE DRAFT STANDARD CAN BE PROMOTED TO BECOME A NEW FIX TECHNICAL STANDARD.**
 
 DISCLAIMER
 
@@ -54,9 +46,9 @@ AND A RELEASE NUMBER.
 No proprietary or ownership interest of any kind is granted with respect
 to the FIX Protocol (or any rights therein).
 
-Copyright 2013-2019 FIX Protocol Ltd., all rights reserved.
+Copyright 2013-2020 FIX Protocol Ltd., all rights reserved.
 
-<a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nd/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">FIX Orchestra Technical Specification</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://www.fixtradingcommunity.org/" property="cc:attributionName" rel="cc:attributionURL">FIX Protocol Ltd.</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/">Creative Commons Attribution-NoDerivatives 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/FIXTradingCommunity/fix-orchestra-spec" rel="dct:source">https://github.com/FIXTradingCommunity/fix-orchestra-spec</a>.
+<a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nd/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">FIX Orchestra Technical Specification</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://www.fixtrading.org/" property="cc:attributionName" rel="cc:attributionURL">FIX Protocol Ltd.</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/">Creative Commons Attribution-NoDerivatives 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/FIXTradingCommunity/fix-orchestra-spec" rel="dct:source">https://github.com/FIXTradingCommunity/fix-orchestra-spec</a>.
 
 # Table of Contents
 
@@ -165,9 +157,9 @@ nor does it obsolete existing FIX engines or tools.
 
 The features of Orchestra are intended to be generic and capable of
 covering both FIX and non-FIX messaging protocols. One of the
-foundational features to support non-FIX protocols is ability to
-describe any set of datatypes, not just FIX datatypes. See the datatypes
-section below.
+foundational features to support non-FIX protocols is the ability to
+describe any set of datatypes, not just FIX datatypes (see the [Datatypes](#datatypes)
+section below).
 
 ## Design principles
 
@@ -191,50 +183,50 @@ that holds state relevant to application or session behavior. An actor
 can take actions such as assigning state or transitioning a state
 machine, and it can send messages.
 
-**Code set**-- A finite set of the valid values of a data element. Each
+**Code set**—A finite set of the valid values of a data element. Each
 unique valid value is called a code.
 
-**Datatype** – the value space of a data element, possibly including
+**Datatype**–the value space of a data element, possibly including
 enumerated values, precision or range. Some types have additional
 attributes, e.g. epoch and time zone of a date. Value space is at the
 application layer (layer 7 of the OSI model).
 
-**Discriminator**—a field that modifies the value space of another
+**Discriminator**—a field that can modify the value space of another
 field. The combination of the value field and its discriminator is
 variously called a choice, discriminated union, tagged union, or
 variant.
 
-**Encoding** – a wire format for data representation. Also known as
+**Encoding**–a wire format for data representation. Also known as
 lexical space or the presentation layer (layer 6) in a protocol stack.
 
-**Extension Pack (EP)** – incremental extension of the FIX application
-layer, aka FIX Latest.
+**Extension Pack (EP)**–incremental extension of the FIX application
+layer, aka *FIX Latest*.
 
-**Lexical space** – the representation of a data element. It belongs to
+**Lexical space**–the representation of a data element. It belongs to
 the presentation layer. For character-based encodings, it is defined as
 a particular sequence of characters. For binary encodings, it may
 involve mapping to primitive data types supported by computing
 platforms.
 
-**Pedigree** – recorded history of an artifact
+**Pedigree**–recorded history of an artifact.
 
-**Provenance** – a record of ownership of an artifact
+**Provenance**–a record of ownership of an artifact.
 
-**Scenario**—a use case of a message type and its components
+**Scenario**—a use case of a message type and its components.
 
 **Semantic**—pertaining to the meaning of a message element, regardless
 of its representation.
 
-**Session protocol** – a protocol concerned with the reliable delivery
+**Session protocol**–a protocol concerned with the reliable delivery
 of messages over a transport. Layer 5 in the OSI protocol model.
 
-**State machine** – A behavior model that has finite, discrete values
+**State machine**–A behavior model that has finite, discrete values
 called states and defined transitions between states.
 
-**Tag** – a unique numeric identifier of a message element, especially a
+**Tag**–a unique numeric identifier of a message element, especially a
 field identifier.
 
-**Value space** – the type of a data element and its possible range of
+**Value space**–the type of a data element and its possible range of
 values. Value space belongs to the application layer (semantics) and
 should be independent of encoding (presentation layer) and programming
 language.
@@ -247,27 +239,29 @@ language since it is the most widely adopted format for XML schemas.
 
 ### Specification terms
 
-These key words in this document are to be interpreted as described in
-[Internet Engineering Task Force RFC2119](http://www.apps.ietf.org/rfc/rfc2119.html). These terms indicate an absolute requirement for implementations of the standard:
+The following key words in this document are to be interpreted as described in
+[Internet Engineering Task Force RFC2119](http://www.apps.ietf.org/rfc/rfc2119.html).
+
+- These terms indicate an absolute requirement for implementations of the standard:
 "**must**", or "**required**".
 
-This term indicates an absolute prohibition: "**must not**".
+- This term indicates an absolute prohibition: "**must not**".
 
-These terms indicate that a feature is allowed by the standard but not
+- These terms indicate that a feature is allowed by the standard but not
 required: "**may**", "**optional**". An implementation that does not
 provide an optional feature must be prepared to interoperate with one
 that does.
 
-These terms give guidance, recommendation or best practices:
+- These terms give guidance, recommendation or best practices:
 "**should**" or "**recommended**". A recommended choice among
 alternatives is described as "**preferred**".
 
-These terms give guidance that a practice is not recommended: "**should
+- These terms give guidance that a practice is not recommended: "**should
 not**" or "**not recommended**".
 
 ### Document format
 
-In this document, these formats are used for technical specifications
+In this document, the following formats are used for technical specifications
 and data examples.
 
 XML element and attribute names as well as FIX field and message names
@@ -284,15 +278,14 @@ This is a sample XML snippet:
 ### Related FIX Standards
 
 For FIX semantics, see the current FIX message specification, which is
-currently [FIX 5.0 Service Pack 2](http://www.fixtradingcommunity.org/pg/structure/tech-specs/fix-version/50-service-pack-2)
-with Extension Packs.
+currently [FIX Latest](https://www.fixtrading.org/online-specification/).
 
 ### Dependencies on other standards
 
 Orchestra imports [Dublin Core XML schemas version 2008-02-11](http://dublincore.org/schemas/xmls/) for artifact
 provenance. Dublin Core is standardized as IETF RFC 5013 and ISO 15836.
 
-XML 1.1 schema standards are located here [W3C XML Schema](http://www.w3.org/XML/Schema.html#dev)
+XML 1.1 schema standards are located at [W3C XML Schema](http://www.w3.org/XML/Schema.html#dev)
 
 [XML Inclusions (XInclude) Version 1.1](https://www.w3.org/TR/xinclude-11/)
 
@@ -302,7 +295,7 @@ Textual encoding of security keys must conform to [IETF RFC 7468](https://tools.
 
 Documentation content types should be chosen from the registry of media types (formerly known as MIME) maintained by the Internet Assigned Numbers Authority (IANA). See the registry of text media types at [Media Types](https://www.iana.org/assignments/media-types/media-types.xhtml#text). [Markdown](https://tools.ietf.org/html/rfc7763) is recommended for rich text while `text/plain` is the default.
 
-[ISO 8601:2019](https://www.iso.org/standard/70907.html) Data elements and interchange formats - Information
+[ISO 8601:2019](https://www.iso.org/standard/70907.html) Data elements and interchange formatsInformation
 interchange - Representation of dates and times. Used for representation
 of dates, times, and time intervals in DSL expressions.
 
@@ -326,37 +319,37 @@ structures.
 
 ### Message structure abstractions
 
-**Field** – carries a specific business meaning (semantics) as described
+**Field**–carries a specific business meaning (semantics) as described
 in FIX specifications or other protocol. A pointer to a field is a **fieldRef**. The data domain of a field is either a datatype or a code
 set.
 
-**Datatype** – the value space of a class of fields. FIX has about 20
+**Datatype**–the value space of a class of fields. FIX has about 20
 datatypes.
 
-**Code set** – a set of valid values of a field. They must all be of the
+**Code set**–a set of valid values of a field. They must all be of the
 same datatype.
 
-**Component** – a sequence of fields and nested components. There are
+**Component**–a sequence of fields and nested components. There are
 two types of components, common block and repeating group. A common
-block is a component designed to specified once in detail but reused in
-multiple message types by reference. A pointer to a component is **componentRef**.
+block is a component designed to be specified once in detail but reused in
+multiple message types by reference. A pointer to a component is a **componentRef**.
 
-**Group, or repeating group** – like a common block but with one
+**Group, or repeating group**–like a common block but with one
 additional feature: it represents an *array of* blocks to be sent on the
-wire. A pointer to a group is **groupRef**.
+wire. A pointer to a group is a **groupRef**.
 
-**Message** – a unit of information sent on the wire between
+**Message**–a unit of information sent on the wire between
 counterparties. A message is composed of components and fields. A
 pointer to a message is a **messageRef**.
 
 ### General Purpose Datatypes
 
-Pointer and array abstractions are defined by standard ISO 11404. The
+Pointer and array abstractions are defined by the standard ISO 11404. The
 code set abstraction is described in that standard as “state” type.
 
 ## Interfaces
 
-The interface metamodel is an abstraction of a service offerings and
+The interface metamodel is an abstraction of service offerings and
 session provisioning. This UML model depicts the main classes.
 
 ![](media/Interfaces.png)
@@ -424,17 +417,17 @@ for each.
 
 The name attribute of `<repository>` identifies an implementation of a
 protocol. The name should remain stable over minor revisions. The
-version attribute should, on the other hand, should be unique for any
+version attribute should, on the other hand, be unique for any
 substantive change to the protocol.
 
 This snippet shows that element with required namespaces and attributes:
 
 ```xml
-<fixr:repository name="FIX.5.0SP2" version="FIX.5.0SP2_EP216"
+<fixr:repository name="FIX.5.0SP2" version="FIX.5.0SP2_EP253"
 xmlns="http://purl.org/dc/elements/1.1/"
 xmlns:fixr="http://fixprotocol.io/2016/fixrepository"
 xmlns:dc="http://purl.org/dc/terms/"
-xmlns:xsi=http://www.w3.org/2001/XMLSchema-instance> 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 ```
 
 #### Repository attributes
@@ -444,8 +437,8 @@ and version attributes are required. Name should be stable even when
 minor changes are made to an Orchestra file while version should be
 updated for incremental changes.
 
-By default, the language for conditional expressions is the Score DSL.
-(See section below.) However, this may be overridden by setting a value
+By default, the language for conditional expressions is the Score DSL
+(See section [Score DSL](#score-dsl) below). However, this may be overridden by setting a value
 to the attribute expressionLanguage.
 
 ### Support for XInclude
@@ -454,7 +447,7 @@ Several of the elements in the schema support XML Inclusions (XInclude). This al
 
 ### Supplementary documentation
 
-See the separate document “FixRepository2016.html” for a detailed
+See the separate document “FixRepository2016.html” **[HK: where is it located?]** for a detailed
 technical reference for the Orchestra and Repository XML schema. The
 remainder of this section serves as an overview and explains motivations
 for the design.
@@ -479,7 +472,7 @@ and the issuer of that file. It can contain any of the elements defined
 by the Dublin Core XML schema. Recommended elements include title,
 publisher, date, and rights.
 
-Metadata example
+**Example:** Metadata
 
 ```xml
 <fixr:metadata>
@@ -501,7 +494,7 @@ entityAttribGrp. Each historical event is qualified by its protocol
 version and optionally, extension pack (EP), an interim publication
 between major versions.
 
-Code element with pedigree
+**Example:** Code element with pedigree.
 
 ```xml
 <code value="3" name="LocalCommission" added="FIX.4.0"
@@ -516,7 +509,7 @@ documentation and other outputs. These elements are optional.
 ### Categories
 
 The `<categories>` element tree is used to associate FIX elements to
-business classifications, such as order handling, market data, and so
+business classifications, such as single general order handling, market data, and so
 forth, for documentation generation. Also, categories are used to
 organize FIXML schema files.
 
@@ -547,7 +540,7 @@ documentation are supported by populating the purpose attribute.
 Suggested values of purpose include "SYNOPSIS", "ELABORATION",
 "EXAMPLE", and "DISPLAY".
 
-Field element with documentation
+**Example:** Field element with documentation.
 
 ```xml
 <fixr:field id="45" name="RefSeqNum">
@@ -563,10 +556,10 @@ Optionally, a `<documentation>` element may be qualified by media type to
 support rich text. The default value of attribute contentType is
 "text/plain". If a rich text encoding is embedded in the XML document,
 appropriate XML namespaces may be required. An Orchestra file may be
-rendered as polyglot markup, meaning that it is well-formed as both as
+rendered as polyglot markup, meaning that it is well-formed as both
 XML and XHTML, a W3C recommendation.
 
-Example of documentation as polyglot markup
+**Example:** Documentation as polyglot markup.
 
 ```xml
 xmlns:html="http://www.w3.org/1999/xhtml"
@@ -583,14 +576,14 @@ abbrName="Acct">
 </fixr:field>
 ```
 
-Alternatively, documentation elements may set the media type in the `contentType` attribute to any text encoding registered with IANA. 
+Alternatively, documentation elements may set the media type in the `contentType` attribute to any text encoding registered with IANA.
 
-Example of documentation as markdown
+**Example:** Documentation as markdown.
 
 ```xml
 	<fixr:annotation>
 		<fixr:documentation purpose="SYNOPSIS" contentType="text/markdown">
-**Account mnemonic**as agreed between buy and sell sides, e.g. broker and institution or investor/intermediary and fund manager.
+**Account mnemonic** as agreed between buy and sell sides, e.g. broker and institution or investor/intermediary and fund manager.
 		</fixr:documentation>
 	</fixr:annotation>
 ```
@@ -623,8 +616,7 @@ encoding protocol (presentation layer), a datatype is mapped to the
 syntax of that encoding, also known as lexical space.
 
 Some fields are specified as a set of valid values. This is known as
-code set, and it can be thought of as a specialized datatype. (See Code
-set section below.)
+*code set*, and it can be thought of as a specialized datatype (see the [Code sets](#code-sets) section below).
 
 Each datatype is described by a `<datatype>` element, a child of
 `<datatypes>`.
@@ -634,14 +626,14 @@ Each datatype is described by a `<datatype>` element, a child of
 FIX fields are categorized into roughly 20 datatypes. A datatype should
 be defined in terms of its value space, the range of its possible
 values, not in terms of its lexical space, its encoding format. In fact,
-a FIX datatype may be mapped to any number of wire formats. (See
-datatype mappings section below.)
+a FIX datatype may be mapped to any number of wire formats (see the [datatype mappings](#datatype-mappings)
+section below).
 
 A datatype may optionally inherit properties from a type specified by
 the baseType attribute. For example, Qty datatype, used by fields like
-OrderQty, has baseType of float, a more generic FIX datatype.
+OrderQty(38), has baseType of float, a more generic FIX datatype.
 
-Generally, FIX datatypes for FIX protocols need be defined only once and
+Generally, FIX datatypes for FIX protocols need to be defined only once and
 are copied from the baseline standard. However, the datatypes section
 may contain different definitions for non-FIX protocols.
 
@@ -658,7 +650,7 @@ in the particular standard. For example, FIX type Qty maps to XML schema
 type xs:decimal.
 
 The `<mappedDatatype>` element allows any snippet of well-formed XML to
-be pasted in as a child element that is meaningful specification to an
+be pasted in as a child element that is a meaningful specification to an
 encoding protocol.
 
 The ISO/IEC 11404 General Purpose Datatypes standard contains a taxonomy
@@ -675,7 +667,7 @@ comprehensive than filtering it through the XML interpretation.)
 The lower and upper bounds of a bounded datatype may be set with
 minInclusive and maxExclusive attributes.
 
-A FIX datatype with mappings to XML schema and General-Purpose Datatypes
+**Example:** A FIX datatype with mappings to XML schema and General-Purpose Datatypes.
 
 ```xml
 <fixr:datatype name="SeqNum" baseType="int">
@@ -708,7 +700,7 @@ as character “2” and then character “7”.
 
 A `<codeSets>` element contains any number of `<codeSet>` child
 elements. The schema allows multiple instances of `<codeSets>`
-containers, each with a unique name attribute. Unique names
+containers, each with a unique name attribute.
 
 The names of code sets and datatypes share a common namespace and must
 be unique within a schema. This constraint is enforced by the XML
@@ -733,24 +725,22 @@ the pedigree attributes of attribute group entityAttribGrp.
 
 Codes may be documented with an `<annotation>` element tree.
 
-An internal code set
+**Example:** An internal code set.
 
 ```xml
 <fixr:codeSet type="char" id="165" name="SettlInstSourceCodeSet"
 scenario="base">
-	<fixr:code value="1" added="FIX.4.1" id="165001"
-name="BrokerCredit"/>
-	<fixr:code value="2" added="FIX.4.1" id="165002"
-name="Institution"/>
+	<fixr:code value="1" added="FIX.4.1" id="165001" name="BrokerCredit"/>
+	<fixr:code value="2" added="FIX.4.1" id="165002" name="Institution"/>
 	<fixr:code value="3" added="FIX.4.3" id="165003" name="Investor"/>
-</fixr:codeSet> 
+</fixr:codeSet>
 ```
 
 #### Scenarios
 
 Code sets may have different supported codes in different scenarios. For
-example, outbound ExecutionReport messages may have more enriched view
-of PartyRole than is required on inbound order messages. Therefore, a
+example, outbound ExecutionReport(35=8) messages may have more enriched view
+of PartyRole(452) than is required on inbound order messages. Therefore, a
 `<codeset>` may be qualified by its scenario attribute. The default
 value of scenario is “base”, so the attribute need not be supplied if
 there is only one form of a codeset.
@@ -771,18 +761,18 @@ with `<annotation>` elements.
 In the case of an external code set, `<code>` elements are not listed in
 the Orchestra file.
 
-An external code set. Currency is defined as a FIX datatype with valid
+**Example:** An external code set CurrencyCode is defined as a FIX datatype Currency with valid
 values defined by standard ISO 4217.
 
 ```xml
 <fixr:codeSet name="CurrencyCode" type="Currency" specUrl="
-http://www.iso.org/iso/home/store/catalogue_ics/catalogue_detail\_ics.htm?csnumber=64758">
+http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=64758">
 ```
 
 ## Fields
 
-A field carries a specific business meaning (semantics) as described in
-FIX specifications or other protocol. In the schema, a `<field>` element
+A field carries a specific business meaning (semantic) as described in
+FIX specifications or another protocol. In the schema, a `<field>` element
 is contained by parent element `<fields>`. The collection of fields
 should be thought of as an append-only list; the id of a deprecated
 field must not be reused. The pedigree attributes of attribute group
@@ -790,7 +780,7 @@ entityAttribGrp are used to tell the history of a field, including the
 protocol version in which it was added.
 
 In FIX, a field has two unique identifiers, numeric id, also known as
-tag, and a descriptive string name.
+"tag", and a descriptive string name.
 
 Like other message elements, a field may be documented with an
 `<annotation>` element tree as described above. Also, the baseCategory
@@ -810,7 +800,7 @@ combination of name + scenario as well as id + scenario.
 
 ### Data domain of a field
 
-Every field must have data domain of either a `<datatype>` name or more
+Every field must have a data domain of either a `<datatype>` name or more
 specifically, a collection of valid values specified by a `<codeSet>`
 reference. In either case, the domain of a field is specified in its
 type attribute. The attribute type refers to either a `<datatype>`
@@ -818,11 +808,11 @@ element or a `<codeSet>` element by its name attribute. In the case of a
 `<codeSet>`, there is a level of indirection to its type attribute to
 arrive at a `<datatype>`.
 
-Since `<codeSet>` also is qualified by scenario, a field will link to
+Since `<codeSet>` is also qualified by scenario, a field will link to
 the code set of the same scenario. By default, “base” scenario field
-links to “base” code set. 
+links to “base” code set.
 
-A field with a code set and another with a datatype domain
+**Example:** A field with a code set and another with a datatype domain.
 
 ```xml
 <fixr:field id="59" name="TimeInForce" type="TimeInForceCodeSet"/>
@@ -836,9 +826,9 @@ the length of such a field is prefixed by a separate field of type
 Length. In other encodings, the length is implicit in the presentation
 protocol. For data fields, the associated Length field is referenced by the
 `lengthId` attribute, a reference to its `id`
-attribute. 
+attribute.
 
-A data field and its corresponding Length field
+**Example:** A data field and its corresponding Length field.
 
 ```xml
 <field added="FIX.2.7" id="95" name="RawDataLength" type="Length"/>
@@ -857,7 +847,7 @@ SecurityIDSource is 4, then the value of SecurityID must be a valid
 ISIN, and so forth. This relationship may be indicated in Orchestra by
 adding the attribute `discriminatorId` to a field.
 
-A field modified by a discriminator
+**Example:** A field modified by a discriminator.
 
 ```xml
 <fixr:field added="FIX.2.7" id="48" name="SecurityID" type="String"
@@ -891,7 +881,9 @@ field may be specified for all uses of the field if a rule is placed as
 a child of a `<field>` element, or it may apply to one use case of the
 field by placing it within a `<fieldRef>` element.
 
-Globally unique value is required for all instances of a field
+A globally unique value is required for all instances of a field.
+
+**Example:** Globally unique values.
 
 ```xml
 <fixr:field id="11" name="ClOrdID" presence="required">  
@@ -901,8 +893,9 @@ Globally unique value is required for all instances of a field
 </fixr:field>
 ```
 
-A key field provides the scope of uniqueness. Example: unique values per
-day
+A key field provides the scope of uniqueness.
+
+**Example:** Unique values per day
 
 ```xml
 <fixr:fieldRef id="11" presence="required">  
@@ -914,8 +907,9 @@ day
 </fixr:fieldRef>
 ```
 
-A combination of fields defines scope of uniqueness. Example: unique per
-day and market segment.
+A combination of fields defines scope of uniqueness.
+
+**Example:** Unique values per day and market segment.
 
 ```xml
 <fixr:fieldRef id="11" presence="required">  
@@ -925,7 +919,7 @@ day and market segment.
       <fixr:fieldRef id="1300"/>  
     </fixr:unique>  
   </fixr:rule>
-<fixr:fieldRef> 
+<fixr:fieldRef>
 ```
 
 ## Message structures
@@ -936,7 +930,7 @@ A component is a sequence of fields and nested components. There are two
 types of components, common blocks and repeating groups. Simple
 `<component>` blocks are contained by the `<components>` parent element
 while `<group>` repeating groups are contained by the `<groups>`
-element.
+parent element.
 
 Like the messages that contain them, components and groups may be
 overloaded for slightly different layouts for different scenarios.
@@ -950,17 +944,17 @@ attribute among both types of components.
 Like a field, a component or group can be annotated for documentation
 and carries pedigree attributes of attribute group entityAttribGrp.
 
-The scenario attribute of a component identifiers a use case; multiple
+The scenario attribute of a component identifies a use case; multiple
 components may have the same name, but the combination of name and
 scenario must be unique. Scenario has a default value of “base”, so if a
 component only has one variation, there is no need to qualify it.
 
 #### Common block
 
-A common block component is designed to specified once in detail but
+A common block component is designed to be specified once in detail but
 reused in multiple message types by reference. An example of a common
 block is “Instrument”. It is a collection of the possible fields
-describing an instrument to be traded, and it is used in many FIX
+describing an instrument, and it is used in many FIX
 messages. A common block is implemented as a `<component>` element in
 the schema.
 
@@ -969,7 +963,7 @@ the presentation protocol. Since Orchestra supports multiple encodings,
 the order of fields in an Orchestra file is not guaranteed to match the
 order on the wire.
 
-A component containing field references
+**Example:** A component containing field references.
 
 ```xml
 <fixr:component category="Common" added="FIX.4.4" id="1006" name="LegBenchmarkCurveData" abbrName="BnchmkCurve" scenario="base">
@@ -992,7 +986,7 @@ FIX tag=value encoding, a counter of datatype NumInGroup precedes the
 array when transmitted. In other encodings, such as FIXML, the array is
 implicit in the presentation protocol.
 
-A repeating group is specified by a `<group>` element. It has an child
+A repeating group is specified by a `<group>` element. It has a child
 element to specify the associated NumInGroup field by id,
 `<numInGroup>`.
 
@@ -1000,7 +994,7 @@ Limits on the size of a repeating group may optionally be specified with
 implMinOccurs and implMaxOccurs attributes. If those attributes are not
 present, then the repeating has unbound size.
 
-A repeating group with member fields and reference to NumInGroup
+**Example:** A repeating group with member fields and reference to the NumInGroup field.
 
 ```xml
 <fixr:group category="Common" id="1007" name="LegStipulations"
@@ -1009,8 +1003,8 @@ abbrName="Stip" added="FIX.4.4" scenario="base">
 	<fixr:fieldRef added="FIX.4.4" id="688" scenario="base"
 presence="optional"/>
 	<fixr:fieldRef added="FIX.4.4" id="689" scenario="base"
-presence="optional”/>
-</fixr:group> 
+presence="optional"/>
+</fixr:group>
 ```
 
 #### Component members
@@ -1030,11 +1024,11 @@ combination. A component must contain at least one member.
 
   - A `<groupRef>` element similarly refers to a nested `<group>`
     repeating group element by its id and scenario attributes. Limits of
-    the size of particular instance of a repeating group may be
+    the size of a particular instance of a repeating group may be
     overridden by setting implMinOccurs and implMaxOccurs attributes on
     the `<groupRef>` element.
 
-A component with all kinds of members
+**Example:** A component with all kinds of members.
 
 ```xml
 <fixr:component category="Common" added="FIX.5.0SP2" addedEP="208"
@@ -1049,7 +1043,7 @@ scenario="base" presence="optional"/>
 	<fixr:fieldRef added="FIX.5.0SP2" addedEP="208" id="42906"
 scenario="base" presence="optional"/>
 	<fixr:fieldRef added="FIX.5.0SP2" addedEP="208" id="42907"
-scenario="base" presence="optional/>
+scenario="base" presence="optional"/>
 	<fixr:fieldRef added="FIX.5.0SP2" addedEP="208" id="42908"
 scenario="base" presence="optional"/>
 	<fixr:fieldRef added="FIX.5.0SP2" addedEP="208" id="42909"
@@ -1068,7 +1062,7 @@ scenario="base" presence="optional"/>
 scenario="base" presence="optional"/>
 	<fixr:fieldRef added="FIX.5.0SP2" addedEP="208" id="42914"
 scenario="base" presence="optional"/>
-</fixr:component> 
+</fixr:component>
 ```
 
 ### Presence
@@ -1092,14 +1086,14 @@ possible values of presence are:
 
 A field may be set to a constant value. A specific value of a field is
 often useful to distinguish scenarios or use cases for a message type.
-For example, values of ExecType distinguish various scenarios of
-ExecutionReport. Also, if a presentation protocol supports constants, a
+For example, values of ExecType(150) distinguish various scenarios of
+ExecutionReport(35=8). Also, if a presentation protocol supports constants, a
 constant field need not be transmitted on the wire.
 
-A constant field. SecurityIDSource is always code “1” (CUSIP).
+**Example:** A constant field. SecurityIDSource is always code '1' (CUSIP).
 
 ```xml
-<fixr:fieldRef id="22"presence="constant" value="1"/>
+<fixr:fieldRef id="22" presence="constant" value="1"/>
 ```
 
 #### Default value of an optional field
@@ -1107,18 +1101,18 @@ A constant field. SecurityIDSource is always code “1” (CUSIP).
 For an optional field, a default value may be specified if the sender
 does not provide the field.
 
-An optional field with default value. TimeInForce default is ‘0’ (Day).
+**Example:** An optional field with a default value. TimeInForce(59) default is '0' (Day).
 
 ```xml
-<fixr:fieldRef id="59"presence="optional" value="0"/>
+<fixr:fieldRef id="59" presence="optional" value="0"/>
 ```
 
 #### Conditionally required field
 
 The presence of a conditionally required field depends upon other fields
-in a component or message. For example, StopPx is required when OrdType
-is Stop or StopLimit. If OrdType has any other value like Limit or
-Market, then StopPx is not required.
+in a component or message. For example, StopPx(99) is required when OrdType(40)
+is 3=Stop or 4=StopLimit. If OrdType(40) has any other value like Limit or
+Market, then StopPx(99) is not required.
 
 The condition that tells when a conditionally required field is required
 is contained by a `<rule>` element tree under a `<fieldRef>`. A `<rule>`
@@ -1130,7 +1124,7 @@ described in the conditional expressions section below. The attribute
 override such as presence=″required″ attribute is applied to the
 `<when>` element.
 
-Rules for a conditionally required field
+**Example:** Rules for a conditionally required field.
 
 ```xml
 <fixr:fieldRef id="99" presence="conditional">
@@ -1145,9 +1139,9 @@ Rules for a conditionally required field
 
 #### Mutually exclusive component members
 
-Sometimes members of a component or group are intended to be mutually exclusive. This is expressed by adding the attribute `which="oneOf"` to a `<component>` or `<group>` element. In a message that contains the component or grroup, *one and only one* of its mutually exclusive members must be present.
+Sometimes members of a component or group are intended to be mutually exclusive. This is expressed by adding the attribute `which="oneOf"` to a `<component>` or `<group>` element. In a message that contains the component or group, *one and only one* of its mutually exclusive members must be present.
 
-In this example, the fields OrderQtyand CashQty, and the nested component OrderQtyDataCIV are mutually exclusive members the OrderQtyData component. 
+**Example:** The fields OrderQty(38) and CashOrderQty(152), and the nested component OrderQtyDataCIV are mutually exclusive members the OrderQtyData component.
 
 ```xml
 <fixr:component category="Common" added="FIX.4.3" id="1011" name="OrderQtyData" abbrName="OrdQty" scenario="base" which="oneOf">
@@ -1177,14 +1171,14 @@ A message in an Orchestra file describes a unit to be sent on the wire
 between counterparties.
 
 Like a `<component>`, a `<message>` element has id and name attributes.
-It also has msgType attribute, a short name. In tag=value encoding,
-msgType is the value of tag 35.
+It also has an msgType attribute, a short name. In tag=value encoding,
+msgType is the value of the FIX field MsgType(35).
 
-In FIX, a MsgType is often reused for multiple use cases. For example,
-an ExecutionReport with msgType=″8″, is overloaded for acceptance of an
+In FIX, a single MsgType(35) value is often reused for multiple use cases. For example,
+an ExecutionReport(35=8), is overloaded for acceptance of an
 order, rejection, execution, cancel confirmation, etc. In the Orchestra
 schema, the scenario attribute is used to name each of those use cases.
-Each of the variations of a MsgType can have slightly different message
+Each of the variations of a single MsgType(35) value can have slightly different message
 structures.
 
 Another attribute of `<message>` called flow ties a message to an
@@ -1202,8 +1196,8 @@ Unlike `<component>`, the parts of a message are contained by a child
 `<structure>` element, which in turn holds `<fieldRef>`,
 `<componentRef>` and `<groupRef>` elements.
 
-A message structure with a field, nested components, and a nested
-repeating group
+**Example:** A message structure with a field, nested components, and a nested
+repeating group.
 
 ```xml
 <fixr:message name="TradingSessionList" id="100" msgType="BJ"
@@ -1224,20 +1218,20 @@ Message structures commonly vary with scenario or use case. For example,
 an ExecutionReport might look quite different in its execution use case
 versus a cancel-confirmation use case. The attribute that names a use
 case is scenario. If no scenario is explicitly given, it defaults to
-“base”.
+"base".
 
 The combination of id and scenario attributes must be unique.
 
 #### Responses
 
 Aside from `<structure>`, `<message>` has another child element called
-`<responses>`; it is explained in the workflow section below.
+`<responses>`; it is explained in the section [Workflow](#workflow) below.
 
 ## Expressions
 
 ### Conditional expressions
 
-Conditional expressions are rules that are expressed in Domain Specific
+Conditional expressions are rules that are expressed in a Domain Specific
 Language (DSL). They are evaluated by substituting actual values from a
 message and other state information for tokens in the expression. A
 conditional expression is of Boolean type. That is, it evaluates true or
@@ -1248,26 +1242,25 @@ message.
 Conditional expressions are used in Orchestra:
 
   - To tell when a conditionally required field is required
-    (presence=required)
+    (presence=required);
 
   - To tell when a field attribute aside from presence is overridden,
     such as setting the range of valid values with minInclusive and
     maxInclusive attributes. It can even tell when to override the type
-    of a field. For example, the type of SecurityID could be overridden,
-    depending on the value of SecurityIDSource. Some kinds of security
-    IDs are strings while others are numeric.
+    of a field. For example, the type of SecurityID(48) could be overridden,
+    depending on the value of SecurityIDSource(22). Some kinds of SecurityID(48) values are strings while others are numeric;
 
   - To tell when a specific workflow response should be sent or other
-    action taken
+    action taken.
 
 All conditions are declared in the XML content of a `<when>` element.
-See the Score DSL section below for details of the grammar.
+See the section [Score DSL](#score-dsl) below for details of the grammar.
 
 ### Assignment expressions
 
 Assignment expressions are used to set the value of a field in an
 outgoing message or to alter a state variable that belongs to an actor.
-The grammar of assignment expressions is also governed by the Score DSL.
+The grammar of assignment expressions is also governed by the [Score DSL](#score-dsl).
 
 #### Assigning a field
 
@@ -1277,7 +1270,7 @@ The content of the `<assign>` element (text node) contains a Score
 expression giving the value to set. The value must evaluate to a
 datatype compatible with the type of the field.
 
-Field assignment: echo the value of a field from an incoming message
+**Example:** Echo the value of a field from an incoming message.
 
 ```xml
 <fixr:fieldRef id="11" added="FIX.2.7" updated="FIX.5.0SP2" updatedEP="188">
@@ -1294,7 +1287,7 @@ entry to be constructed. Within a `<blockAssignment>`, the syntax for
 assigning fields is the same as the assignment of an individual field
 shown above.
 
-Assignment of two entries in a repeating group
+**Example:** Assignment of two entries in the Parties repeating group.
 
 ```xml
 <fixr:groupRef id="1012" added="FIX.4.3" updated="FIX.5.0SP2"
@@ -1311,7 +1304,7 @@ updatedEP="188">
 		</fixr:fieldRef>
 	</fixr:blockAssignment>
 	<fixr:blockAssignment>
-		<fixr:fieldRef id="448"> 
+		<fixr:fieldRef id="448">
 			<fixr:assign>"DEF"</fixr:assign>
 		</fixr:fieldRef>
 		<fixr:fieldRef id="447">
@@ -1329,7 +1322,7 @@ updatedEP="188">
 To assign the value of a state variable when an event occurs, use the
 `<assign>` element within a response. The expression contained by the
 element must refer to a state variable contained by an actor. See the
-Responses section below.
+section [Responses](#responses) below.
 
 ### Field attribute rules
 
@@ -1339,8 +1332,8 @@ allowed for the same field reference to affect multiple attributes or to
 generate different values of an attribute under different conditions.
 
 The attributes of a `<fieldRef>` that can be controlled by a rule
-include type and any member of fieldAttribGrp attribute group. That
-group includes presence and attributes to control the length of a field.
+include type and any member of the fieldAttribGrp attribute group. That
+group includes the presence attribute and attributes to control the length of a field.
 A rule about presence tells when a conditionally required field is
 required.
 
@@ -1353,7 +1346,7 @@ maxInclusive.
 
 More complex rules can be written under a `<fieldRef>` that reference
 the values of other fields or the state variables of actors. Rules can
-be quite dynamic. For example, a market might reject orders with limit
+be dynamic. For example, a market might reject orders with limit
 price outside a band of some differential above or below the last sale
 price.
 
@@ -1366,19 +1359,19 @@ an `<actor>` element. Responses can be defined in the actor to perform
 actions such as sending a reject message for certain kinds of
 violations.
 
-A field valuation rule sets a state variable when tripped
+**Example:** A field validation rule sets a state variable when tripped.
 
 ```xml
 <fixr:fieldRef id="44">
 	<fixr:rule name="tick" >
 		<fixr:assign>$validator.ViolationGrp[].ruleViolated="tick"</fixr:assign>
-		<\!-- price not even tick increment of .05 ->
-		<fixr:when>(Price * 100) % 5 != 0</fixr:when>
+    <!-- price not even tick increment of .05 -->
+	<fixr:when>(Price * 100) % 5 != 0</fixr:when>
 	</fixr:rule>
 </fixr:fieldRef>
 ```
 
-A state variable to hold rule violations
+**Example:** A state variable to hold rule violations.
 
 ```xml
 <fixr:actor name="validator">
@@ -1391,8 +1384,8 @@ A state variable to hold rule violations
 
 ### Response conditions
 
-A `<when>` element with conditional expression is also supported in the
-`<message>/<responses>` element tree. See workflow below for usage.
+A `<when>` element with a conditional expression is also supported in the
+`<message>/<responses>` element tree. See section [Workflow](#workflow) below for usage.
 
 ## Workflow
 
@@ -1401,11 +1394,10 @@ messages. For each received message type, one or more possible actions
 can be specified under the `<message>/<responses>` element.
 
 Workflow in Orchestra recognizes that there is not always a 1:1
-relationship between a FIX MsgType and a use case. Some FIX message
-types such as ExecutionReport are overloaded for many different
-meanings. Therefore, messages in Orchestra are identified primarily by
-their FIX type, but with a qualification for a specific use case. We
-call each message use case a scenario.
+relationship between a FIX MsgType(35) and a use case. Some FIX message
+types such as ExecutionReport(35=8) are overloaded for many different
+use cases. Therefore, messages in Orchestra are identified primarily by
+their FIX MsgType(35) value, but with a qualification for a specific use case. Each message use case is called a scenario.
 
 Behavior may depend upon more information than a receive message itself.
 External state information enters it as well, e.g. the state of an order
@@ -1416,13 +1408,13 @@ originator or receiver of a message.
 ### Scenarios
 
 A scenario is one use case of a specific message type, as identified by
-key attributes name and msgType in messageAttribGrp attribute group
+key attributes name and msgType in the messageAttribGrp attribute group
 supported by `<message>`. A scenario name is stored in the scenario
 attribute of `<message>`. If there is only one use case for a message
-type, then scenario need not be populated. It defaults to “base”.
+type, then scenario need not be populated. It defaults to "base".
 Scenarios must be unique per message type and it is an error to have
 more than one `<message>` element of the same type without a scenario
-since they would in effect be duplicates of scenario “base”.
+since they would in effect be duplicates of scenario "base".
 
 This standard imposes no naming convention for scenarios. Implementers
 are free to choose names that are meaningful in their business.
@@ -1437,10 +1429,10 @@ own message contents in its `<structure>` child element and its own
 
 The task of mapping an actual received message to a scenario declaration
 in Orchestra is left to implementations. The first level of matching is
-on message the msgType attribute. However, that message type may have
+on the msgType attribute. However, that message type may have
 several scenarios. Pattern matching strategies might include comparing a
 message to expected required fields, mapping values of a distinguishing
-field like ExecType to its code set literals, and so forth.
+field like ExecType(150) to its code set literals, and so forth.
 
 ### Actors
 
@@ -1459,7 +1451,7 @@ Actors can hold state variables in the form of FIX fields. That is, each
 state variable has an id and name for identification and a value of a
 FIX datatype. Like any field, valid values can be constrained to a code
 set or range. The datatype or code set is declared in the type
-attribute, just like any field
+attribute, just like any field.
 
 If a state variable corresponds to a standard FIX field, it can be
 declared as a `<fieldRef>` element child of the `<actor>`.
@@ -1470,7 +1462,7 @@ repeating groups.
 A state variable can be tested in a conditional expression or set by an
 assignment expression.
 
-An actor with state variables
+**Example:** An actor with state variables for TradingSession(336) and TradeDate(75).
 
 ```xml
 <fixr:actor name="Market">
@@ -1494,9 +1486,9 @@ the name of the new state of the state machine in its target attribute.
 States and transitions must have unique names within a state machine.
 
 The current state of a state machine can be tested by a conditional
-expression, and a transition can be invoked by an assignment expression.
+expression and a transition can be invoked by an assignment expression.
 
-A state machine for market phases
+**Example:** A state machine for market phases.
 
 ```xml
 <fixr:states name="Phase">
@@ -1550,7 +1542,7 @@ messages on the flow. It takes one of these values:
 
   - **recoverable**—deliver exactly once
 
-Example of actors and flows
+**Example:** Actors and flows.
 
 ```xml
 <fixr:actors>
@@ -1582,29 +1574,29 @@ children of its `<responses>` element.
 
 A `<when>` element supplies a conditional expression that triggers a
 response if the condition is true. The expression is in the Score DSL
-grammar (see section below). It is possible to trigger multiple
+grammar (see section [Score DSL](#score-dsl) below). It is possible to trigger multiple
 responses if more than one conditional expression evaluates true. If no
 `<when>` element is provided for a `<response>`, then the response is
 unconditional.
 
 #### Message response
 
-A `< messageRef>` child of response represents a reply to the received
+A `<messageRef>` child of a response represents a reply to the received
 message. Its name, msgType and scenario attributes are the combined key
-to a matching `<message>` to send
+to a matching `<message>` to send.
 
 An optional `<identifiers>` element contains one or more correlations
 between a message and its response message. This information supports
-following relationships between chains of messages, such as between an
+the following relationships between chains of messages, such as between an
 order and its executions. Each child `<correlate>` element supplies the
 id of a field that is common to a message and its response. By default,
 a common identifier is assumed to be in the same field in the message
 and its response. If it is in different fields, then the id attribute
 applies to the response message and sourceId applies to original
-message. Also, it is possible to assign new identifiers the response
+message. Also, it is possible to assign new identifiers in the response
 message. The element `<assign>` is used to describe that case.
 
-Send a response message and show correlated and new identifiers
+**Example:** Send a response message and show correlated and new identifiers.
 
 ```xml
 <fixr:response name="orderAck">
@@ -1616,14 +1608,13 @@ id="9" scenario="base" implMinOccurs="1">
 			<fixr:assign id="37"/>
 			<fixr:annotation>
 				<fixr:documentation>
-				ExecutionReport echoes ClOrdId and
-	OrderRequestID from order message and assigns OrderID
+				ExecutionReport(35=8) echoes ClOrdId(11) and OrderRequestID(2422) from order message and assigns OrderID(37).
 				</fixr:documentation>
 			</fixr:annotation>
 		</fixr:identifiers>
 	</fixr:messageRef>
 	<fixr:when>$Market.SecMassStatGrp[SecurityID==in.SecurityID].SecurityTradingStatus != ^TradingHalt and $Market.Phase == "Open"</fixr:when>
-</fixr:response> 
+</fixr:response>
 ```
 
 #### State variable response
@@ -1632,7 +1623,7 @@ An `<assign>` element changes the value of a state variable belonging to
 an actor. Its child element `<assign>` references one or more state
 variables to change in the form of an assignment expression.
 
-Assign a state variable belonging to actor “participant”
+**Example:** Assign a state variable belonging to actor "participant".
 
 ```xml
 <fixr:assign>$participant.RiskLimitAmount=15000</fixr:assign>
@@ -1640,32 +1631,30 @@ Assign a state variable belonging to actor “participant”
 
 #### State machine response
 
-A `< trigger>` element represents a state machine transition invoked
+A `<trigger>` element represents a state machine transition, invoked
 when a message is received. Its statemachine attribute identifies the
-name of the state machine, and name attribute refers to the name of a
+name of the state machine, and its name attribute refers to the name of a
 `<transition>` within that state machine.
 
-Invoking a state machine transition: the market resumes after a halt
+**Example:** Invoking a state machine transition: the market resumes after a halt.
 
 ```xml
-<fixr:transitionRef actor="market" stateMachine="phase"
-name="resume"/>
+<fixr:transitionRef actor="market" stateMachine="phase" name="resumed"/>
 ```
 
 #### Timer operation response
 
 A `<timerSchedule>` element invokes an operation to either start or
 cancel a timer. The name attribute refers to the name of the timer,
-operation tells whether to start or cancel, and interval gives the
+the operation tells whether to start or cancel, and interval gives the
 elapsed time. Interval is expressed in the lexical space of XML schema
 type duration. That type includes the magnitude and time unit of the
 period in conformance to standard ISO 8601. The `<responses>` elements
 represents actions to take when the timer expires. Actions can include
 sending a message, setting a state variable, or invoking a state machine
-transition. 
+transition.
 
-Invoking a timer operation: start a timer for 120 seconds. On timer
-expiration, send a cancel message, provided the order is still open
+**Example:** Start a timer for 120 seconds. On timer expiration, send a cancel message, provided the order is still open.
 
 ```xml
 <fixr:timerSchedule actor="trader" name="exposureTimer"
@@ -1675,29 +1664,29 @@ operation="START" interval="PT120S">
 			<fixr:messageRef name="OrderCancelRequest" msgType="F">
 		</fixr:response>
 	<fixr:responses>
-</fixr:timerSchedule> 
+</fixr:timerSchedule>
 ```
 
 ## Semantic Concepts
 
 Optionally, semantic concepts may be identified by name, even when the
-encoding of such a concept changes across versions of a protocol.
-Anchoring a changing encoding to stable concept can be used to inform
+representation of such a concept changes across versions of a protocol.
+Anchoring a changing representation to a stable concept can be used to inform
 applications such as message translators.
 
-A concept may be tied to a field or group fields. Values may be variable
+A concept may be tied to a field or group of fields. Values may be variable
 or constant. Also, a concept name may be used to link a generic event to
 its message type and scenario.
 
-Recognized concept names will be published by FIX Trading Community. To
+Recognized concept names will be published by the FIX Trading Community. To
 maximize portability, users should conform to those names.
 
-The semantic concept is stable, but the FIX 4.2 fields were replaced
+**Example:** The semantic concept is stable, but the FIX 4.2 fields were replaced.
 
 FIX 4.2 encoding
 
 ```xml
-<fixr:concept name="ProgramOrderMember">
+<fixr:concept name="ProgramOrder">
 	<fixr:fieldRef id="47" presence="constant" value="D"/>
 </fixr:concept>
 ```
@@ -1705,19 +1694,19 @@ FIX 4.2 encoding
 FIX 4.4 encoding
 
 ```xml
-<fixr:concept name="ProgramOrderMember">
+<fixr:concept name="ProgramOrder">
 	<fixr:fieldRef id="528" presence="constant" value="P"/>
-	<fixr:fieldRef id="529" presence="constant" value="12"/>
+	<fixr:fieldRef id="529" presence="constant" value="1"/>
 </fixr:concept>
 ```
 
-The name of a message changed
+**Example:** The name of a message changed.
 
 FIX 4.2 encoding
 
 ```xml
 <fixr:concept name="BaseOrder">
-	<fixr:messageRef msgType="D" scenario="base"/>
+	<fixr:messageRef name="OrderSingle" msgType="D" scenario="base"/>
 </fixr:concept>
 ```
 
@@ -1777,9 +1766,9 @@ used in combination with other protocols.
 
 ### Extensibility
 
-This schema was designed to maximize extensibility so it that represent
+This schema was designed to maximize extensibility so that it represents
 a wide range of applications, even with non-FIX protocols. Most elements
-allow addition of attributes, and types allow additional child elements,
+allow the addition of attributes and types allow additional child elements,
 possibly conformant to other XML schemas.
 
 ### Provenance
@@ -1894,15 +1883,15 @@ Example: ′a′
 A character literal is of FIX datatype String. It is delimited by double
 quotes.
 
-Example: ″A String literal″
+Example: "A String literal"
 
 #### Integer literal
 
 An integer literal is of FIX datatype int. It is a sequence of digits,
-such as 123.
+such as "123".
 
 An integer literal may be preceded by a hyphen character that represents
-the unary minus operator, such as -123.
+the unary minus operator, such as "-123".
 
 #### Decimal literal
 
@@ -1912,13 +1901,13 @@ decimal point (period character) and another sequence of digits. At
 least one digit must precede and follow the decimal point. A decimal
 literal may be preceded by a unary minus operator (hyphen character).
 
-Example: 123.456
+Example: "123.456"
 
 #### Date-time literals
 
 Date, time of day, and date-time literals are delimited by the \#
 character. The syntax within the delimiters is governed by standard ISO
-8601 “Date and time format”.
+8601 "Date and time format".
 
 ##### Date literal
 
@@ -1926,7 +1915,7 @@ A date literal is of the form YYYY-MM-DD with a hyphen character
 separating the year, month and day parts. A date literal is of FIX
 datatype UTCDateOnly.
 
-Example date: \#2017-03-21\#
+Example date: "\#2017-03-21\#"
 
 ##### Time literal
 
@@ -1987,15 +1976,15 @@ indeterminate without some context about how to count days.
 
 #### Code literal
 
-A code of a code set, is designated by its Namename preceded by the ^
+A code of a code set is designated by its name preceded by the ^
 character. The code set that contains the code is generally inferred by
 a field scope within an expression.
 
-Example code of OrdType code set: ^StopLimit
+Example of the code literal for OrdType(40)=3 is ^StopLimit.
 
 ### Variables
 
-A variable is named value that is independent of sent and received
+A variable is a named value that is independent of sent and received
 messages. A variable has a name and a value of any FIX datatype. A state
 variable is created and populated by an assignment expression (see
 below). The datatype of a state variable is set by the assignment.
@@ -2038,14 +2027,12 @@ conditional or assignment expressions.
     group, an entry is indexed or an entry may be selected by a
     conditional expression (see below).
 
-The high-level qualifier for a received message is in, and the
-high-level qualifier for an outbound message is out. In implementations,
+The high-level qualifier for a received message is "in", and the
+high-level qualifier for an outbound message is "out". In implementations,
 the scope of a message may be implicit, making the high-level qualifier
 unnecessary. Then a field can simply be referenced by name. However,
 qualification is needed if for example, an expression about a field in
 an outgoing response message refers to a field in its inbound request.
-
-Example: TradSesStatus
 
 #### Repeating group entry selection
 
@@ -2056,8 +2043,8 @@ select an entry. The index is surrounded by square brackets. The
 repeating group and field names are separated by a dot (period
 character).
 
-Example refers to the MDEntryType field in the second entry of its
-repeating group: MDIncGrp\[2\].MDEntryType
+**Example:** Reference MDEntryType(269) field in the second entry of its
+repeating group: MDIncGrp\[2\].MDEntryType.
 
 The second method of accessing a repeating group entry is by using an
 equality expression using a second field in the group as a key. The
@@ -2065,25 +2052,25 @@ expression is placed in square brackets. The condition selects a
 repeating group entry by testing equality of a named field in the group
 entry to a literal value.
 
-Example references PartyID field in the repeating group entry for which
-PartyRole equals 4: Parties\[PartyRole==4\].PartyID
+**Example:** References PartyID(448) field in the repeating group entry for which
+PartyRole(452) = 4 (Clearing Firm): Parties\[PartyRole==4\].PartyID
 
 Alternatively, the same field can be accessed by using a code literal in
-the equality expression. In this example, ClearingFirm is the name of
-the code for which the value is integer 4.
+the equality expression.
 
-Parties\[PartyRole==^ClearingFirm\].PartyID
+**Example:** Reference field in the repeating group entry for which
+PartyRole(452) = 4 (Clearing Firm): Parties\[PartyRole==^ClearingFirm\].PartyID
 
 ### Conditional expressions
 
 Conditional expressions are used for multiple purposes in Orchestra:
 
-  - To tell when a conditionally required is in fact required
+  - To tell when a conditionally required field is in fact required;
 
-  - To tell when a certain response to a received message is triggered
+  - To tell when a certain response to a received message is triggered;
 
   - To select an entry in a repeating group using a field value, as
-    described above
+    described above.
 
 Conditional expressions take several forms:
 
@@ -2095,10 +2082,10 @@ Conditional expressions take several forms:
     to the value of another field in the same message or to a field used
     as a state variable belonging to an actor.
 
-  - Relational expression: compare the current state of a state machine
+  - Relational expression: Compare the current state of a state machine
     to a literal representing one of its possible states.
 
-  - Compound relational conditions joined by “and” and “or”.
+  - Compound relational conditions joined by "and" and "or".
 
   - Relational expressions may express set inclusion or data range
     inclusion.
@@ -2197,7 +2184,7 @@ an element is present in a message. The test is of Boolean type and may
 be combined with other logical operators to form a conditional
 expression. The syntax is of the form:
 
-exists variable
+exists variable/element
 
 ### Assignment expressions
 
@@ -2209,7 +2196,7 @@ The following entities may be assigned values in an expression:
 
 The assignment operator is the = character. The left-hand operand must
 be either a state variable or a mutable message field. Literals are
-immutable so a literal cannot be the lvalue of an assignment expression.
+immutable so a literal cannot be the value of an assignment expression.
 The right-hand operand can be any expression of a compatible datatype.
 In the case of a variable, it takes the datatype of the expression if it
 has never been assigned before.
@@ -2225,7 +2212,7 @@ mismatched.
 Implementations should throw an exception in these cases:
 
   - Operands are of incompatible datatypes. For example, a relational
-    operator is asked to compare a Price value to a UTCTimestamp.
+    operator is asked to compare a price value to a UTC timestamp.
 
   - A variable or message element referenced by an expression does not
     exist.
