@@ -2197,7 +2197,7 @@ The following entities may be assigned values in an expression:
 
 The assignment operator is the = character. The left-hand operand must
 be either a state variable or a mutable message field. Literals are
-immutable so a literal cannot be the value of an assignment expression.
+immutable so a literal cannot be the lvalue (left-hand operand) of an assignment expression.
 The right-hand operand can be any expression of a compatible datatype.
 In the case of a variable, it takes the datatype of the expression if it
 has never been assigned before.
