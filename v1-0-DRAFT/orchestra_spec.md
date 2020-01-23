@@ -1,3 +1,5 @@
+
+<!--
 ![](media/FIXorchestraLogo.png)
 
 FIX Orchestra Technical Specification
@@ -113,8 +115,11 @@ Copyright 2013-2020 FIX Protocol Ltd., all rights reserved.
 [Examples](#examples)
 
 [Appendix](#appendix)
+-->
 
 # Introduction
+
+![](media/FIXorchestraLogo.png)
 
 ## Objectives
 
@@ -148,7 +153,7 @@ From the contents, firms and vendors will be enabled to develop tools to
 automate configuration of FIX engines and applications, and generation
 of code, test cases, and documentation. The various aspects are not an
 all-or-nothing proposition, however. Users may implement only the
-features that they find most beneficial, and add features as needed.
+features that they find most beneficial and add features as needed.
 
 Orchestra supports but does not change FIX protocol itself in any way,
 nor does it obsolete existing FIX engines or tools.
@@ -1856,13 +1861,13 @@ explanation.
 
 C-language style comments are contained by tokens /\* and \*/.
 
-/\* This is a C style comment. \*/
+**Example:** /\* This is a C style comment. \*/
 
 #### Line comments
 
 Line comments extend from the token // to the next line break.
 
-// This is a line comment.
+**Example:** // This is a line comment.
 
 ### Literals
 
@@ -1873,22 +1878,21 @@ A literal stands for a value that is assignable to a FIX datatype.
 A character literal is of FIX datatype char. It is delimited by single
 quotes.
 
-Example: ′a′
+**Example:** ′a′
 
 #### String literal
 
 A character literal is of FIX datatype String. It is delimited by double
 quotes.
 
-Example: "A String literal"
+**Example:** "A String literal"
 
 #### Integer literal
 
-An integer literal is of FIX datatype int. It is a sequence of digits,
-such as "123".
+An integer literal is of FIX datatype int. It is a sequence of digits and may be preceded by a hyphen character that represents
+the unary minus operator.
 
-An integer literal may be preceded by a hyphen character that represents
-the unary minus operator, such as "-123".
+**Examples:** "123", "-123"
 
 #### Decimal literal
 
@@ -1898,7 +1902,7 @@ decimal point (period character) and another sequence of digits. At
 least one digit must precede and follow the decimal point. A decimal
 literal may be preceded by a unary minus operator (hyphen character).
 
-Example: "123.456"
+**Example:** "123.456"
 
 #### Date-time literals
 
@@ -1912,7 +1916,7 @@ A date literal is of the form YYYY-MM-DD with a hyphen character
 separating the year, month and day parts. A date literal is of FIX
 datatype UTCDateOnly.
 
-Example date: \#2017-03-21\#
+**Example:** \#2017-03-21\#
 
 ##### Time literal
 
@@ -1925,7 +1929,7 @@ timezone offset from UTC. A timezone offset is of the form \[+|-\]HH:MM.
 It represents an offset from UTC in hours and minutes. A time literal is
 of FIX datatype UTCTimeOnly.
 
-Example times:
+**Examples:**
 
 \#09:58:24.123456789Z\#
 
@@ -1939,7 +1943,7 @@ A time of day literal is of the form YYYY-MM-DD THH:MM:SS.FFFFFFFFFTZD.
 The syntax of the parts are the same as a date literal followed by a
 time literal. A date-time literal is of FIX datatype UTCTimestamp.
 
-Example times:
+**Examples:**
 
 \#2017-03-21T09:58:24.123456789Z\#
 
@@ -1959,7 +1963,7 @@ Currently, there is no FIX datatype that represents duration, but a
 duration literal may be used with date and time literals in date and
 time expressions in the DSL.
 
-Example durations:
+**Examples:**
 
 7 days: \#P7D\#
 
@@ -1977,7 +1981,7 @@ A code of a code set is designated by its name preceded by the ^
 character. The code set that contains the code is generally inferred by
 a field scope within an expression.
 
-Example of the code literal for OrdType(40)=3 is ^StopLimit.
+**Example:** Code literal for OrdType(40)=3 is ^StopLimit.
 
 ### Variables
 
@@ -2006,7 +2010,7 @@ a dot (period character). The first qualifier should correspond to an
 actor name. Variables may be grouped within actor context by further
 qualifiers.
 
-Example of a variable name: $myactor.totalQty
+**Example:** $myactor.totalQty
 
 ### Message element references
 
