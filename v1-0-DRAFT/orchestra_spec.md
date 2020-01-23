@@ -401,8 +401,7 @@ related tools.
 
 ### Schema location
 
-The XML schema is currently available in GitHub project fix-orchestra
-module
+The XML schema is currently available in GitHub project fix-orchestra module
 [repository2016](https://github.com/FIXTradingCommunity/fix-orchestra/tree/master/repository2016).
 Upon promotion to draft standard, it will be made available at a URI
 consistent with its XML namespace.
@@ -425,7 +424,7 @@ This snippet shows that element with required namespaces and attributes:
 ```xml
 <fixr:repository name="FIX.5.0SP2" version="FIX.5.0SP2_EP253"
 xmlns="http://purl.org/dc/elements/1.1/"
-xmlns:fixr="http://fixprotocol.io/2016/fixrepository"
+xmlns:fixr="http://fixprotocol.io/2020/orchestra/repository"
 xmlns:dc="http://purl.org/dc/terms/"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 ```
@@ -1639,7 +1638,7 @@ name of the state machine, and its name attribute refers to the name of a
 **Example:** Invoking a state machine transition: the market resumes after a halt.
 
 ```xml
-<fixr:transitionRef actor="market" stateMachine="phase" name="resumed"/>
+<fixr:transitionRef actor="Market" stateMachine="Phase" name="Resumed"/>
 ```
 
 #### Timer operation response
@@ -1649,7 +1648,7 @@ cancel a timer. The name attribute refers to the name of the timer,
 the operation tells whether to start or cancel, and interval gives the
 elapsed time. Interval is expressed in the lexical space of XML schema
 type duration. That type includes the magnitude and time unit of the
-period in conformance to standard ISO 8601. The `<responses>` elements
+period in conformance to standard [ISO 8601:2019](https://www.iso.org/standard/70907.html). The `<responses>` elements
 represents actions to take when the timer expires. Actions can include
 sending a message, setting a state variable, or invoking a state machine
 transition.
@@ -1723,8 +1722,7 @@ FIX 4.4 encoding
 ## XML Schema (XSD)
 
 The FIXInterfaces schema represents service offering and session
-provisioning. Its XML namespace is
-"http://fixprotocol.io/2016/fixinterfaces".
+provisioning. Its XML namespace is "http://fixprotocol.io/2020/orchestra/interfaces".
 
 ### Conformance
 
@@ -1733,8 +1731,7 @@ schema. This can be validated with common XML parsers and related tools.
 
 ### Schema location
 
-The XML schema is currently available in GitHub project fix-orchestra
-module
+The XML schema is currently available in GitHub project fix-orchestra module
 [interfaces2016](https://github.com/FIXTradingCommunity/fix-orchestra/tree/master/repository2016).
 Upon promotion to draft standard, it will be made available at a URI
 consistent with its XML namespace.
@@ -1746,7 +1743,7 @@ shows that element with required namespaces:
 
 ```xml
 <fixi:interfaces xmlns:dcterms="http://purl.org/dc/terms/"
-xmlns:fixi="http://fixprotocol.io/2016/fixinterfaces"
+xmlns:fixi="http://fixprotocol.io/2020/orchestra/interfaces"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://fixprotocol.io/2016/fixinterfaces FixInterfaces2016.xsd">
 ```
@@ -1906,8 +1903,8 @@ Example: "123.456"
 #### Date-time literals
 
 Date, time of day, and date-time literals are delimited by the \#
-character. The syntax within the delimiters is governed by standard ISO
-8601 "Date and time format".
+character. The syntax within the delimiters is governed by the standard
+[ISO 8601:2019](https://www.iso.org/standard/70907.html) "Date and time format".
 
 ##### Date literal
 
@@ -1915,11 +1912,11 @@ A date literal is of the form YYYY-MM-DD with a hyphen character
 separating the year, month and day parts. A date literal is of FIX
 datatype UTCDateOnly.
 
-Example date: "\#2017-03-21\#"
+Example date: \#2017-03-21\#
 
 ##### Time literal
 
-A time of day literal is of the form THH:MM:SS.FFFFFFFFFTZD with a colon
+A time of day literal is of the form HH:MM:SS.FFFFFFFFFTZD with a colon
 character separating the hour, minute and optional second parts. An
 optional fraction of a second follows a decimal point (period
 character). It may represent nanosecond precision. Finally, a time
@@ -1930,11 +1927,11 @@ of FIX datatype UTCTimeOnly.
 
 Example times:
 
-\#T09:58:24.123456789Z\#
+\#09:58:24.123456789Z\#
 
-\#T09:58:24Z\#
+\#09:58:24Z\#
 
-\#T09:58-06:00\#
+\#09:58-06:00\#
 
 ##### Date-time literal
 
@@ -1970,7 +1967,7 @@ Example durations:
 
 10 seconds: \#PT10S\#
 
-N.B. Month duration is recognized by the ISO 8601 syntax, but since
+N.B. Month duration is recognized by the [ISO 8601:2019](https://www.iso.org/standard/70907.html) syntax, but since
 months are of different numbers of days, the resulting duration is
 indeterminate without some context about how to count days.
 
