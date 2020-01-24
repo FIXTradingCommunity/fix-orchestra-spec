@@ -391,7 +391,7 @@ settings, such as a transport address.
 
 ## XML Schema (XSD)
 
-FIX Orchestra and Repository 2016 Edition share a common XML schema. The
+FIX Orchestra and Repository Edition share a common XML schema. The
 two forms are only distinguished by usage. If a file only contains
 message structures and message documentation, it may be referred to as a
 Repository file. If it additionally contains work flow, state variables,
@@ -432,6 +432,7 @@ xmlns="http://purl.org/dc/elements/1.1/"
 xmlns:fixr="http://fixprotocol.io/2020/orchestra/repository"
 xmlns:dc="http://purl.org/dc/terms/"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+xsi:schemaLocation="http://fixprotocol.io/2020/orchestra/repository FixRepository2020.xsd">
 ```
 
 #### Repository attributes
@@ -451,7 +452,7 @@ Several of the elements in the schema support XML Inclusions (XInclude). This al
 
 ### Supplementary documentation
 
-See the separate document “FixRepository2016.html” **[HK: where is it located?]** for a detailed
+See the separate document “FixRepository2020.html” for a detailed
 technical reference for the Orchestra and Repository XML schema. The
 remainder of this section serves as an overview and explains motivations
 for the design.
@@ -1750,12 +1751,12 @@ shows that element with required namespaces:
 <fixi:interfaces xmlns:dcterms="http://purl.org/dc/terms/"
 xmlns:fixi="http://fixprotocol.io/2020/orchestra/interfaces"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://fixprotocol.io/2016/fixinterfaces FixInterfaces2016.xsd">
+xsi:schemaLocation="http://fixprotocol.io/2020/orchestra/interfaces FixInterfaces2020.xsd">
 ```
 
 ### Supplementary documentation
 
-See the separate document “FixInterfaces2016.html” for a detailed
+See the separate document “FixInterfaces2020.html” for a detailed
 technical reference for the Interfaces XML schema. The remainder of this
 section serves as an overview and explains motivations for the design.
 
