@@ -76,9 +76,9 @@ Copyright 2013-2020 FIX Protocol Ltd., all rights reserved.
 
 [Interfaces](#interfaces)
 
-[Orchestra and Repository XML Schema](#orchestra-and-repository-xml-schema)
+[Orchestra Repository XML Schema](#orchestra-repository-xml-schema)
 
-[XML Schema (XSD)](#xml-schema-xsd)
+[Repository XML Schema (XSD)](#repository-xml-schema-xsd)
 
 [Unique identifiers](#unique-identifiers)
 
@@ -96,9 +96,9 @@ Copyright 2013-2020 FIX Protocol Ltd., all rights reserved.
 
 [Semantic Concepts](#semantic-concepts)
 
-[Interfaces XML Schema](#interfaces-xml-schema)
+[Orchestra Interfaces XML Schema](#orchestra-interfaces-xml-schema)
 
-[XML Schema (XSD)](#xml-schema-xsd)
+[Interfaces XML Schema (XSD)](#interfaces-xml-schema-xsd)
 
 [Score DSL](#score-dsl)
 
@@ -237,7 +237,7 @@ should be independent of encoding (presentation layer) and programming
 language.
 
 **XML schema**–defines the elements and attributes that may appear in an
-XML document. The Orchestra schema is defined in W3C (XSD) schema
+XML document. The Orchestra schemas are defined in W3C (XSD) schema
 language since it is the most widely adopted format for XML schemas.
 
 ## Documentation
@@ -270,7 +270,7 @@ In this document, the following formats are used for technical specifications
 and data examples.
 
 XML element and attribute names as well as FIX field and message names
-appear in this font: codeSet
+appear in this font: `codeSet`
 
 This is a sample XML snippet:
 
@@ -306,14 +306,11 @@ of dates, times, and time intervals in DSL expressions.
 
 # Metamodel
 
-One conceptual metamodel governs all representations of FIX Orchestra
-and Repository knowledge bases. The XML schema and any other
-representations that may be developed in future, such as semantic
-ontologies, should be considered implementations of this common
-metamodel.
+Orchestra is based on two metamodels. The repository metamodel contains concepts for message structures and workflow while the interfaces metamodel has concepts for service offerings and sessions.
 
-The metamodel presented does not strictly conform to the UML Meta-Object
-Facility architecture.
+Each of the two metamodels are implemented in their respective XML schemas. Any other representations that may be developed in future, such as semantic ontologies, should be considered implementations of these common metamodels.
+
+The metamodels presented do not strictly conform to the UML Meta-Object Facility architecture (MOF).
 
 ## Message structures
 
@@ -387,41 +384,37 @@ identifiers. It inherits services and protocols from its parent
 interface, but it may have further refinement or overrides of protocol
 settings, such as a transport address.
 
-# Orchestra and Repository XML Schema
+# Orchestra Repository XML Schema
+ 
+## Repository XML Schema (XSD)
 
-## XML Schema (XSD)
-
-FIX Orchestra and Repository Edition share a common XML schema. The
-two forms are only distinguished by usage. If a file only contains
-message structures and message documentation, it may be referred to as a
-Repository file. If it additionally contains work flow, state variables,
-conditional logic and so forth, then it is called an Orchestra file. In
-other words, Orchestra is a superset of Repository features.
+The Repository XML schema is used to control the format of XML files that
+describe message structures. Additionally it contains elements and attributes
+for work flow, state variables, conditional logic and so forth.
 
 ### Conformance
 
-All published Repository and Orchestra files **must** conform to the
-standard XML schema. This can be validated with common XML parsers and
+All published Orchestra repository files **must** conform to the
+standard repository XML schema. This can be validated with common XML parsers and
 related tools.
 
 ### Schema location
 
 The XML schema is currently available in GitHub project fix-orchestra module
-[repository2016](https://github.com/FIXTradingCommunity/fix-orchestra/tree/master/repository2016).
-Upon promotion to draft standard, it will be made available at a URI
-consistent with its XML namespace.
+[repository](https://github.com/FIXTradingCommunity/fix-orchestra/tree/master/repository).
+It will be made available via the web at a URL consistent with its XML namespace.
 
 ### Root element
 
-The root element an Orchestra XML file is `<repository>`. An Orchestra
+The root element an Orchestra respository XML file is `<repository>`. An Orchestra
 repository file contains all the message structures and workflow
 elements pertaining to a single protocol version. If an organization
 supports multiple versions of FIX, it should supply an Orchestra file
 for each.
 
-The name attribute of `<repository>` identifies an implementation of a
+The `name` attribute of `<repository>` identifies an implementation of a
 protocol. The name should remain stable over minor revisions. The
-version attribute should, on the other hand, be unique for any
+`version` attribute should, on the other hand, be unique for any
 substantive change to the protocol.
 
 This snippet shows that element with required namespaces and attributes:
@@ -437,14 +430,14 @@ xsi:schemaLocation="http://fixprotocol.io/2020/orchestra/repository FixRepositor
 
 #### Repository attributes
 
-Attributes of the whole repository are set on the root element. The name
-and version attributes are required. Name should be stable even when
+Attributes of the whole repository are set on the root element. The `name`
+and `version` attributes are required. Name should be stable even when
 minor changes are made to an Orchestra file while version should be
 updated for incremental changes.
 
 By default, the language for conditional expressions is the Score DSL
 (See section [Score DSL](#score-dsl) below). However, this may be overridden by setting a value
-to the attribute expressionLanguage.
+to the attribute `expressionLanguage`.
 
 ### Support for XInclude
 
@@ -486,7 +479,7 @@ publisher, date, and rights.
 	<dc:publisher>FIX Trading Community</dc:publisher>
 	<dc:rights>Copyright 2019, FIX Protocol, Limited</dc:rights>
 	<dc:date>2019-01-09T16:09:16.904-06:00</dc:date>
-	<dc:format>Repository 2016 Edition</dc:format>
+	<dc:format>Orchestra repository</dc:format>
 	<dc:contributor>RepositoryCompressor</dc:contributor>
 </fixr:metadata>
 ```
@@ -494,12 +487,17 @@ publisher, date, and rights.
 ### Pedigree
 
 Most message elements in the schema support a complete history of
-creation, change and deprecation with support of attribute group
-entityAttribGrp. Each historical event is qualified by its protocol
-version and optionally, extension pack (EP), an interim publication
-between major versions.
+creation, change and potentially deprecation with support of attribute group
+`entityAttribGrp`. Each historical event should be qualified by its extension pack (EP). In the past, they were also qualified by protocol version. However, each EP now produces FIX Latest; protocol versions will no longer change.
 
-**Example:** Code element with pedigree.
+**Example:** A field that was added and updated
+
+```xml
+<fixr:field type="String" id="17" name="ExecID" abbrName="ExecID" added="FIX.2.7" updated="FIX.5.0SP1" updatedEP="95">
+		
+```
+
+**Example:** Code element that was deprecated
 
 ```xml
 <code value="3" name="LocalCommission" added="FIX.4.0"
@@ -514,13 +512,13 @@ documentation and other outputs. These elements are optional.
 ### Categories
 
 The `<categories>` element tree is used to associate FIX elements to
-business classifications, such as single general order handling, market data, and so
+business areas, such as single general order handling, market data, and so
 forth, for documentation generation. Also, categories are used to
 organize FIXML schema files.
 
 ### Sections
 
-The `<sections>` element tree names document volumes. Traditionally,
+The `<sections>` element tree names higher level business processes. Typically, a section containes multiple categories. Traditionally,
 they have been organized around pre-trade, trade, and post-trade
 information flows.
 
@@ -540,8 +538,8 @@ free-form content. Tools such as XSLT may be used to extract
 documentation from an Orchestra file and compile external documents.
 
 Multiple languages can be supported by specifying the language of each
-element in its langId attribute. Also, multiple categories of
-documentation are supported by populating the purpose attribute.
+element in its `langId` attribute. Also, multiple categories of
+documentation are supported by populating the `purpose` attribute.
 Suggested values of purpose include "SYNOPSIS", "ELABORATION",
 "EXAMPLE", and "DISPLAY".
 
@@ -558,7 +556,7 @@ Suggested values of purpose include "SYNOPSIS", "ELABORATION",
 ```
 
 Optionally, a `<documentation>` element may be qualified by media type to
-support rich text. The default value of attribute contentType is
+support rich text. The default value of attribute `contentType` is
 "text/plain". If a rich text encoding is embedded in the XML document,
 appropriate XML namespaces may be required. An Orchestra file may be
 rendered as polyglot markup, meaning that it is well-formed as both
@@ -597,19 +595,19 @@ Alternatively, documentation elements may set the media type in the `contentType
 
 The `<appinfo>` element is similar to `<documentation>` in that it can
 support multiple languages and multiple purposes. It has an additional
-attribute, specURL, to cross-reference external documentation.
+attribute, `specURL`, to cross-reference external documentation.
 
 ### Rendering hints
 
-The optional attribute rendering may be used to suggest how a message or
+The optional attribute `rendering` may be used to suggest how a message or
 element should be generated or rendered in a user interface. The value
 of the attribute is free-form and is not validated by the Orchestra
 schema.
 
 ## Unique identifiers
 
-Practically all elements in the XML schema have a name attribute, a
-numeric id attribute or both. These values must be unique within their
+Practically all elements in the XML schema have a `name` attribute, a
+numeric `id` attribute or both. These values must be unique within their
 respective element types within a given Orchestra file. To avoid
 collisions, names and IDs of deprecated elements should never be reused.
 
@@ -635,7 +633,7 @@ a FIX datatype may be mapped to any number of wire formats (see the [datatype ma
 section below).
 
 A datatype may optionally inherit properties from a type specified by
-the baseType attribute. For example, Qty datatype, used by fields like
+the `baseType` attribute. For example, Qty datatype, used by fields like
 OrderQty(38), has baseType of float, a more generic FIX datatype.
 
 Generally, FIX datatypes for FIX protocols need to be defined only once and
@@ -649,8 +647,8 @@ corresponding to any number of type systems. Type systems include XML,
 SBE, GPB, JSON, and ISO 11404, a generic type taxonomy. An XML schema
 mapping is obviously needed by FIXML.
 
-The standard attribute of `<datatype>` tells which type system the
-mapping is for. Its base attribute tells what the FIX datatype maps to
+The `standard` attribute of `<datatype>` tells which type system the
+mapping is for. Its `base` attribute tells what the FIX datatype maps to
 in the particular standard. For example, FIX type Qty maps to XML schema
 type xs:decimal.
 
@@ -670,7 +668,7 @@ from ISO 11404, but mapping to the generic standard is more precise and
 comprehensive than filtering it through the XML interpretation.)
 
 The lower and upper bounds of a bounded datatype may be set with
-minInclusive and maxExclusive attributes.
+`minInclusive` and `maxExclusive` attributes.
 
 **Example:** A FIX datatype with mappings to XML schema and General-Purpose Datatypes.
 
@@ -705,7 +703,7 @@ as character “2” and then character “7”.
 
 A `<codeSets>` element contains any number of `<codeSet>` child
 elements. The schema allows multiple instances of `<codeSets>`
-containers, each with a unique name attribute.
+containers, each with a unique `name` attribute.
 
 The names of code sets and datatypes share a common namespace and must
 be unique within a schema. This constraint is enforced by the XML
@@ -720,13 +718,13 @@ explicitly.
 #### Codes
 
 An internal `<codeSet>` is a container for `<code>` elements. In the
-schema, each code has a name attribute to tell its logical name, and a
-value attribute to tell its value on the wire. Additionally, each
-`<code>` element has a numeric id attribute.
+schema, each code has a `name` attribute to tell its logical name, and a
+`value` attribute to tell its value on the wire. Additionally, each
+`<code>` element has a numeric `id` attribute.
 
 Codes may be added to a code set over time, or existing codes may be
 deprecated. The history of codes within a code set may be recorded using
-the pedigree attributes of attribute group entityAttribGrp.
+the pedigree attributes of attribute group `entityAttribGrp`.
 
 Codes may be documented with an `<annotation>` element tree.
 
@@ -746,12 +744,12 @@ scenario="base">
 Code sets may have different supported codes in different scenarios. For
 example, outbound ExecutionReport(35=8) messages may have more enriched view
 of PartyRole(452) than is required on inbound order messages. Therefore, a
-`<codeset>` may be qualified by its scenario attribute. The default
-value of scenario is “base”, so the attribute need not be supplied if
+`<codeset>` may be qualified by its `scenario` attribute. The default
+value of `scenario` is “base”, so the attribute need not be supplied if
 there is only one form of a codeset.
 
 Uniqueness of codeset scenarios is enforced by the XML schema, both as
-the combination of name + scenario as well as id + scenario.
+the combination of `name` + `scenario` as well as `id` + `scenario`.
 
 ### External code sets
 
@@ -760,7 +758,7 @@ include currency, language, and country codes defined by another
 standard. This is called an external code set because the valid values
 are maintained by the external standard, not within the Repository or
 Orchestra file. To provide a reference to an external standard, use
-`<codeSet>` attribute specUrl. Additional references can be supplied
+`<codeSet>` attribute `specUrl`. Additional references can be supplied
 with `<annotation>` elements.
 
 In the case of an external code set, `<code>` elements are not listed in
@@ -781,14 +779,14 @@ FIX specifications or another protocol. In the schema, a `<field>` element
 is contained by parent element `<fields>`. The collection of fields
 should be thought of as an append-only list; the id of a deprecated
 field must not be reused. The pedigree attributes of attribute group
-entityAttribGrp are used to tell the history of a field, including the
+`entityAttribGrp` are used to tell the history of a field, including the
 protocol version in which it was added.
 
 In FIX, a field has two unique identifiers, numeric id, also known as
 "tag", and a descriptive string name.
 
 Like other message elements, a field may be documented with an
-`<annotation>` element tree as described above. Also, the baseCategory
+`<annotation>` element tree as described above. Also, the `baseCategory`
 attribute may be used to categorize fields. There are several more
 optional attributes which are described in the message structure section
 below.
@@ -797,20 +795,20 @@ below.
 
 Fields may have different scenarios either to vary annotations or to use
 different code set scenarios for different use cases. The default value
-of scenario is “base”, so the attribute need not be supplied if there is
+of `scenario` is “base”, so the attribute need not be supplied if there is
 only one form of a field.
 
 Uniqueness of field scenarios is enforced by the XML schema, both as the
-combination of name + scenario as well as id + scenario.
+combination of `name` + `scenario` as well as `id` + `scenario`.
 
 ### Data domain of a field
 
 Every field must have a data domain of either a `<datatype>` name or more
 specifically, a collection of valid values specified by a `<codeSet>`
 reference. In either case, the domain of a field is specified in its
-type attribute. The attribute type refers to either a `<datatype>`
-element or a `<codeSet>` element by its name attribute. In the case of a
-`<codeSet>`, there is a level of indirection to its type attribute to
+`type` attribute. The attribute `type` refers to either a `<datatype>`
+element or a `<codeSet>` element by its `name` attribute. In the case of a
+`<codeSet>`, there is a level of indirection to its `type` attribute to
 arrive at a `<datatype>`.
 
 Since `<codeSet>` is also qualified by scenario, a field will link to
@@ -942,14 +940,14 @@ overloaded for slightly different layouts for different scenarios.
 
 #### Component identifiers
 
-Like a field, a component or group has a numeric id attribute and a
-string name attribute. The schema enforces uniqueness of the id
-attribute among both types of components.
+Like a field, a component has a numeric `id` attribute and a
+string `name` attribute. The schema enforces uniqueness of the `id` and `name`
+attributes among components.
 
-Like a field, a component or group can be annotated for documentation
-and carries pedigree attributes of attribute group entityAttribGrp.
+Like a field, a component can be annotated for documentation
+and carries pedigree attributes of attribute group `entityAttribGrp`.
 
-The scenario attribute of a component identifies a use case; multiple
+The `scenario` attribute of a component identifies a use case; multiple
 components may have the same name, but the combination of name and
 scenario must be unique. Scenario has a default value of “base”, so if a
 component only has one variation, there is no need to qualify it.
@@ -996,7 +994,7 @@ element to specify the associated NumInGroup field by id,
 `<numInGroup>`.
 
 Limits on the size of a repeating group may optionally be specified with
-implMinOccurs and implMaxOccurs attributes. If those attributes are not
+`implMinOccurs` and `implMaxOccurs` attributes. If those attributes are not
 present, then the repeating has unbound size.
 
 **Example:** A repeating group with member fields and reference to the NumInGroup field.
@@ -1019,18 +1017,18 @@ combination. A component must contain at least one member.
 
   - A `<fieldRef>` element represents a field in a block or repeating
     group. It is a reference to a `<field>` element within the
-    `<fields>` container by its id and scenario attributes.
+    `<fields>` container by its `id` and `scenario` attributes.
 
   - A `<componentRef>` element represents a nested component. There is
     no limit in the schema to the level of nesting, although a
     presentation protocol may have rules about it, and there may be
     practical limits. The reference must match the referenced
-    `<component>` on both id and scenario attributes.
+    `<component>` on both `id` and `scenario` attributes.
 
   - A `<groupRef>` element similarly refers to a nested `<group>`
-    repeating group element by its id and scenario attributes. Limits of
+    repeating group element by its `id` and `scenario` attributes. Limits of
     the size of a particular instance of a repeating group may be
-    overridden by setting implMinOccurs and implMaxOccurs attributes on
+    overridden by setting `implMinOccurs` and `implMaxOccurs` attributes on
     the `<groupRef>` element.
 
 **Example:** A component with all kinds of members.
@@ -1072,7 +1070,7 @@ scenario="base" presence="optional"/>
 
 ### Presence
 
-Each of the members of a component or message, namely `<fieldRef>`, `<componentRef>` or `<groupRef>`, have a presence attribute. The
+Each of the members of a component or message, namely `<fieldRef>`, `<componentRef>` or `<groupRef>`, have a `presence` attribute. The
 possible values of presence are:
 
   - **required**—the member MUST always be present in a message.
@@ -1086,6 +1084,8 @@ possible values of presence are:
     receiving party, and thus, no validation is performed on it.
 
   - **constant**—the field has a constant value.
+
+The receiver of a message with a forbidden element or lacking a required element may reject it using appropriate actions defined by the rules of engagement.
 
 #### Constant field value
 
@@ -1121,12 +1121,12 @@ Market, then StopPx(99) is not required.
 
 The condition that tells when a conditionally required field is required
 is contained by a `<rule>` element tree under a `<fieldRef>`. A `<rule>`
-element may contain an override of presence as well as certain other
+element may contain an override of `presence` as well as certain other
 field attributes. Each rule is specified by a `<when>` element that
 gives the condition for the override. The XML content (text node) of the
 `<when>` element is a conditional expression that follows a grammar
 described in the conditional expressions section below. The attribute
-override such as presence=″required″ attribute is applied to the
+override such as `presence=″required″` attribute is applied to the
 `<when>` element.
 
 **Example:** Rules for a conditionally required field.
@@ -1175,18 +1175,18 @@ To require *all* of the members to be present, set `presence="required"` on each
 A message in an Orchestra file describes a unit to be sent on the wire
 between counterparties.
 
-Like a `<component>`, a `<message>` element has id and name attributes.
-It also has an msgType attribute, a short name. In tag=value encoding,
+Like a `<component>`, a `<message>` element has `id` and `name` attributes.
+It also has an `msgType` attribute, a short name. In tag=value encoding,
 msgType is the value of the FIX field MsgType(35).
 
 In FIX, a single MsgType(35) value is often reused for multiple use cases. For example,
 an ExecutionReport(35=8), is overloaded for acceptance of an
 order, rejection, execution, cancel confirmation, etc. In the Orchestra
-schema, the scenario attribute is used to name each of those use cases.
+schema, the `scenario` attribute is used to name each of those use cases.
 Each of the variations of a single MsgType(35) value can have slightly different message
 structures.
 
-Another attribute of `<message>` called flow ties a message to an
+Another attribute of `<message>` called `flow` ties a message to an
 exchange of messages between actors.
 
 #### Message structure
@@ -1225,7 +1225,7 @@ versus a cancel-confirmation use case. The attribute that names a use
 case is scenario. If no scenario is explicitly given, it defaults to
 "base".
 
-The combination of id and scenario attributes must be unique.
+The combination of `id` and `scenario` attributes must be unique.
 
 #### Responses
 
@@ -1249,10 +1249,10 @@ Conditional expressions are used in Orchestra:
   - To tell when a conditionally required field is required
     (presence=required);
 
-  - To tell when a field attribute aside from presence is overridden,
-    such as setting the range of valid values with minInclusive and
-    maxInclusive attributes. It can even tell when to override the type
-    of a field. For example, the type of SecurityID(48) could be overridden,
+  - To tell when a field attribute aside from `presence` is overridden,
+    such as setting the range of valid values with `minInclusive` and
+    `maxInclusive` attributes. It can even tell when to override the `type`
+    of a field. For example, the `type` of SecurityID(48) could be overridden,
     depending on the value of SecurityIDSource(22). Some kinds of SecurityID(48) values are strings while others are numeric;
 
   - To tell when a specific workflow response should be sent or other
@@ -1338,7 +1338,7 @@ generate different values of an attribute under different conditions.
 
 The attributes of a `<fieldRef>` that can be controlled by a rule
 include type and any member of the fieldAttribGrp attribute group. That
-group includes the presence attribute and attributes to control the length of a field.
+group includes the `presence` attribute and attributes to control the length of a field.
 A rule about presence tells when a conditionally required field is
 required.
 
@@ -1346,8 +1346,8 @@ required.
 
 Orchestra has several ways to specify when a field value is valid. One
 is to set a field’s type to a code set that lists all valid values.
-Another is to set a valid range using attributes minInclusive and
-maxInclusive.
+Another is to set a valid range using attributes `minInclusive` and
+`maxInclusive`.
 
 More complex rules can be written under a `<fieldRef>` that reference
 the values of other fields or the state variables of actors. Rules can
@@ -1413,8 +1413,8 @@ originator or receiver of a message.
 ### Scenarios
 
 A scenario is one use case of a specific message type, as identified by
-key attributes name and msgType in the messageAttribGrp attribute group
-supported by `<message>`. A scenario name is stored in the scenario
+key attributes `name` and `msgType` in the `messageAttribGrp` attribute group
+supported by `<message>`. A scenario name is stored in the `scenario`
 attribute of `<message>`. If there is only one use case for a message
 type, then scenario need not be populated. It defaults to "base".
 Scenarios must be unique per message type and it is an error to have
@@ -1434,7 +1434,7 @@ own message contents in its `<structure>` child element and its own
 
 The task of mapping an actual received message to a scenario declaration
 in Orchestra is left to implementations. The first level of matching is
-on the msgType attribute. However, that message type may have
+on the `msgType` attribute. However, that message type may have
 several scenarios. Pattern matching strategies might include comparing a
 message to expected required fields, mapping values of a distinguishing
 field like ExecType(150) to its code set literals, and so forth.
@@ -1447,7 +1447,7 @@ session behavior. An actor can take actions such as assigning state or
 transitioning a state machine. If it represents a session counterparty,
 it can send FIX messages. Also, actions can be time dependent. An
 Orchestra file may declare any number of actors within the `<actors>`
-parent element. The name attribute of an `<actor>` element must be
+parent element. The `name` attribute of an `<actor>` element must be
 unique within an Orchestra file.
 
 #### State variables
@@ -1455,7 +1455,7 @@ unique within an Orchestra file.
 Actors can hold state variables in the form of FIX fields. That is, each
 state variable has an id and name for identification and a value of a
 FIX datatype. Like any field, valid values can be constrained to a code
-set or range. The datatype or code set is declared in the type
+set or range. The datatype or code set is declared in the `type`
 attribute, just like any field.
 
 If a state variable corresponds to a standard FIX field, it can be
@@ -1486,7 +1486,7 @@ state machine, as `<initial>` element. It is an error to declare more
 than one initial state. Some state changes are allowed and others
 disallowed; changes can only be made through explicitly declared
 transitions. A `<transition>` child of a `<state>` or `<initial>` gives
-the name of the new state of the state machine in its target attribute.
+the name of the new state of the state machine in its `target` attribute.
 
 States and transitions must have unique names within a state machine.
 
@@ -1522,7 +1522,7 @@ An event can fire when a timer expires to affect other states or send a
 message.
 
 Like a state machine, a `<timer>` is the child of an `<actor>`, and it
-has a name attribute.
+has a `name` attribute.
 
 ### Flows
 
@@ -1533,12 +1533,12 @@ message exchange behavior. It is intended to be session and transport
 protocol independent. Multiple application flows may be multiplexed in a
 FIX session.
 
-A `<flow>` is identified by its name attribute. It must have a source
-and a destination attribute, and both of those must match the name of an
-`<actor>` element. The messageCast attribute defaults to unicast, but
+A `<flow>` is identified by its `name` attribute. It must have a `source`
+and a `destination` attribute, and both of those must match the `name` of an
+`<actor>` element. The `messageCast` attribute defaults to unicast, but
 may be set to multicast.
 
-The optional reliability attribute describes the delivery guarantee of
+The optional `reliability` attribute describes the delivery guarantee of
 messages on the flow. It takes one of these values:
 
   - **bestEffort**—no delivery guarantee
@@ -1587,7 +1587,7 @@ unconditional.
 #### Message response
 
 A `<messageRef>` child of a response represents a reply to the received
-message. Its name, msgType and scenario attributes are the combined key
+message. Its name, `msgType` and `scenario` attributes are the combined key
 to a matching `<message>` to send.
 
 An optional `<identifiers>` element contains one or more correlations
@@ -1596,7 +1596,7 @@ the following relationships between chains of messages, such as between an
 order and its executions. Each child `<correlate>` element supplies the
 id of a field that is common to a message and its response. By default,
 a common identifier is assumed to be in the same field in the message
-and its response. If it is in different fields, then the id attribute
+and its response. If it is in different fields, then the `id` attribute
 applies to the response message and sourceId applies to original
 message. Also, it is possible to assign new identifiers in the response
 message. The element `<assign>` is used to describe that case.
@@ -1638,7 +1638,7 @@ variables to change in the form of an assignment expression.
 
 A `<trigger>` element represents a state machine transition, invoked
 when a message is received. Its statemachine attribute identifies the
-name of the state machine, and its name attribute refers to the name of a
+name of the state machine, and its `name` attribute refers to the name of a
 `<transition>` within that state machine.
 
 **Example:** Invoking a state machine transition: the market resumes after a halt.
@@ -1650,7 +1650,7 @@ name of the state machine, and its name attribute refers to the name of a
 #### Timer operation response
 
 A `<timerSchedule>` element invokes an operation to either start or
-cancel a timer. The name attribute refers to the name of the timer,
+cancel a timer. The `name` attribute refers to the name of the timer,
 the operation tells whether to start or cancel, and interval gives the
 elapsed time. Interval is expressed in the lexical space of XML schema
 type duration. That type includes the magnitude and time unit of the
@@ -1738,7 +1738,7 @@ schema. This can be validated with common XML parsers and related tools.
 ### Schema location
 
 The XML schema is currently available in GitHub project fix-orchestra module
-[interfaces2016](https://github.com/FIXTradingCommunity/fix-orchestra/tree/master/repository2016).
+[interfaces](https://github.com/FIXTradingCommunity/fix-orchestra/tree/master/interfaces).
 Upon promotion to draft standard, it will be made available at a URI
 consistent with its XML namespace.
 
@@ -1803,7 +1803,7 @@ service offerings and all the protocols that make up a communication
 stack. A service offering is exposed as a `<service>` element, and
 protocols are given as elements for each layer of a stack. Also, an
 interface may contain any number of session configurations under its
-child `<sessions>` element. An `<interface>` element has a name
+child `<sessions>` element. An `<interface>` element has a `name`
 attribute.
 
 ### Protocols
@@ -1814,12 +1814,12 @@ stack. The children are `<userInterface>`, `<encoding>`,
 may have multiple instances of a protocol. For example, a session may
 use primary and secondary transports.
 
-Any message-oriented protocol may have an orchestration attribute that
+Any message-oriented protocol may have an `orchestration` attribute that
 consists of a URI. It is a link to an Orchestra file that describes
 message structures and workflow. A URI may link to a web resource or a
 local file.
 
-All the protocol elements have name and version attributes.
+All the protocol elements have `name` and `version` attributes.
 
 ### Service
 
@@ -1830,8 +1830,8 @@ of XML protocolType, carrying the same attributes as other protocols.
 
 The `<transport>` element is derived from XML protocolType but has
 additional attributes address, messageCast and use. The optional
-messageCast attribute has an enumeration of values: unicast, multicast
-and broadcast. The optional use attribute can have values primary,
+`messageCast` attribute has an enumeration of values: unicast, multicast
+and broadcast. The optional `use` attribute can have values primary,
 secondary and alternate.
 
 ### Session
@@ -2271,7 +2271,7 @@ compliant.
 
 At minimum, a compliant application:
 
-  - Must conform to the XML schema published in the GitHub fix-orchestra
+  - Must conform to the XML schemas published in the GitHub fix-orchestra
     project.
 
   - Must conform to the DSL grammar published in the GitHub project.
