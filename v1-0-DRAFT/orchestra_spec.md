@@ -1517,12 +1517,23 @@ expression and a transition can be invoked by an assignment expression.
 
 #### Timers
 
-Some application layer and session layer behaviors are time dependent.
-An event can fire when a timer expires to affect other states or send a
-message.
+Some application layer and session layer behaviors are time dependent. An event can fire when a timer expires to affect other states or send a message.
 
-Like a state machine, a `<timer>` is the child of an `<actor>`, and it
-has a `name` attribute.
+Like a state machine, a `<timer>` is the child of an `<actor>`, and it has a `name` attribute.
+
+**Example:** A timer declaration
+```xml
+<fixr:timer name="expirationTimer"/>
+```
+
+**Example:** A timer operation to start a timer that triggers a transition in a state machine. Other events could cancel the timer.
+```xml
+<fixr:timerSchedule actor="Market" name="expirationTimer" operation="START">
+	<fixr:activity>
+		<fixr:trigger stateMachine="OrderState" actor="Market" name="Expired"/>
+	</fixr:activity>
+</fixr:timerSchedule>
+```
 
 ### Flows
 
