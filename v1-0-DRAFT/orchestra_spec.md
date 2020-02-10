@@ -1,122 +1,4 @@
 
-<!--
-![](media/FIXorchestraLogo.png)
-
-FIX Orchestra Technical Specification
-
-Version 1.0 Draft Standard
-
-**THIS DOCUMENT IS A DRAFT STANDARD FOR A PROPOSED FIX TECHNICAL STANDARD. A DRAFT STANDARD HAS BEEN APPROVED BY THE GLOBAL TECHNICAL COMMITTEE AS THE FINAL STEP IN CREATING A NEW FIX TECHNICAL STANDARD. POTENTIAL ADOPTERS ARE STRONGLY ENCOURAGED TO BEGIN WORKING WITH THE DRAFT STANDARD AND TO PROVIDE FEEDBACK TO THE GLOBAL TECHNICAL COMMITTEE AND THE WORKING GROUP THAT SUBMITTED THE PROPOSAL. THE FEEDBACK TO THE DRAFT STANDARD WILL DETERMINE WHEN TWO INTEROPERABLE IMPLEMENTATIONS HAVE BEEN ESTABLISHED AND THE DRAFT STANDARD CAN BE PROMOTED TO BECOME A NEW FIX TECHNICAL STANDARD.**
-
-DISCLAIMER
-
-THE INFORMATION CONTAINED HEREIN AND THE FINANCIAL INFORMATION EXCHANGE
-PROTOCOL (COLLECTIVELY, THE "FIX PROTOCOL") ARE PROVIDED "AS IS" AND NO
-PERSON OR ENTITY ASSOCIATED WITH THE FIX PROTOCOL MAKES ANY
-REPRESENTATION OR WARRANTY, EXPRESS OR IMPLIED, AS TO THE FIX PROTOCOL
-(OR THE RESULTS TO BE OBTAINED BY THE USE THEREOF) OR ANY OTHER MATTER
-AND EACH SUCH PERSON AND ENTITY SPECIFICALLY DISCLAIMS ANY WARRANTY OF
-ORIGINALITY, ACCURACY, COMPLETENESS, MERCHANTABILITY OR FITNESS FOR A
-PARTICULAR PURPOSE. SUCH PERSONS AND ENTITIES DO NOT WARRANT THAT THE
-FIX PROTOCOL WILL CONFORM TO ANY DESCRIPTION THEREOF OR BE FREE OF
-ERRORS. THE ENTIRE RISK OF ANY USE OF THE FIX PROTOCOL IS ASSUMED BY THE
-USER.
-
-NO PERSON OR ENTITY ASSOCIATED WITH THE FIX PROTOCOL SHALL HAVE ANY
-LIABILITY FOR DAMAGES OF ANY KIND ARISING IN ANY MANNER OUT OF OR IN
-CONNECTION WITH ANY USER'S USE OF (OR ANY INABILITY TO USE) THE FIX
-PROTOCOL, WHETHER DIRECT, INDIRECT, INCIDENTAL, SPECIAL OR CONSEQUENTIAL
-(INCLUDING, WITHOUT LIMITATION, LOSS OF DATA, LOSS OF USE, CLAIMS OF
-THIRD PARTIES OR LOST PROFITS OR REVENUES OR OTHER ECONOMIC LOSS),
-WHETHER IN TORT (INCLUDING NEGLIGENCE AND STRICT LIABILITY), CONTRACT OR
-OTHERWISE, WHETHER OR NOT ANY SUCH PERSON OR ENTITY HAS BEEN ADVISED OF,
-OR OTHERWISE MIGHT HAVE ANTICIPATED THE POSSIBILITY OF, SUCH DAMAGES.
-
-**DRAFT OR NOT RATIFIED PROPOSALS** (REFER TO PROPOSAL STATUS AND/OR
-SUBMISSION STATUS ON COVER PAGE) ARE PROVIDED "AS IS" TO INTERESTED
-PARTIES FOR DISCUSSION ONLY. PARTIES THAT CHOOSE TO IMPLEMENT THIS DRAFT
-PROPOSAL DO SO AT THEIR OWN RISK. IT IS A DRAFT DOCUMENT AND MAY BE
-UPDATED, REPLACED, OR MADE OBSOLETE BY OTHER DOCUMENTS AT ANY TIME. THE
-FIX GLOBAL TECHNICAL COMMITTEE WILL NOT ALLOW EARLY IMPLEMENTATION TO
-CONSTRAIN ITS ABILITY TO MAKE CHANGES TO THIS SPECIFICATION PRIOR TO
-FINAL RELEASE. IT IS INAPPROPRIATE TO USE FIX WORKING DRAFTS AS
-REFERENCE MATERIAL OR TO CITE THEM AS OTHER THAN “WORKS IN PROGRESS”.
-THE FIX GLOBAL TECHNICAL COMMITTEE WILL ISSUE, UPON COMPLETION OF REVIEW
-AND RATIFICATION, AN OFFICIAL STATUS ("APPROVED") OF/FOR THE PROPOSAL
-AND A RELEASE NUMBER.
-
-No proprietary or ownership interest of any kind is granted with respect
-to the FIX Protocol (or any rights therein).
-
-Copyright 2013-2020 FIX Protocol Ltd., all rights reserved.
-
-<a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nd/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">FIX Orchestra Technical Specification</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://www.fixtrading.org/" property="cc:attributionName" rel="cc:attributionURL">FIX Protocol Ltd.</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/">Creative Commons Attribution-NoDerivatives 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/FIXTradingCommunity/fix-orchestra-spec" rel="dct:source">https://github.com/FIXTradingCommunity/fix-orchestra-spec</a>.
-
-# Table of Contents
-
-[Introduction](#introduction)
-
-[Objectives](#objectives)
-
-[Protocol coverage](#protocol-coverage)
-
-[Design principles](#design-principles)
-
-[Glossary](#glossary)
-
-[Documentation](#documentation)
-
-[Specification terms](#specification-terms)
-
-[References](#references)
-
-[Metamodel](#metamodel)
-
-[Message structures](#message-structures)
-
-[Interfaces](#interfaces)
-
-[Orchestra Repository XML Schema](#orchestra-repository-xml-schema)
-
-[Repository XML Schema (XSD)](#repository-xml-schema-xsd)
-
-[Unique identifiers](#unique-identifiers)
-
-[Datatypes](#datatypes)
-
-[Code sets](#code-sets)
-
-[Fields](#fields)
-
-[Message structures](#message-structures)
-
-[Expressions](#expressions)
-
-[Workflow](#workflow)
-
-[Semantic Concepts](#semantic-concepts)
-
-[Orchestra Interfaces XML Schema](#orchestra-interfaces-xml-schema)
-
-[Interfaces XML Schema (XSD)](#interfaces-xml-schema-xsd)
-
-[Score DSL](#score-dsl)
-
-[Grammar](#grammar)
-
-[Syntax errors](#syntax-errors)
-
-[Semantic errors](#semantic-errors)
-
-[Semantic Representation](#semantic-representation)
-
-[Usage Guidelines](#usage-guidelines)
-
-[Examples](#examples)
-
-[Appendix](#appendix)
--->
-
 # Introduction
 
 ![](media/FIXorchestraLogo.png)
@@ -354,7 +236,9 @@ code set abstraction is described in that standard as “state” type.
 The interface metamodel is an abstraction of service offerings and
 session provisioning. This UML model depicts the main classes.
 
-![](media/Interfaces.png)
+![](media/Interfaces-1.png)
+
+![](media/Interfaces-2.png)
 
 ### Interface abstractions
 
@@ -385,7 +269,7 @@ interface, but it may have further refinement or overrides of protocol
 settings, such as a transport address.
 
 # Orchestra Repository XML Schema
- 
+
 ## Repository XML Schema (XSD)
 
 The Repository XML schema is used to control the format of XML files that
@@ -479,7 +363,7 @@ publisher, date, and rights.
 	<dc:publisher>FIX Trading Community</dc:publisher>
 	<dc:rights>Copyright 2019, FIX Protocol, Limited</dc:rights>
 	<dc:date>2019-01-09T16:09:16.904-06:00</dc:date>
-	<dc:format>Orchestra repository</dc:format>
+	<dc:format>Orchestra Repository</dc:format>
 	<dc:contributor>RepositoryCompressor</dc:contributor>
 </fixr:metadata>
 ```
@@ -494,7 +378,7 @@ creation, change and potentially deprecation with support of attribute group
 
 ```xml
 <fixr:field type="String" id="17" name="ExecID" abbrName="ExecID" added="FIX.2.7" updated="FIX.5.0SP1" updatedEP="95">
-		
+
 ```
 
 **Example:** Code element that was deprecated
@@ -2229,14 +2113,6 @@ Implementations should throw an exception in these cases:
 
   - A variable or message element referenced by an expression does not
     exist.
-
-# Semantic Representation
-
-\[OWL representation to come\]
-
-# Usage Guidelines
-
-\[to come\]
 
 # Examples
 
