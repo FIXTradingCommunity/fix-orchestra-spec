@@ -308,7 +308,7 @@ This snippet shows that element with required namespaces and attributes:
 xmlns="http://purl.org/dc/elements/1.1/"
 xmlns:fixr="http://fixprotocol.io/2020/orchestra/repository"
 xmlns:dc="http://purl.org/dc/terms/"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://fixprotocol.io/2020/orchestra/repository FixRepository2020.xsd">
 ```
 
