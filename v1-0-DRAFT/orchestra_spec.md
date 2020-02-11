@@ -199,7 +199,7 @@ The metamodels presented do not strictly conform to the UML Meta-Object Facility
 The UML metamodel depicted below is a conceptual view of message
 structures.
 
-![](media/FIX Repository MetaModel.png)
+![](media/FIX-Repository-MetaModel.png)
 
 ### Message structure abstractions
 
