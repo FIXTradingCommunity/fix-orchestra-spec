@@ -461,6 +461,7 @@ abbrName="Acct">
 		</fixr:documentation>
 	</fixr:annotation>
 </fixr:field>
+
 ```
 
 Alternatively, documentation elements may set the media type in the `contentType` attribute to any text encoding registered with IANA.
@@ -719,7 +720,6 @@ attribute.
 
 ```xml
 <field added="FIX.2.7" id="95" name="RawDataLength" type="Length"/>
-
 <field added="FIX.2.7" id="96" name="RawData" type="data" lengthId="95"/>
 ```
 
@@ -778,6 +778,7 @@ A globally unique value is required for all instances of a field.
     <fixr:unique/>  
   </fixr:rule>
 </fixr:field>
+
 ```
 
 A key field provides the scope of uniqueness.
@@ -792,6 +793,7 @@ A key field provides the scope of uniqueness.
     </fixr:unique>  
   </fixr:rule>
 </fixr:fieldRef>
+
 ```
 
 A combination of fields defines scope of uniqueness.
@@ -865,6 +867,7 @@ order on the wire.
       </fixr:documentation>
 </fixr:component>
 ```
+
 #### Repeating group
 
 A repeating group is like a common block but with one additional
@@ -1258,6 +1261,7 @@ violations.
 	<fixr:when>(Price * 100) % 5 != 0</fixr:when>
 	</fixr:rule>
 </fixr:fieldRef>
+
 ```
 
 **Example:** A state variable to hold rule violations.
@@ -1408,6 +1412,7 @@ Like a state machine, a `<timer>` is the child of an `<actor>`, and it has a `na
 **Example:** A timer declaration
 ```xml
 <fixr:timer name="expirationTimer"/>
+
 ```
 
 **Example:** A timer operation to start a timer that triggers a transition in a state machine. Other events could cancel the timer.
@@ -1589,6 +1594,7 @@ FIX 4.2 encoding
 <fixr:concept name="ProgramOrder">
 	<fixr:fieldRef id="47" presence="constant" value="D"/>
 </fixr:concept>
+
 ```
 
 FIX 4.4 encoding
@@ -1598,6 +1604,7 @@ FIX 4.4 encoding
 	<fixr:fieldRef id="528" presence="constant" value="P"/>
 	<fixr:fieldRef id="529" presence="constant" value="1"/>
 </fixr:concept>
+
 ```
 
 **Example:** The name of a message changed.
@@ -1608,6 +1615,7 @@ FIX 4.2 encoding
 <fixr:concept name="BaseOrder">
 	<fixr:messageRef name="OrderSingle" msgType="D" scenario="base"/>
 </fixr:concept>
+
 ```
 
 FIX 4.4 encoding
