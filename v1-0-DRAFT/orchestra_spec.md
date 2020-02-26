@@ -378,9 +378,8 @@ creation, change and potentially deprecation with support of attribute group
 
 ```xml
 <fixr:field type="String" id="17" name="ExecID" abbrName="ExecID" added="FIX.2.7" updated="FIX.5.0SP1" updatedEP="95">
-
 ```
-
+\
 **Example:** Code element that was deprecated
 
 ```xml
@@ -438,7 +437,7 @@ Suggested values of purpose include "SYNOPSIS", "ELABORATION",
 	</fixr:annotation>
 </fixr:field>
 ```
-
+\
 Optionally, a `<documentation>` element may be qualified by media type to
 support rich text. The default value of attribute `contentType` is
 "text/plain". If a rich text encoding is embedded in the XML document,
@@ -461,9 +460,8 @@ abbrName="Acct">
 		</fixr:documentation>
 	</fixr:annotation>
 </fixr:field>
-
 ```
-
+\
 Alternatively, documentation elements may set the media type in the `contentType` attribute to any text encoding registered with IANA.
 
 **Example:** Documentation as markdown.
@@ -778,9 +776,8 @@ A globally unique value is required for all instances of a field.
     <fixr:unique/>  
   </fixr:rule>
 </fixr:field>
-
 ```
-
+\
 A key field provides the scope of uniqueness.
 
 **Example:** Unique values per day
@@ -793,9 +790,8 @@ A key field provides the scope of uniqueness.
     </fixr:unique>  
   </fixr:rule>
 </fixr:fieldRef>
-
 ```
-
+\
 A combination of fields defines scope of uniqueness.
 
 **Example:** Unique values per day and market segment.
@@ -1261,9 +1257,8 @@ violations.
 	<fixr:when>(Price * 100) % 5 != 0</fixr:when>
 	</fixr:rule>
 </fixr:fieldRef>
-
 ```
-
+\
 **Example:** A state variable to hold rule violations.
 
 ```xml
@@ -1412,9 +1407,8 @@ Like a state machine, a `<timer>` is the child of an `<actor>`, and it has a `na
 **Example:** A timer declaration
 ```xml
 <fixr:timer name="expirationTimer"/>
-
 ```
-
+\
 **Example:** A timer operation to start a timer that triggers a transition in a state machine. Other events could cancel the timer.
 ```xml
 <fixr:timerSchedule actor="Market" name="expirationTimer" operation="START">
@@ -1594,9 +1588,8 @@ FIX 4.2 encoding
 <fixr:concept name="ProgramOrder">
 	<fixr:fieldRef id="47" presence="constant" value="D"/>
 </fixr:concept>
-
 ```
-
+\
 FIX 4.4 encoding
 
 ```xml
@@ -1604,9 +1597,8 @@ FIX 4.4 encoding
 	<fixr:fieldRef id="528" presence="constant" value="P"/>
 	<fixr:fieldRef id="529" presence="constant" value="1"/>
 </fixr:concept>
-
 ```
-
+\
 **Example:** The name of a message changed.
 
 FIX 4.2 encoding
@@ -1615,9 +1607,8 @@ FIX 4.2 encoding
 <fixr:concept name="BaseOrder">
 	<fixr:messageRef name="OrderSingle" msgType="D" scenario="base"/>
 </fixr:concept>
-
 ```
-
+\
 FIX 4.4 encoding
 
 ```xml
