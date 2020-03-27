@@ -3,6 +3,16 @@
 
 ![](media/FIXorchestraLogo.png)
 
+The Technical Specification is split into the following sections:
+
+1. [Introduction](#introduction)
+2. [Metamodel](#metamodel)
+3. [Orchestra Repository XML Schema](#orchestra-repository-xml-schema)
+4. [Interfaces XML Schema](#interfaces-xml-schema)
+5. [Score DSL](#score-dsl)
+6. [Examples](#examples)
+7. [Appendix](#appendix)
+
 ## Objectives
 
 FIX Orchestra was conceived as **machine readable rules of engagement**
