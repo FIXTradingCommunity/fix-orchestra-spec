@@ -2120,7 +2120,7 @@ Example Orchestra files are provided in the GitHub project
 
 # Appendix
 
-## Changes from Repository 2010 Edition
+## Differences to the Unified Repository (a.k.a. Repository 2010 Edition)
 
   - New features: metadata with provenance, actors, workflow, semantic
     concepts.
@@ -2129,7 +2129,7 @@ Example Orchestra files are provided in the GitHub project
     organization supports multiple protocols, it should issue an
     Orchestra file for each.
 
-  - The codeSets element is now top-level while in the 2010 Edition,
+  - The `<codeSets>` element is now top-level while in the 2010 Edition,
     enumerations of valid values were contained by fields. This change
     was made to recognize that code sets may be shared by many fields
     and also, they may be managed by an external standard.
