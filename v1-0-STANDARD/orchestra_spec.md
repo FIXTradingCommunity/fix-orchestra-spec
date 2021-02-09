@@ -441,28 +441,9 @@ Suggested values of purpose include "SYNOPSIS", "ELABORATION",
 Optionally, a `<documentation>` element may be qualified by media type to
 support rich text. The default value of attribute `contentType` is
 "text/plain". If a rich text encoding is embedded in the XML document,
-appropriate XML namespaces may be required. An Orchestra file may be
-rendered as polyglot markup, meaning that it is well-formed as both
-XML and XHTML, a W3C recommendation.
+appropriate XML namespaces may be required.
 
-**Example:** Documentation as polyglot markup.
-
-```xml
-xmlns:html="http://www.w3.org/1999/xhtml"
-
-. . .
-
-<fixr:field type="String" added="FIX.2.7" id="1" name="Account"
-abbrName="Acct">
-	<fixr:annotation>
-		<fixr:documentation purpose="SYNOPSIS" contentType="text/html">
-<html:p><html:b>Account mnemonic</html:b> as agreed between buy and sell sides, e.g. broker and institution or investor/intermediary and fund manager.</html:p>
-		</fixr:documentation>
-	</fixr:annotation>
-</fixr:field>
-```
-\
-Alternatively, documentation elements may set the media type in the `contentType` attribute to any text encoding registered with IANA.
+Documentation elements may set the media type in the `contentType` attribute to any text encoding registered with IANA.
 
 **Example:** Documentation as markdown.
 
@@ -1633,8 +1614,7 @@ schema. This can be validated with common XML parsers and related tools.
 
 The XML schema is currently available in GitHub project fix-orchestra module
 [interfaces](https://github.com/FIXTradingCommunity/fix-orchestra/tree/master/interfaces).
-Upon promotion to draft standard, it will be made available at a URI
-consistent with its XML namespace.
+It will also be made available at a URI consistent with its XML namespace.
 
 ### Root element
 
@@ -1787,7 +1767,7 @@ quotes.
 An integer literal is of FIX datatype int. It is a sequence of digits and may be preceded by a hyphen character that represents
 the unary minus operator.
 
-**Examples:** "123", "-123"
+**Examples:** 123, -123
 
 #### Decimal literal
 
@@ -1797,7 +1777,7 @@ decimal point (period character) and another sequence of digits. At
 least one digit must precede and follow the decimal point. A decimal
 literal may be preceded by a unary minus operator (hyphen character).
 
-**Example:** "123.456"
+**Example:** 123.456
 
 #### Date-time literals
 
