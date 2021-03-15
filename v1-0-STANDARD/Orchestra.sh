@@ -10,7 +10,7 @@ STYLE="FIX_TechStd_Style_MASTER.docx"
 TARGET="$SOURCE/target"
 YAML="$SOURCE/Orchestra.yaml"
 FILES="orchestra_spec.md"
-WPFOLDER="/wp-content/uploads/2021/02/"
+WPFOLDER="/wp-content/uploads/2020/02/"
 
 # Create document version with disclaimer
 pandoc "$DISCLAIMER" $FILES -o "$TARGET/docx/FIX Orchestra V1.0 Technical Standard.docx" --reference-doc="$STYLE" --metadata-file="$YAML" --toc --toc-depth=4
@@ -18,6 +18,14 @@ echo Orchestra document version created
 
 # Create base online version without disclaimer
 pandoc $FILES -o "$TARGET/debug/OrchestraONLINE.html" --metadata-file="$YAML" -s --toc --toc-depth=2
+
+# Remove title as it is redundant to page header
+sed -i '.bak1' '/<h1 class="title">/d' "$TARGET/debug/OrchestraONLINE.html"
+
+# Add header for table of contents
+sed -i '.bak2' '/<nav id="TOC" role="doc-toc">/i\
+<h1 id="table-of-contents">Table of Contents<\/h1>\
+' "$TARGET/debug/OrchestraONLINE.html"
 
 # Create separate online versions for production and test website by including appropriate link prefixes
 sed 's,img src="media/,img src="https://www.fixtrading.org'$WPFOLDER',g' "$TARGET/debug/OrchestraONLINE.html" > "$TARGET/html/OrchestraONLINE_PROD.html"

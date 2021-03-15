@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Version 1.0 – Technical Standard – February 18, 2021" />
+  <meta name="author" content="" />
+  <meta name="author" content="THIS DOCUMENT IS THE FINAL VERSION OF A FIX TECHNICAL STANDARD. THIS VERSION HAS BEEN" />
+  <meta name="author" content="APPROVED BY THE GLOBAL TECHNICAL COMMITTEE AS THE FINAL STEP IN CREATING A NEW FIX" />
+  <meta name="author" content="TECHNICAL STANDARD OR A NEW VERSION OF AN EXISTING FIX TECHNICAL STANDARD. POTENTIAL" />
+  <meta name="author" content="ADOPTERS ARE STRONGLY ENCOURAGED TO USE ONLY THE FINAL VERSION. EXISTING ADOPTERS ARE" />
+  <meta name="author" content="STRONGLY ENCOURAGED TO UPGRADE TO THE FINAL VERSION." />
+  <title>FIX Orchestra</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      word-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<p class="subtitle">Technical Specification</p>
+<p class="author">Version 1.0 – Technical Standard – February 18, 2021</p>
+<p class="author"></p>
+<p class="author">THIS DOCUMENT IS THE FINAL VERSION OF A FIX TECHNICAL STANDARD. THIS VERSION HAS BEEN</p>
+<p class="author">APPROVED BY THE GLOBAL TECHNICAL COMMITTEE AS THE FINAL STEP IN CREATING A NEW FIX</p>
+<p class="author">TECHNICAL STANDARD OR A NEW VERSION OF AN EXISTING FIX TECHNICAL STANDARD. POTENTIAL</p>
+<p class="author">ADOPTERS ARE STRONGLY ENCOURAGED TO USE ONLY THE FINAL VERSION. EXISTING ADOPTERS ARE</p>
+<p class="author">STRONGLY ENCOURAGED TO UPGRADE TO THE FINAL VERSION.</p>
+</header>
+<h1 id="table-of-contents">Table of Contents</h1>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#introduction">Introduction</a>
+<ul>
+<li><a href="#objectives">Objectives</a></li>
+<li><a href="#protocol-coverage">Protocol coverage</a></li>
+<li><a href="#design-principles">Design principles</a></li>
+<li><a href="#glossary">Glossary</a></li>
+<li><a href="#documentation">Documentation</a></li>
+<li><a href="#references">References</a></li>
+</ul></li>
+<li><a href="#metamodel">Metamodel</a>
+<ul>
+<li><a href="#message-structures">Message structures</a></li>
+<li><a href="#interfaces">Interfaces</a></li>
+</ul></li>
+<li><a href="#orchestra-repository-xml-schema">Orchestra Repository XML Schema</a>
+<ul>
+<li><a href="#repository-xml-schema-xsd">Repository XML Schema (XSD)</a></li>
+<li><a href="#content-ownership-and-history">Content ownership and history</a></li>
+<li><a href="#features-for-document-and-fixml-generation">Features for document and FIXML generation</a></li>
+<li><a href="#unique-identifiers">Unique identifiers</a></li>
+<li><a href="#datatypes">Datatypes</a></li>
+<li><a href="#code-sets">Code sets</a></li>
+<li><a href="#fields">Fields</a></li>
+<li><a href="#message-structures-1">Message structures</a></li>
+<li><a href="#expressions">Expressions</a></li>
+<li><a href="#workflow">Workflow</a></li>
+<li><a href="#semantic-concepts">Semantic Concepts</a></li>
+</ul></li>
+<li><a href="#interfaces-xml-schema">Interfaces XML Schema</a>
+<ul>
+<li><a href="#xml-schema-xsd">XML Schema (XSD)</a></li>
+</ul></li>
+<li><a href="#score-dsl">Score DSL</a>
+<ul>
+<li><a href="#grammar">Grammar</a></li>
+<li><a href="#syntax-errors">Syntax errors</a></li>
+<li><a href="#semantic-errors">Semantic errors</a></li>
+</ul></li>
+<li><a href="#examples">Examples</a></li>
+<li><a href="#appendix">Appendix</a>
+<ul>
+<li><a href="#differences-to-the-unified-repository-a.k.a.-repository-2010-edition">Differences to the Unified Repository (a.k.a. Repository 2010 Edition)</a></li>
+<li><a href="#compliance">Compliance</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="introduction">Introduction</h1>
+<p><img src="https://www.fixtrading.org/wp-content/uploads/2020/02/FIXorchestraLogo.png" /></p>
+<h2 id="objectives">Objectives</h2>
+<p>FIX Orchestra was conceived as <strong>machine readable rules of engagement</strong> between counterparties. As such, it is a standard for exchange of metadata about the behavior of FIX applications. Orchestra is intended to cut time to onboard counterparties.</p>
+<p>The contents of Orchestra files are machine readable (that is, processed as data) and may include:</p>
+<ul>
+<li><p>Message structure by each scenario, implemented as an extension of FIX Repository.</p></li>
+<li><p>Accepted values of enumerations by message scenario</p></li>
+<li><p>Workflow: when I send this message type under this condition, what can I expect back?</p></li>
+<li><p>How external states affect messages, e.g. market phases</p></li>
+<li><p>Express a condition such as for a conditionally required field using a Domain Specific Language (DSL)</p></li>
+<li><p>Document and exchange the Algorithmic Trading Definition Language (FIXatdl) files associated with a FIX service offering</p></li>
+<li><p>FIX session identification and transport configuration</p></li>
+</ul>
+<p>From the contents, firms and vendors will be enabled to develop tools to automate configuration of FIX engines and applications, and generation of code, test cases, and documentation. The various aspects are not an all-or-nothing proposition, however. Users may implement only the features that they find most beneficial and add features as needed.</p>
+<p>Orchestra supports but does not change FIX protocol itself in any way, nor does it obsolete existing FIX engines or tools.</p>
+<h2 id="protocol-coverage">Protocol coverage</h2>
+<p>The features of Orchestra are intended to be generic and capable of covering both FIX and non-FIX messaging protocols. One of the foundational features to support non-FIX protocols is the ability to describe any set of datatypes, not just FIX datatypes (see the <a href="#datatypes">Datatypes</a> section below).</p>
+<h2 id="design-principles">Design principles</h2>
+<p>As a standard for delivering metadata about FIX messages and application behavior, Orchestra relies on technologies that are well supported across all popular platforms and programming languages, particularly XML and XML Schema.</p>
+<p>Since Orchestra is primarily used at design time or compile time rather than run time, high performance characteristics such as low latency are not a major concern.</p>
+<p>In future, Orchestra may be ported to alternative technologies, particularly Web Ontology Language (OWL). However, the primary XML technologies will continue to be supported for the foreseeable future.</p>
+<h2 id="glossary">Glossary</h2>
+<p><strong>Actor</strong> — either a counterparty to a FIX session or an external entity that holds state relevant to application or session behavior. An actor can take actions such as assigning state or transitioning a state machine, and it can send messages.</p>
+<p><strong>Code set</strong> — A finite set of the valid values of a data element. Each unique valid value is called a code.</p>
+<p><strong>Datatype</strong> – the value space of a data element, possibly including enumerated values, precision or range. Some types have additional attributes, e.g. epoch and time zone of a date. Value space is at the application layer (layer 7 of the OSI model).</p>
+<p><strong>Discriminator</strong> — a field that can modify the value space of another field. The combination of the value field and its discriminator is variously called a choice, discriminated union, tagged union, or variant.</p>
+<p><strong>Encoding</strong> – a wire format for data representation. Also known as lexical space or the presentation layer (layer 6) in a protocol stack.</p>
+<p><strong>Extension Pack (EP)</strong> – incremental extension of the FIX application layer, aka <em>FIX Latest</em>.</p>
+<p><strong>Lexical space</strong> – the representation of a data element. It belongs to the presentation layer. For character-based encodings, it is defined as a particular sequence of characters. For binary encodings, it may involve mapping to primitive data types supported by computing platforms.</p>
+<p><strong>Pedigree</strong> – recorded history of an artifact.</p>
+<p><strong>Provenance</strong> – a record of ownership of an artifact.</p>
+<p><strong>Scenario</strong> — a use case of a message type and its components.</p>
+<p><strong>Semantic</strong> — pertaining to the meaning of a message element, regardless of its representation.</p>
+<p><strong>Session protocol</strong> – a protocol concerned with the reliable delivery of messages over a transport. Layer 5 in the OSI protocol model.</p>
+<p><strong>State machine</strong> – A behavior model that has finite, discrete values called states and defined transitions between states.</p>
+<p><strong>Tag</strong> – a unique numeric identifier of a message element, especially a field identifier.</p>
+<p><strong>Value space</strong> – the type of a data element and its possible range of values. Value space belongs to the application layer (semantics) and should be independent of encoding (presentation layer) and programming language.</p>
+<p><strong>XML schema</strong> – defines the elements and attributes that may appear in an XML document. The Orchestra schemas are defined in W3C (XSD) schema language since it is the most widely adopted format for XML schemas.</p>
+<h2 id="documentation">Documentation</h2>
+<h3 id="specification-terms">Specification terms</h3>
+<p>The following key words in this document are to be interpreted as described in <a href="http://www.apps.ietf.org/rfc/rfc2119.html">Internet Engineering Task Force RFC2119</a>.</p>
+<ul>
+<li><p>These terms indicate an absolute requirement for implementations of the standard: “<strong>must</strong>”, or “<strong>required</strong>”.</p></li>
+<li><p>This term indicates an absolute prohibition: “<strong>must not</strong>”.</p></li>
+<li><p>These terms indicate that a feature is allowed by the standard but not required: “<strong>may</strong>”, “<strong>optional</strong>”. An implementation that does not provide an optional feature must be prepared to interoperate with one that does.</p></li>
+<li><p>These terms give guidance, recommendation or best practices: “<strong>should</strong>” or “<strong>recommended</strong>”. A recommended choice among alternatives is described as “<strong>preferred</strong>”.</p></li>
+<li><p>These terms give guidance that a practice is not recommended: “<strong>should not</strong>” or “<strong>not recommended</strong>”.</p></li>
+</ul>
+<h3 id="document-format">Document format</h3>
+<p>In this document, the following formats are used for technical specifications and data examples.</p>
+<p>XML element and attribute names as well as FIX field and message names appear in this font: <code>codeSet</code></p>
+<p>This is a sample XML snippet:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:field</span><span class="ot"> id=</span><span class="st">&quot;59&quot;</span><span class="ot"> name=</span><span class="st">&quot;TimeInForce&quot;</span><span class="ot"> type=</span><span class="st">&quot;TimeInForceCodeSet&quot;</span><span class="kw">/&gt;</span></span></code></pre></div>
+<h2 id="references">References</h2>
+<h3 id="related-fix-standards">Related FIX Standards</h3>
+<p>For FIX semantics, see the current FIX message specification, which is currently <a href="https://www.fixtrading.org/online-specification/">FIX Latest</a>.</p>
+<h3 id="dependencies-on-other-standards">Dependencies on other standards</h3>
+<p>Orchestra imports <a href="http://dublincore.org/schemas/xmls/">Dublin Core XML schemas version 2008-02-11</a> for artifact provenance. Dublin Core is standardized as IETF RFC 5013 and ISO 15836.</p>
+<p>XML 1.1 schema standards are located at <a href="http://www.w3.org/XML/Schema.html#dev">W3C XML Schema</a></p>
+<p><a href="https://www.w3.org/TR/xinclude-11/">XML Inclusions (XInclude) Version 1.1</a></p>
+<p>Incremental changes to an XML file may be represented by the format described in <a href="https://tools.ietf.org/html/rfc5261">IETF RFC 5261</a>.</p>
+<p>Textual encoding of security keys must conform to <a href="https://tools.ietf.org/html/rfc7468">IETF RFC 7468</a>.</p>
+<p>Documentation content types should be chosen from the registry of media types (formerly known as MIME) maintained by the Internet Assigned Numbers Authority (IANA). See the registry of text media types at <a href="https://www.iana.org/assignments/media-types/media-types.xhtml#text">Media Types</a>. <a href="https://tools.ietf.org/html/rfc7763">Markdown</a> is recommended for rich text while <code>text/plain</code> is the default.</p>
+<p><a href="https://www.iso.org/standard/70907.html">ISO 8601:2019</a> Data elements and interchange formatsInformation interchange - Representation of dates and times. Used for representation of dates, times, and time intervals in DSL expressions.</p>
+<h1 id="metamodel">Metamodel</h1>
+<p>Orchestra is based on two metamodels. The repository metamodel contains concepts for message structures and workflow while the interfaces metamodel has concepts for service offerings and sessions.</p>
+<p>Each of the two metamodels are implemented in their respective XML schemas. Any other representations that may be developed in future, such as semantic ontologies, should be considered implementations of these common metamodels.</p>
+<p>The metamodels presented do not strictly conform to the UML Meta-Object Facility architecture (MOF).</p>
+<h2 id="message-structures">Message structures</h2>
+<p>The UML metamodel depicted below is a conceptual view of message structures.</p>
+<p><img src="https://www.fixtrading.org/wp-content/uploads/2020/02/FIX-Repository-MetaModel.png" /></p>
+<h3 id="message-structure-abstractions">Message structure abstractions</h3>
+<p><strong>Field</strong>–carries a specific business meaning (semantics) as described in FIX specifications or other protocol. A pointer to a field is a <strong>fieldRef</strong>. The data domain of a field is either a datatype or a code set.</p>
+<p><strong>Datatype</strong>–the value space of a class of fields. FIX has about 20 datatypes.</p>
+<p><strong>Code set</strong>–a set of valid values of a field. They must all be of the same datatype.</p>
+<p><strong>Component</strong>–a sequence of fields and nested components. There are two types of components, common block and repeating group. A common block is a component designed to be specified once in detail but reused in multiple message types by reference. A pointer to a component is a <strong>componentRef</strong>.</p>
+<p><strong>Group, or repeating group</strong>–like a common block but with one additional feature: it represents an <em>array of</em> blocks to be sent on the wire. A pointer to a group is a <strong>groupRef</strong>.</p>
+<p><strong>Message</strong>–a unit of information sent on the wire between counterparties. A message is composed of components and fields. A pointer to a message is a <strong>messageRef</strong>.</p>
+<h3 id="general-purpose-datatypes">General Purpose Datatypes</h3>
+<p>Pointer and array abstractions are defined by the standard ISO 11404. The code set abstraction is described in that standard as “state” type.</p>
+<h2 id="interfaces">Interfaces</h2>
+<p>The interface metamodel is an abstraction of service offerings and session provisioning. This UML model depicts the main classes.</p>
+<p><img src="https://www.fixtrading.org/wp-content/uploads/2020/02/Interfaces-1.png" /></p>
+<p><img src="https://www.fixtrading.org/wp-content/uploads/2020/02/Interfaces-2.png" /></p>
+<h3 id="interface-abstractions">Interface abstractions</h3>
+<p><strong>Protocol</strong>—a standard for communications. The Open Systems Interconnection model (OSI) defines protocols as a layered stack, including application layer and user interface at the top, presentation layer (encoding), session layer, and transport layer. Each protocol depends on lower layers for services. Layers below transport layer are out of scope for Orchestra.</p>
+<p>Any message-oriented protocol may have an orchestration attribute that consists of a URI. It is a link to an Orchestra file that describes message structures and workflow.</p>
+<p><strong>Service</strong>—a service offering by a counterparty. A service is an application layer protocol.</p>
+<p><strong>Interface</strong>—a collection of protocols and services exposed by a counterparty. A counterparty may offer more than one interface for different purposes. An interface may be configured for one or more service offerings and all the protocols that make up a communication stack. Also, an interface may contain any number of session configurations.</p>
+<p><strong>Session</strong>—a specific usage of an interface. A session has one or more identifiers. It inherits services and protocols from its parent interface, but it may have further refinement or overrides of protocol settings, such as a transport address.</p>
+<h1 id="orchestra-repository-xml-schema">Orchestra Repository XML Schema</h1>
+<h2 id="repository-xml-schema-xsd">Repository XML Schema (XSD)</h2>
+<p>The Repository XML schema is used to control the format of XML files that describe message structures. Additionally it contains elements and attributes for work flow, state variables, conditional logic and so forth.</p>
+<h3 id="conformance">Conformance</h3>
+<p>All published Orchestra repository files <strong>must</strong> conform to the standard repository XML schema. This can be validated with common XML parsers and related tools.</p>
+<h3 id="schema-location">Schema location</h3>
+<p>The XML schema is currently available in GitHub project fix-orchestra module <a href="https://github.com/FIXTradingCommunity/fix-orchestra/tree/master/repository">repository</a>. It will be made available via the web at a URL consistent with its XML namespace.</p>
+<h3 id="root-element">Root element</h3>
+<p>The root element an Orchestra respository XML file is <code>&lt;repository&gt;</code>. An Orchestra repository file contains all the message structures and workflow elements pertaining to a single protocol version. If an organization supports multiple versions of FIX, it should supply an Orchestra file for each.</p>
+<p>The <code>name</code> attribute of <code>&lt;repository&gt;</code> identifies an implementation of a protocol. The name should remain stable over minor revisions. The <code>version</code> attribute should, on the other hand, be unique for any substantive change to the protocol.</p>
+<p>This snippet shows that element with required namespaces and attributes:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:repository</span><span class="ot"> name=</span><span class="st">&quot;FIX.5.0SP2&quot;</span><span class="ot"> version=</span><span class="st">&quot;FIX.5.0SP2_EP253&quot;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ot">xmlns=</span><span class="st">&quot;http://purl.org/dc/elements/1.1/&quot;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ot">xmlns:fixr=</span><span class="st">&quot;http://fixprotocol.io/2020/orchestra/repository&quot;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ot">xmlns:dc=</span><span class="st">&quot;http://purl.org/dc/terms/&quot;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ot">xmlns:xsi=</span><span class="st">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ot">xsi:schemaLocation=</span><span class="st">&quot;http://fixprotocol.io/2020/orchestra/repository FixRepository2020.xsd&quot;</span><span class="kw">&gt;</span></span></code></pre></div>
+<h4 id="repository-attributes">Repository attributes</h4>
+<p>Attributes of the whole repository are set on the root element. The <code>name</code> and <code>version</code> attributes are required. Name should be stable even when minor changes are made to an Orchestra file while version should be updated for incremental changes.</p>
+<p>By default, the language for conditional expressions is the Score DSL (See section <a href="#score-dsl">Score DSL</a> below). However, this may be overridden by setting a value to the attribute <code>expressionLanguage</code>.</p>
+<h3 id="support-for-xinclude">Support for XInclude</h3>
+<p>Several of the elements in the schema support XML Inclusions (XInclude). This allows assembly of an Orchestra XML infoset from multiple, reusable XML files. For example, several service offerings may share datatypes, fields, and even common message types.</p>
+<h3 id="supplementary-documentation">Supplementary documentation</h3>
+<p>See the separate document “FixRepository2020.html” for a detailed technical reference for the Orchestra and Repository XML schema. The remainder of this section serves as an overview and explains motivations for the design.</p>
+<h3 id="protocol-relationship">Protocol relationship</h3>
+<p>The schema was primarily designed to describe metadata about FIX protocols. However, it was also intended to be generic enough to work with other common financial industry protocols, especially when FIX is used in combination with other protocols, or a translation must be performed between protocols.</p>
+<p>Usage should be supported for all phases of financial industry workflows, including pre-trade, trade, and post-trade flows.</p>
+<h2 id="content-ownership-and-history">Content ownership and history</h2>
+<h3 id="provenance">Provenance</h3>
+<p>The <code>&lt;metadata&gt;</code> element is used to identify a particular Orchestra file and the issuer of that file. It can contain any of the elements defined by the Dublin Core XML schema. Recommended elements include title, publisher, date, and rights.</p>
+<p><strong>Example:</strong> Metadata</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:metadata&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;dc:title&gt;</span>Orchestra Example<span class="kw">&lt;/dc:title&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;dc:creator&gt;</span>Millennium IT<span class="kw">&lt;/dc:creator&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;dc:publisher&gt;</span>FIX Trading Community<span class="kw">&lt;/dc:publisher&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;dc:rights&gt;</span>Copyright 2019, FIX Protocol, Limited<span class="kw">&lt;/dc:rights&gt;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;dc:date&gt;</span>2019-01-09T16:09:16.904-06:00<span class="kw">&lt;/dc:date&gt;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;dc:format&gt;</span>Orchestra Repository<span class="kw">&lt;/dc:format&gt;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;dc:contributor&gt;</span>RepositoryCompressor<span class="kw">&lt;/dc:contributor&gt;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:metadata&gt;</span></span></code></pre></div>
+<h3 id="pedigree">Pedigree</h3>
+<p>Most message elements in the schema support a complete history of creation, change and potentially deprecation with support of attribute group <code>entityAttribGrp</code>. Each historical event should be qualified by its extension pack (EP). In the past, they were also qualified by protocol version. However, each EP now produces FIX Latest; protocol versions will no longer change.</p>
+<p><strong>Example:</strong> A field that was added and updated</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:field</span><span class="ot"> type=</span><span class="st">&quot;String&quot;</span><span class="ot"> id=</span><span class="st">&quot;17&quot;</span><span class="ot"> name=</span><span class="st">&quot;ExecID&quot;</span><span class="ot"> abbrName=</span><span class="st">&quot;ExecID&quot;</span><span class="ot"> added=</span><span class="st">&quot;FIX.2.7&quot;</span><span class="ot"> updated=</span><span class="st">&quot;FIX.5.0SP1&quot;</span><span class="ot"> updatedEP=</span><span class="st">&quot;95&quot;</span><span class="kw">&gt;</span></span></code></pre></div>
+<p><br />
+<strong>Example:</strong> Code element that was deprecated</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;code</span><span class="ot"> value=</span><span class="st">&quot;3&quot;</span><span class="ot"> name=</span><span class="st">&quot;LocalCommission&quot;</span><span class="ot"> added=</span><span class="st">&quot;FIX.4.0&quot;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ot">deprecated=</span><span class="st">&quot;FIX.5.0SP2&quot;</span><span class="ot"> deprecatedEP=</span><span class="st">&quot;204&quot;</span><span class="kw">/&gt;</span></span></code></pre></div>
+<h2 id="features-for-document-and-fixml-generation">Features for document and FIXML generation</h2>
+<p>The XML schema retains features that have long been used to generate FIX documentation and other outputs. These elements are optional.</p>
+<h3 id="categories">Categories</h3>
+<p>The <code>&lt;categories&gt;</code> element tree is used to associate FIX elements to business areas, such as single general order handling, market data, and so forth, for documentation generation. Also, categories are used to organize FIXML schema files.</p>
+<h3 id="sections">Sections</h3>
+<p>The <code>&lt;sections&gt;</code> element tree names higher level business processes. Typically, a section containes multiple categories. Traditionally, they have been organized around pre-trade, trade, and post-trade information flows.</p>
+<h3 id="metadata-about-any-element">Metadata about any element</h3>
+<p>The schema provides features to provide metadata about almost any element. All such metadata appears under element <code>&lt;annotation&gt;</code>. There is no limit to the number of metadata entries per <code>&lt;annotation&gt;</code> element.</p>
+<h4 id="documentation-1">Documentation</h4>
+<p>A <code>&lt;documentation&gt;</code> element can carry any description of its ancestor element. The content (text node) may be of any format, such as XHTML, markdown, or HTML5. The XML parser is instructed not to validate the free-form content. Tools such as XSLT may be used to extract documentation from an Orchestra file and compile external documents.</p>
+<p>Multiple languages can be supported by specifying the language of each element in its <code>langId</code> attribute. Also, multiple categories of documentation are supported by populating the <code>purpose</code> attribute. Suggested values of purpose include “SYNOPSIS”, “ELABORATION”, “EXAMPLE”, and “DISPLAY”.</p>
+<p><strong>Example:</strong> Field element with documentation.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:field</span><span class="ot"> id=</span><span class="st">&quot;45&quot;</span><span class="ot"> name=</span><span class="st">&quot;RefSeqNum&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:annotation&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:documentation</span><span class="ot"> langId=</span><span class="st">&quot;en-us&quot;</span><span class="ot"> purpose=</span><span class="st">&quot;SYNOPSIS&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        Reference message sequence number</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;/fixr:documentation&gt;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;/fixr:annotation&gt;</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:field&gt;</span></span></code></pre></div>
+<p><br />
+Optionally, a <code>&lt;documentation&gt;</code> element may be qualified by media type to support rich text. The default value of attribute <code>contentType</code> is “text/plain”. If a rich text encoding is embedded in the XML document, appropriate XML namespaces may be required.</p>
+<p>Documentation elements may set the media type in the <code>contentType</code> attribute to any text encoding registered with IANA.</p>
+<p><strong>Example:</strong> Documentation as markdown.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:annotation&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:documentation</span><span class="ot"> purpose=</span><span class="st">&quot;SYNOPSIS&quot;</span><span class="ot"> contentType=</span><span class="st">&quot;text/markdown&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>**Account mnemonic** as agreed between buy and sell sides, e.g. broker and institution or investor/intermediary and fund manager.</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;/fixr:documentation&gt;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;/fixr:annotation&gt;</span></span></code></pre></div>
+<h4 id="appinfo">Appinfo</h4>
+<p>The <code>&lt;appinfo&gt;</code> element is similar to <code>&lt;documentation&gt;</code> in that it can support multiple languages and multiple purposes. It has an additional attribute, <code>specURL</code>, to cross-reference external documentation.</p>
+<h3 id="rendering-hints">Rendering hints</h3>
+<p>The optional attribute <code>rendering</code> may be used to suggest how a message or element should be generated or rendered in a user interface. The value of the attribute is free-form and is not validated by the Orchestra schema.</p>
+<h2 id="unique-identifiers">Unique identifiers</h2>
+<p>Practically all elements in the XML schema have a <code>name</code> attribute, a numeric <code>id</code> attribute or both. These values must be unique within their respective element types within a given Orchestra file. To avoid collisions, names and IDs of deprecated elements should never be reused.</p>
+<h2 id="datatypes">Datatypes</h2>
+<p>A datatype is a context-free value space. That is, a domain of possible values relatively free of business semantics. For a specific message encoding protocol (presentation layer), a datatype is mapped to the syntax of that encoding, also known as lexical space.</p>
+<p>Some fields are specified as a set of valid values. This is known as <em>code set</em>, and it can be thought of as a specialized datatype (see the <a href="#code-sets">Code sets</a> section below).</p>
+<p>Each datatype is described by a <code>&lt;datatype&gt;</code> element, a child of <code>&lt;datatypes&gt;</code>.</p>
+<h3 id="fix-datatypes">FIX datatypes</h3>
+<p>FIX fields are categorized into roughly 20 datatypes. A datatype should be defined in terms of its value space, the range of its possible values, not in terms of its lexical space, its encoding format. In fact, a FIX datatype may be mapped to any number of wire formats (see the <a href="#datatype-mappings">datatype mappings</a> section below).</p>
+<p>A datatype may optionally inherit properties from a type specified by the <code>baseType</code> attribute. For example, Qty datatype, used by fields like OrderQty(38), has baseType of float, a more generic FIX datatype.</p>
+<p>Generally, FIX datatypes for FIX protocols need to be defined only once and are copied from the baseline standard. However, the datatypes section may contain different definitions for non-FIX protocols.</p>
+<h3 id="datatype-mappings">Datatype mappings</h3>
+<p>A <code>&lt;datatype&gt;</code> element may contain <code>&lt;mappedDatatype&gt;</code> elements corresponding to any number of type systems. Type systems include XML, SBE, GPB, JSON, and ISO 11404, a generic type taxonomy. An XML schema mapping is obviously needed by FIXML.</p>
+<p>The <code>standard</code> attribute of <code>&lt;datatype&gt;</code> tells which type system the mapping is for. Its <code>base</code> attribute tells what the FIX datatype maps to in the particular standard. For example, FIX type Qty maps to XML schema type xs:decimal.</p>
+<p>The <code>&lt;mappedDatatype&gt;</code> element allows any snippet of well-formed XML to be pasted in as a child element that is a meaningful specification to an encoding protocol.</p>
+<p>The ISO/IEC 11404 General Purpose Datatypes standard contains a taxonomy of programming language-independent types and enumerates their characteristics. One of the benefits of following this standard is that it will be easier to map FIX data types to other message standards, such as ISO 20022 (SWIFT). Rather than creating numerous one-off mappings to other type systems, is it likely more efficient to map each to ISO 11404 once, and then compare mappings in an associative model to identify the commonalities. (The XML schema standard claims to derive its datatypes from ISO 11404, but mapping to the generic standard is more precise and comprehensive than filtering it through the XML interpretation.)</p>
+<p>The lower and upper bounds of a bounded datatype may be set with <code>minInclusive</code> and <code>maxExclusive</code> attributes.</p>
+<p><strong>Example:</strong> A FIX datatype with mappings to XML schema and General-Purpose Datatypes.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:datatype</span><span class="ot"> name=</span><span class="st">&quot;SeqNum&quot;</span><span class="ot"> baseType=</span><span class="st">&quot;int&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:mappedDatatype</span><span class="ot"> standard=</span><span class="st">&quot;XML&quot;</span><span class="ot"> base=</span><span class="st">&quot;xs:positiveInteger&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:mappedDatatype</span><span class="ot"> standard=</span><span class="st">&quot;ISO11404&quot;</span><span class="ot"> base=</span><span class="st">&quot;Ordinal&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:datatype&gt;</span></span></code></pre></div>
+<h2 id="code-sets">Code sets</h2>
+<p>A code set contains a finite collection of valid values of a data element. Each unique valid value is called a code. In the terminology of ISO 11404, such a data element is called a “state”. (This is distinguished from an enumeration, in which the order of values matters. In a state, each of the values must be unique, but order is not significant. Hence, the values collection is a set.)</p>
+<p>In FIX and other protocols, many fields may share a code set. For example, the SecurityIDSource and UnderlyingSecurityIDSource fields share the same valid values, or code set.</p>
+<p>A code set has an underlying datatype to tell its domain of possible values. Codes may legally be of any type listed in the <code>&lt;datatypes&gt;</code> section, but typically are int, char or String datatypes in FIX. In an Orchestra file, a code value is presented as a string, but it should be actually transmitted in the correct encoding for the datatype of the code set. For example, if the datatype of a code set was “int”, value “27” should be transmitted in a binary wire format for integer 27, not as character “2” and then character “7”.</p>
+<p>A <code>&lt;codeSets&gt;</code> element contains any number of <code>&lt;codeSet&gt;</code> child elements. The schema allows multiple instances of <code>&lt;codeSets&gt;</code> containers, each with a unique <code>name</code> attribute.</p>
+<p>The names of code sets and datatypes share a common namespace and must be unique within a schema. This constraint is enforced by the XML schema.</p>
+<h3 id="internal-code-sets">Internal code sets</h3>
+<p>Internal code sets are maintained in a Repository or Orchestra file by the issuer. The <code>&lt;code&gt;</code> elements that belong to the code set are listed explicitly.</p>
+<h4 id="codes">Codes</h4>
+<p>An internal <code>&lt;codeSet&gt;</code> is a container for <code>&lt;code&gt;</code> elements. In the schema, each code has a <code>name</code> attribute to tell its logical name, and a <code>value</code> attribute to tell its value on the wire. Additionally, each <code>&lt;code&gt;</code> element has a numeric <code>id</code> attribute.</p>
+<p>Codes may be added to a code set over time, or existing codes may be deprecated. The history of codes within a code set may be recorded using the pedigree attributes of attribute group <code>entityAttribGrp</code>.</p>
+<p>Codes may be documented with an <code>&lt;annotation&gt;</code> element tree.</p>
+<p><strong>Example:</strong> An internal code set.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:codeSet</span><span class="ot"> type=</span><span class="st">&quot;char&quot;</span><span class="ot"> id=</span><span class="st">&quot;165&quot;</span><span class="ot"> name=</span><span class="st">&quot;SettlInstSourceCodeSet&quot;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ot">scenario=</span><span class="st">&quot;base&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:code</span><span class="ot"> value=</span><span class="st">&quot;1&quot;</span><span class="ot"> added=</span><span class="st">&quot;FIX.4.1&quot;</span><span class="ot"> id=</span><span class="st">&quot;165001&quot;</span><span class="ot"> name=</span><span class="st">&quot;BrokerCredit&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:code</span><span class="ot"> value=</span><span class="st">&quot;2&quot;</span><span class="ot"> added=</span><span class="st">&quot;FIX.4.1&quot;</span><span class="ot"> id=</span><span class="st">&quot;165002&quot;</span><span class="ot"> name=</span><span class="st">&quot;Institution&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:code</span><span class="ot"> value=</span><span class="st">&quot;3&quot;</span><span class="ot"> added=</span><span class="st">&quot;FIX.4.3&quot;</span><span class="ot"> id=</span><span class="st">&quot;165003&quot;</span><span class="ot"> name=</span><span class="st">&quot;Investor&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:codeSet&gt;</span></span></code></pre></div>
+<h4 id="scenarios">Scenarios</h4>
+<p>Code sets may have different supported codes in different scenarios. For example, outbound ExecutionReport(35=8) messages may have more enriched view of PartyRole(452) than is required on inbound order messages. Therefore, a <code>&lt;codeset&gt;</code> may be qualified by its <code>scenario</code> attribute. The default value of <code>scenario</code> is “base”, so the attribute need not be supplied if there is only one form of a codeset.</p>
+<p>Uniqueness of codeset scenarios is enforced by the XML schema, both as the combination of <code>name</code> + <code>scenario</code> as well as <code>id</code> + <code>scenario</code>.</p>
+<h3 id="external-code-sets">External code sets</h3>
+<p>In some cases, FIX shares code sets with other protocols. Examples include currency, language, and country codes defined by another standard. This is called an external code set because the valid values are maintained by the external standard, not within the Repository or Orchestra file. To provide a reference to an external standard, use <code>&lt;codeSet&gt;</code> attribute <code>specUrl</code>. Additional references can be supplied with <code>&lt;annotation&gt;</code> elements.</p>
+<p>In the case of an external code set, <code>&lt;code&gt;</code> elements are not listed in the Orchestra file.</p>
+<p><strong>Example:</strong> An external code set CurrencyCode is defined as a FIX datatype Currency with valid values defined by standard ISO 4217.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:codeSet</span><span class="ot"> name=</span><span class="st">&quot;CurrencyCode&quot;</span><span class="ot"> type=</span><span class="st">&quot;Currency&quot;</span><span class="ot"> specUrl=</span><span class="st">&quot;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="st">http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=64758&quot;</span><span class="kw">&gt;</span></span></code></pre></div>
+<h2 id="fields">Fields</h2>
+<p>A field carries a specific business meaning (semantic) as described in FIX specifications or another protocol. In the schema, a <code>&lt;field&gt;</code> element is contained by parent element <code>&lt;fields&gt;</code>. The collection of fields should be thought of as an append-only list; the id of a deprecated field must not be reused. The pedigree attributes of attribute group <code>entityAttribGrp</code> are used to tell the history of a field, including the protocol version in which it was added.</p>
+<p>In FIX, a field has two unique identifiers, numeric id, also known as “tag”, and a descriptive string name.</p>
+<p>Like other message elements, a field may be documented with an <code>&lt;annotation&gt;</code> element tree as described above. Also, the <code>baseCategory</code> attribute may be used to categorize fields. There are several more optional attributes which are described in the message structure section below.</p>
+<h3 id="scenarios-1">Scenarios</h3>
+<p>Fields may have different scenarios either to vary annotations or to use different code set scenarios for different use cases. The default value of <code>scenario</code> is “base”, so the attribute need not be supplied if there is only one form of a field.</p>
+<p>Uniqueness of field scenarios is enforced by the XML schema, both as the combination of <code>name</code> + <code>scenario</code> as well as <code>id</code> + <code>scenario</code>.</p>
+<h3 id="data-domain-of-a-field">Data domain of a field</h3>
+<p>Every field must have a data domain of either a <code>&lt;datatype&gt;</code> name or more specifically, a collection of valid values specified by a <code>&lt;codeSet&gt;</code> reference. In either case, the domain of a field is specified in its <code>type</code> attribute. The attribute <code>type</code> refers to either a <code>&lt;datatype&gt;</code> element or a <code>&lt;codeSet&gt;</code> element by its <code>name</code> attribute. In the case of a <code>&lt;codeSet&gt;</code>, there is a level of indirection to its <code>type</code> attribute to arrive at a <code>&lt;datatype&gt;</code>.</p>
+<p>Since <code>&lt;codeSet&gt;</code> is also qualified by scenario, a field will link to the code set of the same scenario. By default, “base” scenario field links to “base” code set.</p>
+<p><strong>Example:</strong> A field with a code set and another with a datatype domain.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:field</span><span class="ot"> id=</span><span class="st">&quot;59&quot;</span><span class="ot"> name=</span><span class="st">&quot;TimeInForce&quot;</span><span class="ot"> type=</span><span class="st">&quot;TimeInForceCodeSet&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:field</span><span class="ot"> id=</span><span class="st">&quot;60&quot;</span><span class="ot"> name=</span><span class="st">&quot;TransactTime&quot;</span><span class="ot"> type=</span><span class="st">&quot;UTCTimestamp&quot;</span><span class="kw">/&gt;</span></span></code></pre></div>
+<h3 id="data-fields">Data fields</h3>
+<p>A field of data datatype is variable length. In FIX tag=value encoding, the length of such a field is prefixed by a separate field of type Length. In other encodings, the length is implicit in the presentation protocol. For data fields, the associated Length field is referenced by the <code>lengthId</code> attribute, a reference to its <code>id</code> attribute.</p>
+<p><strong>Example:</strong> A data field and its corresponding Length field.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;field</span><span class="ot"> added=</span><span class="st">&quot;FIX.2.7&quot;</span><span class="ot"> id=</span><span class="st">&quot;95&quot;</span><span class="ot"> name=</span><span class="st">&quot;RawDataLength&quot;</span><span class="ot"> type=</span><span class="st">&quot;Length&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;field</span><span class="ot"> added=</span><span class="st">&quot;FIX.2.7&quot;</span><span class="ot"> id=</span><span class="st">&quot;96&quot;</span><span class="ot"> name=</span><span class="st">&quot;RawData&quot;</span><span class="ot"> type=</span><span class="st">&quot;data&quot;</span><span class="ot"> lengthId=</span><span class="st">&quot;95&quot;</span><span class="kw">/&gt;</span></span></code></pre></div>
+<h3 id="discriminator-fields">Discriminator fields</h3>
+<p>FIX contains fields for which its value domain is modified by another field. This is variously called a choice, discriminated union, tagged union, or variant. The field that modifies the range of values of another field is called a discriminator. For example, SecurityIDSource is the discriminator for the values of SecurityID. If the value of SecurityIDSource is 4, then the value of SecurityID must be a valid ISIN, and so forth. This relationship may be indicated in Orchestra by adding the attribute <code>discriminatorId</code> to a field.</p>
+<p><strong>Example:</strong> A field modified by a discriminator.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:field</span><span class="ot"> added=</span><span class="st">&quot;FIX.2.7&quot;</span><span class="ot"> id=</span><span class="st">&quot;48&quot;</span><span class="ot"> name=</span><span class="st">&quot;SecurityID&quot;</span><span class="ot"> type=</span><span class="st">&quot;String&quot;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ot">abbrName=</span><span class="st">&quot;ID&quot;</span><span class="ot"> discriminatorId=</span><span class="st">&quot;22&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:annotation&gt;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:documentation</span><span class="ot"> purpose=</span><span class="st">&quot;SYNOPSIS&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>Security identifier value of SecurityIDSource (22) type (e.g. CUSIP, SEDOL, ISIN, etc). Requires ecurityIDSource.</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;/fixr:documentation&gt;</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;/fixr:annotation&gt;</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:field&gt;</span></span></code></pre></div>
+<h3 id="overridable-and-fixed-field-attributes">Overridable and fixed field attributes</h3>
+<p>Some attributes of a field, such as minimum and maximum values and length, may be overridden for a particular usage in the message structure that contains a field reference. However, the key identifiers id and name as well as type attribute may not be overridden. It is possible to override which codes of a code set are supported in a particular scenario, however. See the message structure section below.</p>
+<h3 id="field-value-uniqueness">Field value uniqueness</h3>
+<p>Some fields are required to be populated with unique values, either globally or within a defined scope. A scope of uniqueness may be specified with reference to other fields.</p>
+<p>Uniqueness may be specified with the <code>&lt;unique&gt;</code> element within a rule applied to either a field definition or a reference. The uniqueness of a field may be specified for all uses of the field if a rule is placed as a child of a <code>&lt;field&gt;</code> element, or it may apply to one use case of the field by placing it within a <code>&lt;fieldRef&gt;</code> element.</p>
+<p>A globally unique value is required for all instances of a field.</p>
+<p><strong>Example:</strong> Globally unique values.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:field</span><span class="ot"> id=</span><span class="st">&quot;11&quot;</span><span class="ot"> name=</span><span class="st">&quot;ClOrdID&quot;</span><span class="ot"> presence=</span><span class="st">&quot;required&quot;</span><span class="kw">&gt;</span>  </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">&lt;fixr:rule&gt;</span>  </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:unique/&gt;</span>  </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">&lt;/fixr:rule&gt;</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:field&gt;</span></span></code></pre></div>
+<p><br />
+A key field provides the scope of uniqueness.</p>
+<p><strong>Example:</strong> Unique values per day</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;11&quot;</span><span class="ot"> presence=</span><span class="st">&quot;required&quot;</span><span class="kw">&gt;</span>  </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">&lt;fixr:rule&gt;</span>  </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:unique&gt;</span>  </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>      <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;75&quot;</span><span class="kw">/&gt;</span>  </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;/fixr:unique&gt;</span>  </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">&lt;/fixr:rule&gt;</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:fieldRef&gt;</span></span></code></pre></div>
+<p><br />
+A combination of fields defines scope of uniqueness.</p>
+<p><strong>Example:</strong> Unique values per day and market segment.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;11&quot;</span><span class="ot"> presence=</span><span class="st">&quot;required&quot;</span><span class="kw">&gt;</span>  </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">&lt;fixr:rule&gt;</span>  </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:unique&gt;</span>  </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>      <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;75&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>      <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;1300&quot;</span><span class="kw">/&gt;</span>  </span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;/fixr:unique&gt;</span>  </span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">&lt;/fixr:rule&gt;</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:fieldRef&gt;</span></span></code></pre></div>
+<h2 id="message-structures-1">Message structures</h2>
+<h3 id="components">Components</h3>
+<p>A component is a sequence of fields and nested components. There are two types of components, common blocks and repeating groups. Simple <code>&lt;component&gt;</code> blocks are contained by the <code>&lt;components&gt;</code> parent element while <code>&lt;group&gt;</code> repeating groups are contained by the <code>&lt;groups&gt;</code> parent element.</p>
+<p>Like the messages that contain them, components and groups may be overloaded for slightly different layouts for different scenarios.</p>
+<h4 id="component-identifiers">Component identifiers</h4>
+<p>Like a field, a component has a numeric <code>id</code> attribute and a string <code>name</code> attribute. The schema enforces uniqueness of the <code>id</code> and <code>name</code> attributes among components.</p>
+<p>Like a field, a component can be annotated for documentation and carries pedigree attributes of attribute group <code>entityAttribGrp</code>.</p>
+<p>The <code>scenario</code> attribute of a component identifies a use case; multiple components may have the same name, but the combination of name and scenario must be unique. Scenario has a default value of “base”, so if a component only has one variation, there is no need to qualify it.</p>
+<h4 id="common-block">Common block</h4>
+<p>A common block component is designed to be specified once in detail but reused in multiple message types by reference. An example of a common block is “Instrument”. It is a collection of the possible fields describing an instrument, and it is used in many FIX messages. A common block is implemented as a <code>&lt;component&gt;</code> element in the schema.</p>
+<p>Rules about order of fields or nested components, if any, depend upon the presentation protocol. Since Orchestra supports multiple encodings, the order of fields in an Orchestra file is not guaranteed to match the order on the wire.</p>
+<p><strong>Example:</strong> A component containing field references.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:component</span><span class="ot"> category=</span><span class="st">&quot;Common&quot;</span><span class="ot"> added=</span><span class="st">&quot;FIX.4.4&quot;</span><span class="ot"> id=</span><span class="st">&quot;1006&quot;</span><span class="ot"> name=</span><span class="st">&quot;LegBenchmarkCurveData&quot;</span><span class="ot"> abbrName=</span><span class="st">&quot;BnchmkCurve&quot;</span><span class="ot"> scenario=</span><span class="st">&quot;base&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;676&quot;</span><span class="ot"> scenario=</span><span class="st">&quot;base&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;677&quot;</span><span class="ot"> scenario=</span><span class="st">&quot;base&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;678&quot;</span><span class="ot"> scenario=</span><span class="st">&quot;base&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;679&quot;</span><span class="ot"> scenario=</span><span class="st">&quot;base&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;680&quot;</span><span class="ot"> scenario=</span><span class="st">&quot;base&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:annotation&gt;</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:documentation</span><span class="ot"> purpose=</span><span class="st">&quot;SYNOPSIS&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>         The LegBenchmarkCurveData is used to convey the benchmark information used for pricing in a multi-legged Fixed Income security.</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>      <span class="kw">&lt;/fixr:documentation&gt;</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:component&gt;</span></span></code></pre></div>
+<h4 id="repeating-group">Repeating group</h4>
+<p>A repeating group is like a common block but with one additional feature: it represents an <em>array of</em> blocks to be sent on the wire. In FIX tag=value encoding, a counter of datatype NumInGroup precedes the array when transmitted. In other encodings, such as FIXML, the array is implicit in the presentation protocol.</p>
+<p>A repeating group is specified by a <code>&lt;group&gt;</code> element. It has a child element to specify the associated NumInGroup field by id, <code>&lt;numInGroup&gt;</code>.</p>
+<p>Limits on the size of a repeating group may optionally be specified with <code>implMinOccurs</code> and <code>implMaxOccurs</code> attributes. If those attributes are not present, then the repeating has unbound size.</p>
+<p><strong>Example:</strong> A repeating group with member fields and reference to the NumInGroup field.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:group</span><span class="ot"> category=</span><span class="st">&quot;Common&quot;</span><span class="ot"> id=</span><span class="st">&quot;1007&quot;</span><span class="ot"> name=</span><span class="st">&quot;LegStipulations&quot;</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ot">abbrName=</span><span class="st">&quot;Stip&quot;</span><span class="ot"> added=</span><span class="st">&quot;FIX.4.4&quot;</span><span class="ot"> scenario=</span><span class="st">&quot;base&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:numInGroup</span><span class="ot"> id=</span><span class="st">&quot;683&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> added=</span><span class="st">&quot;FIX.4.4&quot;</span><span class="ot"> id=</span><span class="st">&quot;688&quot;</span><span class="ot"> scenario=</span><span class="st">&quot;base&quot;</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="ot">presence=</span><span class="st">&quot;optional&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> added=</span><span class="st">&quot;FIX.4.4&quot;</span><span class="ot"> id=</span><span class="st">&quot;689&quot;</span><span class="ot"> scenario=</span><span class="st">&quot;base&quot;</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="ot">presence=</span><span class="st">&quot;optional&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:group&gt;</span></span></code></pre></div>
+<h4 id="component-members">Component members</h4>
+<p>A component may contain reference elements of three types in any combination. A component must contain at least one member.</p>
+<ul>
+<li><p>A <code>&lt;fieldRef&gt;</code> element represents a field in a block or repeating group. It is a reference to a <code>&lt;field&gt;</code> element within the <code>&lt;fields&gt;</code> container by its <code>id</code> and <code>scenario</code> attributes.</p></li>
+<li><p>A <code>&lt;componentRef&gt;</code> element represents a nested component. There is no limit in the schema to the level of nesting, although a presentation protocol may have rules about it, and there may be practical limits. The reference must match the referenced <code>&lt;component&gt;</code> on both <code>id</code> and <code>scenario</code> attributes.</p></li>
+<li><p>A <code>&lt;groupRef&gt;</code> element similarly refers to a nested <code>&lt;group&gt;</code> repeating group element by its <code>id</code> and <code>scenario</code> attributes. Limits of the size of a particular instance of a repeating group may be overridden by setting <code>implMinOccurs</code> and <code>implMaxOccurs</code> attributes on the <code>&lt;groupRef&gt;</code> element.</p></li>
+</ul>
+<p><strong>Example:</strong> A component with all kinds of members.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:component</span><span class="ot"> category=</span><span class="st">&quot;Common&quot;</span><span class="ot"> added=</span><span class="st">&quot;FIX.5.0SP2&quot;</span><span class="ot"> addedEP=</span><span class="st">&quot;208&quot;</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ot">id=</span><span class="st">&quot;4400&quot;</span><span class="ot"> name=</span><span class="st">&quot;UnderlyingPaymentStreamCompoundingDates&quot;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="ot">abbrName=</span><span class="st">&quot;CmpndgDts&quot;</span><span class="ot"> scenario=</span><span class="st">&quot;base&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> added=</span><span class="st">&quot;FIX.5.0SP2&quot;</span><span class="ot"> addedEP=</span><span class="st">&quot;208&quot;</span><span class="ot"> id=</span><span class="st">&quot;42904&quot;</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="ot">scenario=</span><span class="st">&quot;base&quot;</span><span class="ot"> presence=</span><span class="st">&quot;optional&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:groupRef</span><span class="ot"> added=</span><span class="st">&quot;FIX.5.0SP2&quot;</span><span class="ot"> addedEP=</span><span class="st">&quot;208&quot;</span><span class="ot"> id=</span><span class="st">&quot;4401&quot;</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="ot">scenario=</span><span class="st">&quot;base&quot;</span><span class="ot"> implMaxOccurs=</span><span class="st">&quot;unbounded&quot;</span><span class="ot"> presence=</span><span class="st">&quot;optional&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> added=</span><span class="st">&quot;FIX.5.0SP2&quot;</span><span class="ot"> addedEP=</span><span class="st">&quot;208&quot;</span><span class="ot"> id=</span><span class="st">&quot;42905&quot;</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="ot">scenario=</span><span class="st">&quot;base&quot;</span><span class="ot"> presence=</span><span class="st">&quot;optional&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> added=</span><span class="st">&quot;FIX.5.0SP2&quot;</span><span class="ot"> addedEP=</span><span class="st">&quot;208&quot;</span><span class="ot"> id=</span><span class="st">&quot;42906&quot;</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="ot">scenario=</span><span class="st">&quot;base&quot;</span><span class="ot"> presence=</span><span class="st">&quot;optional&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> added=</span><span class="st">&quot;FIX.5.0SP2&quot;</span><span class="ot"> addedEP=</span><span class="st">&quot;208&quot;</span><span class="ot"> id=</span><span class="st">&quot;42907&quot;</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="ot">scenario=</span><span class="st">&quot;base&quot;</span><span class="ot"> presence=</span><span class="st">&quot;optional&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> added=</span><span class="st">&quot;FIX.5.0SP2&quot;</span><span class="ot"> addedEP=</span><span class="st">&quot;208&quot;</span><span class="ot"> id=</span><span class="st">&quot;42908&quot;</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="ot">scenario=</span><span class="st">&quot;base&quot;</span><span class="ot"> presence=</span><span class="st">&quot;optional&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> added=</span><span class="st">&quot;FIX.5.0SP2&quot;</span><span class="ot"> addedEP=</span><span class="st">&quot;208&quot;</span><span class="ot"> id=</span><span class="st">&quot;42909&quot;</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a><span class="ot">scenario=</span><span class="st">&quot;base&quot;</span><span class="ot"> presence=</span><span class="st">&quot;optional&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:componentRef</span><span class="ot"> added=</span><span class="st">&quot;FIX.5.0SP2&quot;</span><span class="ot"> addedEP=</span><span class="st">&quot;208&quot;</span><span class="ot"> id=</span><span class="st">&quot;4404&quot;</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a><span class="ot">scenario=</span><span class="st">&quot;base&quot;</span><span class="ot"> presence=</span><span class="st">&quot;optional&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:componentRef</span><span class="ot"> added=</span><span class="st">&quot;FIX.5.0SP2&quot;</span><span class="ot"> addedEP=</span><span class="st">&quot;208&quot;</span><span class="ot"> id=</span><span class="st">&quot;4402&quot;</span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="ot">scenario=</span><span class="st">&quot;base&quot;</span><span class="ot"> presence=</span><span class="st">&quot;optional&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> added=</span><span class="st">&quot;FIX.5.0SP2&quot;</span><span class="ot"> addedEP=</span><span class="st">&quot;208&quot;</span><span class="ot"> id=</span><span class="st">&quot;42910&quot;</span></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a><span class="ot">scenario=</span><span class="st">&quot;base&quot;</span><span class="ot"> presence=</span><span class="st">&quot;optional&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> added=</span><span class="st">&quot;FIX.5.0SP2&quot;</span><span class="ot"> addedEP=</span><span class="st">&quot;208&quot;</span><span class="ot"> id=</span><span class="st">&quot;42911&quot;</span></span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a><span class="ot">scenario=</span><span class="st">&quot;base&quot;</span><span class="ot"> presence=</span><span class="st">&quot;optional&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> added=</span><span class="st">&quot;FIX.5.0SP2&quot;</span><span class="ot"> addedEP=</span><span class="st">&quot;208&quot;</span><span class="ot"> id=</span><span class="st">&quot;42912&quot;</span></span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a><span class="ot">scenario=</span><span class="st">&quot;base&quot;</span><span class="ot"> presence=</span><span class="st">&quot;optional&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> added=</span><span class="st">&quot;FIX.5.0SP2&quot;</span><span class="ot"> addedEP=</span><span class="st">&quot;208&quot;</span><span class="ot"> id=</span><span class="st">&quot;42913&quot;</span></span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a><span class="ot">scenario=</span><span class="st">&quot;base&quot;</span><span class="ot"> presence=</span><span class="st">&quot;optional&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> added=</span><span class="st">&quot;FIX.5.0SP2&quot;</span><span class="ot"> addedEP=</span><span class="st">&quot;208&quot;</span><span class="ot"> id=</span><span class="st">&quot;42914&quot;</span></span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a><span class="ot">scenario=</span><span class="st">&quot;base&quot;</span><span class="ot"> presence=</span><span class="st">&quot;optional&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:component&gt;</span></span></code></pre></div>
+<h3 id="presence">Presence</h3>
+<p>Each of the members of a component or message, namely <code>&lt;fieldRef&gt;</code>, <code>&lt;componentRef&gt;</code> or <code>&lt;groupRef&gt;</code>, have a <code>presence</code> attribute. The possible values of presence are:</p>
+<ul>
+<li><p><strong>required</strong>—the member MUST always be present in a message.</p></li>
+<li><p><strong>optional</strong>—the member MAY be present; it may be conditionally required based on a rule.</p></li>
+<li><p><strong>forbidden</strong>—the member MUST NOT be present.</p></li>
+<li><p><strong>ignored</strong>—the member MAY be present but is not processed by the receiving party, and thus, no validation is performed on it.</p></li>
+<li><p><strong>constant</strong>—the field has a constant value.</p></li>
+</ul>
+<p>The receiver of a message with a forbidden element or lacking a required element may reject it using appropriate actions defined by the rules of engagement.</p>
+<h4 id="constant-field-value">Constant field value</h4>
+<p>A field may be set to a constant value. A specific value of a field is often useful to distinguish scenarios or use cases for a message type. For example, values of ExecType(150) distinguish various scenarios of ExecutionReport(35=8). Also, if a presentation protocol supports constants, a constant field need not be transmitted on the wire.</p>
+<p><strong>Example:</strong> A constant field. SecurityIDSource is always code ‘1’ (CUSIP).</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;22&quot;</span><span class="ot"> presence=</span><span class="st">&quot;constant&quot;</span><span class="ot"> value=</span><span class="st">&quot;1&quot;</span><span class="kw">/&gt;</span></span></code></pre></div>
+<h4 id="default-value-of-an-optional-field">Default value of an optional field</h4>
+<p>For an optional field, a default value may be specified if the sender does not provide the field.</p>
+<p><strong>Example:</strong> An optional field with a default value. TimeInForce(59) default is ‘0’ (Day).</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;59&quot;</span><span class="ot"> presence=</span><span class="st">&quot;optional&quot;</span><span class="ot"> value=</span><span class="st">&quot;0&quot;</span><span class="kw">/&gt;</span></span></code></pre></div>
+<h4 id="conditionally-required-field">Conditionally required field</h4>
+<p>The presence of a conditionally required field depends upon other fields in a component or message. For example, StopPx(99) is required when OrdType(40) is 3=Stop or 4=StopLimit. If OrdType(40) has any other value like Limit or Market, then StopPx(99) is not required.</p>
+<p>The condition that tells when a conditionally required field is required is contained by a <code>&lt;rule&gt;</code> element tree under a <code>&lt;fieldRef&gt;</code>. A <code>&lt;rule&gt;</code> element may contain an override of <code>presence</code> as well as certain other field attributes. Each rule is specified by a <code>&lt;when&gt;</code> element that gives the condition for the override. The XML content (text node) of the <code>&lt;when&gt;</code> element is a conditional expression that follows a grammar described in the conditional expressions section below. The attribute override such as <code>presence=″required″</code> attribute is applied to the <code>&lt;when&gt;</code> element.</p>
+<p><strong>Example:</strong> Rules for a conditionally required field.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;99&quot;</span><span class="ot"> presence=</span><span class="st">&quot;conditional&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:rule</span><span class="ot"> name=</span><span class="st">&quot;StopOrderRequiresStopPx&quot;</span><span class="ot"> presence=</span><span class="st">&quot;required&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:when&gt;</span>OrdType == ^Stop<span class="kw">&lt;/fixr:when&gt;</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;/fixr:rule&gt;</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:rule</span><span class="ot"> name=</span><span class="st">&quot;LimitOrderForbidsStopPx&quot;</span><span class="ot"> presence=</span><span class="st">&quot;forbidden&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:when&gt;</span>OrdType \!= ^Stop<span class="kw">&lt;/fixr:when&gt;</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;/fixr:rule&gt;</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:fieldRef&gt;</span></span></code></pre></div>
+<h4 id="mutually-exclusive-component-members">Mutually exclusive component members</h4>
+<p>Sometimes members of a component or group are intended to be mutually exclusive. This is expressed by adding the attribute <code>which="oneOf"</code> to a <code>&lt;component&gt;</code> or <code>&lt;group&gt;</code> element. In a message that contains the component or group, <em>one and only one</em> of its mutually exclusive members must be present.</p>
+<p><strong>Example:</strong> The fields OrderQty(38) and CashOrderQty(152), and the nested component OrderQtyDataCIV are mutually exclusive members the OrderQtyData component.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:component</span><span class="ot"> category=</span><span class="st">&quot;Common&quot;</span><span class="ot"> added=</span><span class="st">&quot;FIX.4.3&quot;</span><span class="ot"> id=</span><span class="st">&quot;1011&quot;</span><span class="ot"> name=</span><span class="st">&quot;OrderQtyData&quot;</span><span class="ot"> abbrName=</span><span class="st">&quot;OrdQty&quot;</span><span class="ot"> scenario=</span><span class="st">&quot;base&quot;</span><span class="ot"> which=</span><span class="st">&quot;oneOf&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> added=</span><span class="st">&quot;FIX.4.3&quot;</span><span class="ot"> id=</span><span class="st">&quot;38&quot;</span><span class="ot"> scenario=</span><span class="st">&quot;base&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> added=</span><span class="st">&quot;FIX.4.3&quot;</span><span class="ot"> id=</span><span class="st">&quot;152&quot;</span><span class="ot"> scenario=</span><span class="st">&quot;base&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:componentRef</span><span class="ot"> id=</span><span class="st">&quot;2011&quot;</span><span class="ot"> scenario=</span><span class="st">&quot;base&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:annotation&gt;</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:documentation</span><span class="ot"> purpose=</span><span class="st">&quot;SYNOPSIS&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>         The OrderQtyData component block contains the fields commonly used for indicating the amount or quantity of an order. Note that when this component block is marked as &quot;required&quot; in a message either one of these three fields must be used to identify the amount: OrderQty, CashOrderQty or OrderPercent (in the case of CIV).</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;/fixr:documentation&gt;</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;/fixr:annotation&gt;</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:component&gt;</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:component</span><span class="ot"> category=</span><span class="st">&quot;Common&quot;</span><span class="ot"> added=</span><span class="st">&quot;FIX.4.3&quot;</span><span class="ot"> id=</span><span class="st">&quot;2011&quot;</span><span class="ot"> name=</span><span class="st">&quot;OrderQtyDataCIV&quot;</span><span class="ot"> abbrName=</span><span class="st">&quot;OrdQty&quot;</span><span class="ot"> scenario=</span><span class="st">&quot;base&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> added=</span><span class="st">&quot;FIX.4.3&quot;</span><span class="ot"> id=</span><span class="st">&quot;516&quot;</span><span class="ot"> scenario=</span><span class="st">&quot;base&quot;</span><span class="ot"> presence=</span><span class="st">&quot;required&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> added=</span><span class="st">&quot;FIX.4.3&quot;</span><span class="ot"> id=</span><span class="st">&quot;468&quot;</span><span class="ot"> scenario=</span><span class="st">&quot;base&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> added=</span><span class="st">&quot;FIX.4.3&quot;</span><span class="ot"> id=</span><span class="st">&quot;469&quot;</span><span class="ot"> scenario=</span><span class="st">&quot;base&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:component&gt;</span></span></code></pre></div>
+<p>Similarly, the attribute <code>which="anyOf"</code> indicates that <em>at least one</em> of the members of a component must be present.</p>
+<p>To require <em>all</em> of the members to be present, set <code>presence="required"</code> on each member.</p>
+<h3 id="message">Message</h3>
+<p>A message in an Orchestra file describes a unit to be sent on the wire between counterparties.</p>
+<p>Like a <code>&lt;component&gt;</code>, a <code>&lt;message&gt;</code> element has <code>id</code> and <code>name</code> attributes. It also has an <code>msgType</code> attribute, a short name. In tag=value encoding, msgType is the value of the FIX field MsgType(35).</p>
+<p>In FIX, a single MsgType(35) value is often reused for multiple use cases. For example, an ExecutionReport(35=8), is overloaded for acceptance of an order, rejection, execution, cancel confirmation, etc. In the Orchestra schema, the <code>scenario</code> attribute is used to name each of those use cases. Each of the variations of a single MsgType(35) value can have slightly different message structures.</p>
+<p>Another attribute of <code>&lt;message&gt;</code> called <code>flow</code> ties a message to an exchange of messages between actors.</p>
+<h4 id="message-structure">Message structure</h4>
+<p>The <code>&lt;messages&gt;</code> element contains any number of child <code>&lt;message&gt;</code> elements. From the perspective of the XML schema, a <code>&lt;message&gt;</code> is very similar to a <code>&lt;component&gt;</code>; they contain the same member types and share most attributes. However, <code>&lt;message&gt;</code> is a top-level entity only; it cannot be contained by other message parts, nor can messages be nested.</p>
+<p>Unlike <code>&lt;component&gt;</code>, the parts of a message are contained by a child <code>&lt;structure&gt;</code> element, which in turn holds <code>&lt;fieldRef&gt;</code>, <code>&lt;componentRef&gt;</code> and <code>&lt;groupRef&gt;</code> elements.</p>
+<p><strong>Example:</strong> A message structure with a field, nested components, and a nested repeating group.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:message</span><span class="ot"> name=</span><span class="st">&quot;TradingSessionList&quot;</span><span class="ot"> id=</span><span class="st">&quot;100&quot;</span><span class="ot"> msgType=</span><span class="st">&quot;BJ&quot;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="ot">category=</span><span class="st">&quot;MarketStructureReferenceData&quot;</span><span class="ot"> section=</span><span class="st">&quot;PreTrade&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:structure&gt;</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:componentRef</span><span class="ot"> id=</span><span class="st">&quot;1024&quot;</span><span class="ot"> presence=</span><span class="st">&quot;required&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:componentRef</span><span class="ot"> id=</span><span class="st">&quot;1057&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;335&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:groupRef</span><span class="ot"> id=</span><span class="st">&quot;2099&quot;</span><span class="ot"> presence=</span><span class="st">&quot;required&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:componentRef</span><span class="ot"> id=</span><span class="st">&quot;1025&quot;</span><span class="ot"> presence=</span><span class="st">&quot;required&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;/fixr:structure&gt;</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:message&gt;</span></span></code></pre></div>
+<h4 id="scenarios-2">Scenarios</h4>
+<p>Message structures commonly vary with scenario or use case. For example, an ExecutionReport might look quite different in its execution use case versus a cancel-confirmation use case. The attribute that names a use case is scenario. If no scenario is explicitly given, it defaults to “base”.</p>
+<p>The combination of <code>id</code> and <code>scenario</code> attributes must be unique.</p>
+<h4 id="responses">Responses</h4>
+<p>Aside from <code>&lt;structure&gt;</code>, <code>&lt;message&gt;</code> has another child element called <code>&lt;responses&gt;</code>; it is explained in the section <a href="#workflow">Workflow</a> below.</p>
+<h2 id="expressions">Expressions</h2>
+<h3 id="conditional-expressions">Conditional expressions</h3>
+<p>Conditional expressions are rules that are expressed in a Domain Specific Language (DSL). They are evaluated by substituting actual values from a message and other state information for tokens in the expression. A conditional expression is of Boolean type. That is, it evaluates true or false. If true, it determines the value of another attribute or that some action should take place, such as sending a certain response message.</p>
+<p>Conditional expressions are used in Orchestra:</p>
+<ul>
+<li><p>To tell when a conditionally required field is required (presence=required);</p></li>
+<li><p>To tell when a field attribute aside from <code>presence</code> is overridden, such as setting the range of valid values with <code>minInclusive</code> and <code>maxInclusive</code> attributes. It can even tell when to override the <code>type</code> of a field. For example, the <code>type</code> of SecurityID(48) could be overridden, depending on the value of SecurityIDSource(22). Some kinds of SecurityID(48) values are strings while others are numeric;</p></li>
+<li><p>To tell when a specific workflow response should be sent or other action taken.</p></li>
+</ul>
+<p>All conditions are declared in the XML content of a <code>&lt;when&gt;</code> element. See the section <a href="#score-dsl">Score DSL</a> below for details of the grammar.</p>
+<h3 id="assignment-expressions">Assignment expressions</h3>
+<p>Assignment expressions are used to set the value of a field in an outgoing message or to alter a state variable that belongs to an actor. The grammar of assignment expressions is also governed by the <a href="#score-dsl">Score DSL</a>.</p>
+<h4 id="assigning-a-field">Assigning a field</h4>
+<p>To assign a field in an outgoing message, an <code>&lt;assign&gt;</code> element is placed within the context of a <code>&lt;fieldRef&gt;</code> in the message structure. The content of the <code>&lt;assign&gt;</code> element (text node) contains a Score expression giving the value to set. The value must evaluate to a datatype compatible with the type of the field.</p>
+<p><strong>Example:</strong> Echo the value of a field from an incoming message.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;11&quot;</span><span class="ot"> added=</span><span class="st">&quot;FIX.2.7&quot;</span><span class="ot"> updated=</span><span class="st">&quot;FIX.5.0SP2&quot;</span><span class="ot"> updatedEP=</span><span class="st">&quot;188&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:assign&gt;</span>in.ClOrdID<span class="kw">&lt;/fixr:assign&gt;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:fieldRef&gt;</span></span></code></pre></div>
+<h4 id="assigning-repeating-group-entries">Assigning repeating group entries</h4>
+<p>Within the context of a <code>&lt;groupRef&gt;</code>, one or more <code>&lt;blockAssignment&gt;</code> elements may be used to specify the assignment of fields in entries of a repeating group. Each instance of <code>&lt;blockAssignment&gt;</code> will cause another entry to be constructed. Within a <code>&lt;blockAssignment&gt;</code>, the syntax for assigning fields is the same as the assignment of an individual field shown above.</p>
+<p><strong>Example:</strong> Assignment of two entries in the Parties repeating group.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:groupRef</span><span class="ot"> id=</span><span class="st">&quot;1012&quot;</span><span class="ot"> added=</span><span class="st">&quot;FIX.4.3&quot;</span><span class="ot"> updated=</span><span class="st">&quot;FIX.5.0SP2&quot;</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="ot">updatedEP=</span><span class="st">&quot;188&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:blockAssignment&gt;</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;448&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>            <span class="kw">&lt;fixr:assign&gt;</span>&quot;ABC&quot;<span class="kw">&lt;/fixr:assign&gt;</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;/fixr:fieldRef&gt;</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;447&quot;</span> <span class="kw">&gt;</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>            <span class="kw">&lt;fixr:assign&gt;</span>^GeneralIdentifier<span class="kw">&lt;/fixr:assign&gt;</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;/fixr:fieldRef&gt;</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;452&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>            <span class="kw">&lt;fixr:assign&gt;</span>^ExecutingFirm<span class="kw">&lt;/fixr:assign&gt;</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;/fixr:fieldRef&gt;</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;/fixr:blockAssignment&gt;</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:blockAssignment&gt;</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;448&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>            <span class="kw">&lt;fixr:assign&gt;</span>&quot;DEF&quot;<span class="kw">&lt;/fixr:assign&gt;</span></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;/fixr:fieldRef&gt;</span></span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;447&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>            <span class="kw">&lt;fixr:assign&gt;</span>^GeneralIdentifier<span class="kw">&lt;/fixr:assign&gt;</span></span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;/fixr:fieldRef&gt;</span></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;452&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>            <span class="kw">&lt;fixr:assign&gt;</span>^ClearingFirm<span class="kw">&lt;/fixr:assign&gt;</span></span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;/fixr:fieldRef&gt;</span></span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;/fixr:blockAssignment&gt;</span></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:groupRef&gt;</span></span></code></pre></div>
+<h4 id="assigning-a-state-variable">Assigning a state variable</h4>
+<p>To assign the value of a state variable when an event occurs, use the <code>&lt;assign&gt;</code> element within a response. The expression contained by the element must refer to a state variable contained by an actor. See the section <a href="#responses">Responses</a> below.</p>
+<h3 id="field-attribute-rules">Field attribute rules</h3>
+<p>Optionally, a <code>&lt;rule&gt;</code> element may be added as a child to <code>&lt;fieldRef&gt;</code> to control an attribute of a field dynamically. Multiple rules are allowed for the same field reference to affect multiple attributes or to generate different values of an attribute under different conditions.</p>
+<p>The attributes of a <code>&lt;fieldRef&gt;</code> that can be controlled by a rule include type and any member of the fieldAttribGrp attribute group. That group includes the <code>presence</code> attribute and attributes to control the length of a field. A rule about presence tells when a conditionally required field is required.</p>
+<h3 id="field-validation-rules">Field validation rules</h3>
+<p>Orchestra has several ways to specify when a field value is valid. One is to set a field’s type to a code set that lists all valid values. Another is to set a valid range using attributes <code>minInclusive</code> and <code>maxInclusive</code>.</p>
+<p>More complex rules can be written under a <code>&lt;fieldRef&gt;</code> that reference the values of other fields or the state variables of actors. Rules can be dynamic. For example, a market might reject orders with limit price outside a band of some differential above or below the last sale price.</p>
+<p>Rule violations can then be captured by a state variable, and if appropriate, an action can be taken, such as sending a reject message. It is important, particularly when generating test systems, to capture all violations rather than reacting to the first one encountered. It is recommended to capture all violations in a repeating group variable of an <code>&lt;actor&gt;</code> element. Responses can be defined in the actor to perform actions such as sending a reject message for certain kinds of violations.</p>
+<p><strong>Example:</strong> A field validation rule sets a state variable when tripped.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;44&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:rule</span><span class="ot"> name=</span><span class="st">&quot;tick&quot;</span> <span class="kw">&gt;</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:assign&gt;</span>$validator.ViolationGrp[].ruleViolated=&quot;tick&quot;<span class="kw">&lt;/fixr:assign&gt;</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">&lt;!-- price not even tick increment of .05 --&gt;</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:when&gt;</span>(Price * 100) % 5 != 0<span class="kw">&lt;/fixr:when&gt;</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;/fixr:rule&gt;</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:fieldRef&gt;</span></span></code></pre></div>
+<p><br />
+<strong>Example:</strong> A state variable to hold rule violations.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:actor</span><span class="ot"> name=</span><span class="st">&quot;validator&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:group</span><span class="ot"> id=</span><span class="st">&quot;10000&quot;</span><span class="ot"> name=</span><span class="st">&quot;ViolationGrp&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:numInGroup</span><span class="ot"> id=</span><span class="st">&quot;10001&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:field</span><span class="ot"> id=</span><span class="st">&quot;10002&quot;</span><span class="ot"> name=</span><span class="st">&quot;ruleViolated&quot;</span><span class="ot"> type=</span><span class="st">&quot;String&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;/fixr:group&gt;</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:actor&gt;</span></span></code></pre></div>
+<h3 id="response-conditions">Response conditions</h3>
+<p>A <code>&lt;when&gt;</code> element with a conditional expression is also supported in the <code>&lt;message&gt;/&lt;responses&gt;</code> element tree. See section <a href="#workflow">Workflow</a> below for usage.</p>
+<h2 id="workflow">Workflow</h2>
+<p>Workflow is the behavior of a FIX party with respect to the exchange of messages. For each received message type, one or more possible actions can be specified under the <code>&lt;message&gt;/&lt;responses&gt;</code> element.</p>
+<p>Workflow in Orchestra recognizes that there is not always a 1:1 relationship between a FIX MsgType(35) and a use case. Some FIX message types such as ExecutionReport(35=8) are overloaded for many different use cases. Therefore, messages in Orchestra are identified primarily by their FIX MsgType(35) value, but with a qualification for a specific use case. Each message use case is called a scenario.</p>
+<p>Behavior may depend upon more information than a receive message itself. External state information enters it as well, e.g. the state of an order book. The <code>&lt;actors&gt;</code> element tree provides a place to store such external state information. An actor can also be used to identify the originator or receiver of a message.</p>
+<h3 id="scenarios-3">Scenarios</h3>
+<p>A scenario is one use case of a specific message type, as identified by key attributes <code>name</code> and <code>msgType</code> in the <code>messageAttribGrp</code> attribute group supported by <code>&lt;message&gt;</code>. A scenario name is stored in the <code>scenario</code> attribute of <code>&lt;message&gt;</code>. If there is only one use case for a message type, then scenario need not be populated. It defaults to “base”. Scenarios must be unique per message type and it is an error to have more than one <code>&lt;message&gt;</code> element of the same type without a scenario since they would in effect be duplicates of scenario “base”.</p>
+<p>This standard imposes no naming convention for scenarios. Implementers are free to choose names that are meaningful in their business.</p>
+<p>Each scenario is represented by a <code>&lt;message&gt;</code> element, and thus has its own message contents in its <code>&lt;structure&gt;</code> child element and its own <code>&lt;responses&gt;</code> element tree.</p>
+<h4 id="mapping-a-message-to-a-scenario">Mapping a message to a scenario</h4>
+<p><em>This section is non-normative.</em></p>
+<p>The task of mapping an actual received message to a scenario declaration in Orchestra is left to implementations. The first level of matching is on the <code>msgType</code> attribute. However, that message type may have several scenarios. Pattern matching strategies might include comparing a message to expected required fields, mapping values of a distinguishing field like ExecType(150) to its code set literals, and so forth.</p>
+<h3 id="actors">Actors</h3>
+<p>An <code>&lt;actor&gt;</code> element represents either a counterparty to a FIX session or an external entity that holds state relevant to application and session behavior. An actor can take actions such as assigning state or transitioning a state machine. If it represents a session counterparty, it can send FIX messages. Also, actions can be time dependent. An Orchestra file may declare any number of actors within the <code>&lt;actors&gt;</code> parent element. The <code>name</code> attribute of an <code>&lt;actor&gt;</code> element must be unique within an Orchestra file.</p>
+<h4 id="state-variables">State variables</h4>
+<p>Actors can hold state variables in the form of FIX fields. That is, each state variable has an id and name for identification and a value of a FIX datatype. Like any field, valid values can be constrained to a code set or range. The datatype or code set is declared in the <code>type</code> attribute, just like any field.</p>
+<p>If a state variable corresponds to a standard FIX field, it can be declared as a <code>&lt;fieldRef&gt;</code> element child of the <code>&lt;actor&gt;</code>. Alternatively, it can be declared in-line as a <code>&lt;field&gt;</code> element. Additionally, state variables can be organized as components or repeating groups.</p>
+<p>A state variable can be tested in a conditional expression or set by an assignment expression.</p>
+<p><strong>Example:</strong> An actor with state variables for TradingSession(336) and TradeDate(75).</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:actor</span><span class="ot"> name=</span><span class="st">&quot;Market&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;336&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;75&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:actor&gt;</span></span></code></pre></div>
+<h4 id="state-machines">State machines</h4>
+<p>A state machine has discrete values called states and defined transitions between states. A state machine is declared in XML as a <code>&lt;states&gt;</code> child element of an <code>&lt;actor&gt;</code>. The <code>&lt;states&gt;</code> element contains any number <code>&lt;state&gt;</code> children, and one initial state of the state machine, as <code>&lt;initial&gt;</code> element. It is an error to declare more than one initial state. Some state changes are allowed and others disallowed; changes can only be made through explicitly declared transitions. A <code>&lt;transition&gt;</code> child of a <code>&lt;state&gt;</code> or <code>&lt;initial&gt;</code> gives the name of the new state of the state machine in its <code>target</code> attribute.</p>
+<p>States and transitions must have unique names within a state machine.</p>
+<p>The current state of a state machine can be tested by a conditional expression and a transition can be invoked by an assignment expression.</p>
+<p><strong>Example:</strong> A state machine for market phases.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:states</span><span class="ot"> name=</span><span class="st">&quot;Phase&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:initial</span><span class="ot"> name=</span><span class="st">&quot;Closed&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:transition</span><span class="ot"> name=</span><span class="st">&quot;Reopening&quot;</span><span class="ot"> target=</span><span class="st">&quot;Preopen&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;/fixr:initial&gt;</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:state</span><span class="ot"> name=</span><span class="st">&quot;Halted&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:transition</span><span class="ot"> name=</span><span class="st">&quot;Resumed&quot;</span><span class="ot"> target=</span><span class="st">&quot;Preopen&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;/fixr:state&gt;</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:state</span><span class="ot"> name=</span><span class="st">&quot;Open&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:transition</span><span class="ot"> name=</span><span class="st">&quot;Closing&quot;</span><span class="ot"> target=</span><span class="st">&quot;Preclose&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;/fixr:state&gt;</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:state</span><span class="ot"> name=</span><span class="st">&quot;Preopen&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:transition</span><span class="ot"> name=</span><span class="st">&quot;Opened&quot;</span><span class="ot"> target=</span><span class="st">&quot;Open&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;/fixr:state&gt;</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:state</span><span class="ot"> name=</span><span class="st">&quot;Preclose&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:transition</span><span class="ot"> name=</span><span class="st">&quot;Closed&quot;</span><span class="ot"> target=</span><span class="st">&quot;Closed&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;/fixr:state&gt;</span></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:states&gt;</span></span></code></pre></div>
+<h4 id="timers">Timers</h4>
+<p>Some application layer and session layer behaviors are time dependent. An event can fire when a timer expires to affect other states or send a message.</p>
+<p>Like a state machine, a <code>&lt;timer&gt;</code> is the child of an <code>&lt;actor&gt;</code>, and it has a <code>name</code> attribute.</p>
+<p><strong>Example:</strong> A timer declaration</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:timer</span><span class="ot"> name=</span><span class="st">&quot;expirationTimer&quot;</span><span class="kw">/&gt;</span></span></code></pre></div>
+<p><br />
+<strong>Example:</strong> A timer operation to start a timer that triggers a transition in a state machine. Other events could cancel the timer.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:timerSchedule</span><span class="ot"> actor=</span><span class="st">&quot;Market&quot;</span><span class="ot"> name=</span><span class="st">&quot;expirationTimer&quot;</span><span class="ot"> operation=</span><span class="st">&quot;START&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:activity&gt;</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:trigger</span><span class="ot"> stateMachine=</span><span class="st">&quot;OrderState&quot;</span><span class="ot"> actor=</span><span class="st">&quot;Market&quot;</span><span class="ot"> name=</span><span class="st">&quot;Expired&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;/fixr:activity&gt;</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:timerSchedule&gt;</span></span></code></pre></div>
+<h3 id="flows">Flows</h3>
+<p>A <code>&lt;flow&gt;</code> element represents a stream of messages from one actor (source) to another (destination). A flow depends on abstractions of the session and transport layers, but is an application-layer view of message exchange behavior. It is intended to be session and transport protocol independent. Multiple application flows may be multiplexed in a FIX session.</p>
+<p>A <code>&lt;flow&gt;</code> is identified by its <code>name</code> attribute. It must have a <code>source</code> and a <code>destination</code> attribute, and both of those must match the <code>name</code> of an <code>&lt;actor&gt;</code> element. The <code>messageCast</code> attribute defaults to unicast, but may be set to multicast.</p>
+<p>The optional <code>reliability</code> attribute describes the delivery guarantee of messages on the flow. It takes one of these values:</p>
+<ul>
+<li><p><strong>bestEffort</strong>—no delivery guarantee</p></li>
+<li><p><strong>idempotent</strong>—deliver at-most once</p></li>
+<li><p><strong>recoverable</strong>—deliver exactly once</p></li>
+</ul>
+<p><strong>Example:</strong> Actors and flows.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:actors&gt;</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:actor</span><span class="ot"> name=</span><span class="st">&quot;BuySide&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:actor</span><span class="ot"> name=</span><span class="st">&quot;SellSide&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:flow</span><span class="ot"> name=</span><span class="st">&quot;OrderEntry&quot;</span><span class="ot"> source=</span><span class="st">&quot;BuySide&quot;</span><span class="ot"> destination=</span><span class="st">&quot;SellSide&quot;</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="ot">messageCast=</span><span class="st">&quot;unicast&quot;</span><span class="ot"> reliability=</span><span class="st">&quot;idempotent&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:flow</span><span class="ot"> name=</span><span class="st">&quot;Executions&quot;</span><span class="ot"> source=</span><span class="st">&quot;SellSide&quot;</span><span class="ot"> destination=</span><span class="st">&quot;BuySide&quot;</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="ot">messageCast=</span><span class="st">&quot;unicast&quot;</span><span class="ot"> reliability=</span><span class="st">&quot;recoverable&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:flow</span><span class="ot"> name=</span><span class="st">&quot;MarketData&quot;</span><span class="ot"> source=</span><span class="st">&quot;SellSide&quot;</span><span class="ot"> destination=</span><span class="st">&quot;BuySide&quot;</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="ot">messageCast=</span><span class="st">&quot;multicast&quot;</span><span class="ot"> reliability=</span><span class="st">&quot;bestEffort&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:actors&gt;</span></span></code></pre></div>
+<h3 id="responses-1">Responses</h3>
+<p>Responses to a received message can be of these types:</p>
+<ul>
+<li><p>A message is sent in reply to the received message</p></li>
+<li><p>A state variable is changed</p></li>
+<li><p>A state machine transition is invoked</p></li>
+<li><p>A timer is started or canceled</p></li>
+</ul>
+<p>Multiple responses can be specified for a given message scenario as children of its <code>&lt;responses&gt;</code> element.</p>
+<p>A <code>&lt;when&gt;</code> element supplies a conditional expression that triggers a response if the condition is true. The expression is in the Score DSL grammar (see section <a href="#score-dsl">Score DSL</a> below). It is possible to trigger multiple responses if more than one conditional expression evaluates true. If no <code>&lt;when&gt;</code> element is provided for a <code>&lt;response&gt;</code>, then the response is unconditional.</p>
+<h4 id="message-response">Message response</h4>
+<p>A <code>&lt;messageRef&gt;</code> child of a response represents a reply to the received message. Its name, <code>msgType</code> and <code>scenario</code> attributes are the combined key to a matching <code>&lt;message&gt;</code> to send.</p>
+<p>An optional <code>&lt;identifiers&gt;</code> element contains one or more correlations between a message and its response message. This information supports the following relationships between chains of messages, such as between an order and its executions. Each child <code>&lt;correlate&gt;</code> element supplies the id of a field that is common to a message and its response. By default, a common identifier is assumed to be in the same field in the message and its response. If it is in different fields, then the <code>id</code> attribute applies to the response message and sourceId applies to original message. Also, it is possible to assign new identifiers in the response message. The element <code>&lt;assign&gt;</code> is used to describe that case.</p>
+<p><strong>Example:</strong> Send a response message and show correlated and new identifiers.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:response</span><span class="ot"> name=</span><span class="st">&quot;orderAck&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:messageRef</span><span class="ot"> name=</span><span class="st">&quot;ExecutionReport&quot;</span><span class="ot"> msgType=</span><span class="st">&quot;8&quot;</span><span class="ot"> implMaxOccurs=</span><span class="st">&quot;1&quot;</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="ot">id=</span><span class="st">&quot;9&quot;</span><span class="ot"> scenario=</span><span class="st">&quot;base&quot;</span><span class="ot"> implMinOccurs=</span><span class="st">&quot;1&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:identifiers&gt;</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>            <span class="kw">&lt;fixr:correlate</span><span class="ot"> id=</span><span class="st">&quot;11&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>            <span class="kw">&lt;fixr:correlate</span><span class="ot"> id=</span><span class="st">&quot;2422&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>            <span class="kw">&lt;fixr:assign</span><span class="ot"> id=</span><span class="st">&quot;37&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>            <span class="kw">&lt;fixr:annotation&gt;</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>                <span class="kw">&lt;fixr:documentation&gt;</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>                ExecutionReport(35=8) echoes ClOrdId(11) and OrderRequestID(2422) from order message and assigns OrderID(37).</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>                <span class="kw">&lt;/fixr:documentation&gt;</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>            <span class="kw">&lt;/fixr:annotation&gt;</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;/fixr:identifiers&gt;</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;/fixr:messageRef&gt;</span></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:when&gt;</span>$Market.SecMassStatGrp[SecurityID==in.SecurityID].SecurityTradingStatus != ^TradingHalt and $Market.Phase == &quot;Open&quot;<span class="kw">&lt;/fixr:when&gt;</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:response&gt;</span></span></code></pre></div>
+<h4 id="state-variable-response">State variable response</h4>
+<p>An <code>&lt;assign&gt;</code> element changes the value of a state variable belonging to an actor. Its child element <code>&lt;assign&gt;</code> references one or more state variables to change in the form of an assignment expression.</p>
+<p><strong>Example:</strong> Assign a state variable belonging to actor “participant”.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:assign&gt;</span>$participant.RiskLimitAmount=15000<span class="kw">&lt;/fixr:assign&gt;</span></span></code></pre></div>
+<h4 id="state-machine-response">State machine response</h4>
+<p>A <code>&lt;trigger&gt;</code> element represents a state machine transition, invoked when a message is received. Its statemachine attribute identifies the name of the state machine, and its <code>name</code> attribute refers to the name of a <code>&lt;transition&gt;</code> within that state machine.</p>
+<p><strong>Example:</strong> Invoking a state machine transition: the market resumes after a halt.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:transitionRef</span><span class="ot"> actor=</span><span class="st">&quot;Market&quot;</span><span class="ot"> stateMachine=</span><span class="st">&quot;Phase&quot;</span><span class="ot"> name=</span><span class="st">&quot;Resumed&quot;</span><span class="kw">/&gt;</span></span></code></pre></div>
+<h4 id="timer-operation-response">Timer operation response</h4>
+<p>A <code>&lt;timerSchedule&gt;</code> element invokes an operation to either start or cancel a timer. The <code>name</code> attribute refers to the name of the timer, the operation tells whether to start or cancel, and interval gives the elapsed time. Interval is expressed in the lexical space of XML schema type duration. That type includes the magnitude and time unit of the period in conformance to standard <a href="https://www.iso.org/standard/70907.html">ISO 8601:2019</a>. The <code>&lt;responses&gt;</code> elements represents actions to take when the timer expires. Actions can include sending a message, setting a state variable, or invoking a state machine transition.</p>
+<p><strong>Example:</strong> Start a timer for 120 seconds. On timer expiration, send a cancel message, provided the order is still open.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:timerSchedule</span><span class="ot"> actor=</span><span class="st">&quot;trader&quot;</span><span class="ot"> name=</span><span class="st">&quot;exposureTimer&quot;</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="ot">operation=</span><span class="st">&quot;START&quot;</span><span class="ot"> interval=</span><span class="st">&quot;PT120S&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:responses&gt;</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;fixr:response&gt;</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>            <span class="kw">&lt;fixr:messageRef</span><span class="ot"> name=</span><span class="st">&quot;OrderCancelRequest&quot;</span><span class="ot"> msgType=</span><span class="st">&quot;F&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>        <span class="kw">&lt;/fixr:response&gt;</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:responses&gt;</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:timerSchedule&gt;</span></span></code></pre></div>
+<h2 id="semantic-concepts">Semantic Concepts</h2>
+<p>Optionally, semantic concepts may be identified by name, even when the representation of such a concept changes across versions of a protocol. Anchoring a changing representation to a stable concept can be used to inform applications such as message translators.</p>
+<p>A concept may be tied to a field or group of fields. Values may be variable or constant. Also, a concept name may be used to link a generic event to its message type and scenario.</p>
+<p>Recognized concept names will be published by the FIX Trading Community. To maximize portability, users should conform to those names.</p>
+<p><strong>Example:</strong> The semantic concept is stable, but the FIX 4.2 fields were replaced.</p>
+<p>FIX 4.2 encoding</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:concept</span><span class="ot"> name=</span><span class="st">&quot;ProgramOrder&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;47&quot;</span><span class="ot"> presence=</span><span class="st">&quot;constant&quot;</span><span class="ot"> value=</span><span class="st">&quot;D&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:concept&gt;</span></span></code></pre></div>
+<p><br />
+FIX 4.4 encoding</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:concept</span><span class="ot"> name=</span><span class="st">&quot;ProgramOrder&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;528&quot;</span><span class="ot"> presence=</span><span class="st">&quot;constant&quot;</span><span class="ot"> value=</span><span class="st">&quot;P&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:fieldRef</span><span class="ot"> id=</span><span class="st">&quot;529&quot;</span><span class="ot"> presence=</span><span class="st">&quot;constant&quot;</span><span class="ot"> value=</span><span class="st">&quot;1&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:concept&gt;</span></span></code></pre></div>
+<p><br />
+<strong>Example:</strong> The name of a message changed.</p>
+<p>FIX 4.2 encoding</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:concept</span><span class="ot"> name=</span><span class="st">&quot;BaseOrder&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:messageRef</span><span class="ot"> name=</span><span class="st">&quot;OrderSingle&quot;</span><span class="ot"> msgType=</span><span class="st">&quot;D&quot;</span><span class="ot"> scenario=</span><span class="st">&quot;base&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:concept&gt;</span></span></code></pre></div>
+<p><br />
+FIX 4.4 encoding</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixr:concept</span><span class="ot"> name=</span><span class="st">&quot;BaseOrder&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;fixr:messageRef</span><span class="ot"> name=</span><span class="st">&quot;NewOrderSingle&quot;</span><span class="ot"> msgType=</span><span class="st">&quot;D&quot;</span><span class="ot"> scenario=</span><span class="st">&quot;base&quot;</span><span class="kw">/&gt;</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/fixr:concept&gt;</span></span></code></pre></div>
+<h1 id="interfaces-xml-schema">Interfaces XML Schema</h1>
+<h2 id="xml-schema-xsd">XML Schema (XSD)</h2>
+<p>The FIXInterfaces schema represents service offering and session provisioning. Its XML namespace is “http://fixprotocol.io/2020/orchestra/interfaces”.</p>
+<h3 id="conformance-1">Conformance</h3>
+<p>All published Interface files <strong>must</strong> conform to the standard XML schema. This can be validated with common XML parsers and related tools.</p>
+<h3 id="schema-location-1">Schema location</h3>
+<p>The XML schema is currently available in GitHub project fix-orchestra module <a href="https://github.com/FIXTradingCommunity/fix-orchestra/tree/master/interfaces">interfaces</a>. It will also be made available at a URI consistent with its XML namespace.</p>
+<h3 id="root-element-1">Root element</h3>
+<p>The root element an Interfaces XML file is <code>&lt;interfaces&gt;</code>. This snippet shows that element with required namespaces:</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;fixi:interfaces</span><span class="ot"> xmlns:dcterms=</span><span class="st">&quot;http://purl.org/dc/terms/&quot;</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="ot">xmlns:fixi=</span><span class="st">&quot;http://fixprotocol.io/2020/orchestra/interfaces&quot;</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="ot">xmlns:xsi=</span><span class="st">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="ot">xsi:schemaLocation=</span><span class="st">&quot;http://fixprotocol.io/2020/orchestra/interfaces FixInterfaces2020.xsd&quot;</span><span class="kw">&gt;</span></span></code></pre></div>
+<h3 id="supplementary-documentation-1">Supplementary documentation</h3>
+<p>See the separate document “FixInterfaces2020.html” for a detailed technical reference for the Interfaces XML schema. The remainder of this section serves as an overview and explains motivations for the design.</p>
+<h3 id="protocol-relationship-1">Protocol relationship</h3>
+<p>The schema was primarily designed to describe metadata about FIX protocols. However, it was also intended to be generic enough to work with other common financial industry protocols, especially when FIX is used in combination with other protocols.</p>
+<h3 id="extensibility">Extensibility</h3>
+<p>This schema was designed to maximize extensibility so that it represents a wide range of applications, even with non-FIX protocols. Most elements allow the addition of attributes and types allow additional child elements, possibly conformant to other XML schemas.</p>
+<h3 id="provenance-1">Provenance</h3>
+<p>The <code>&lt;metadata&gt;</code> element is used to identify a particular Interfaces file and the issuer of that file. It can contain any of the elements defined by the Dublin Core XML schema. Recommended elements include publisher, date, and rights.</p>
+<h3 id="session-effective-times">Session effective times</h3>
+<p>Optionally, a session may be configured for start and end time. Adding a session prior to its effective time allows configuration tasks to be carried out in advance of usage.</p>
+<h3 id="incremental-changes">Incremental changes</h3>
+<p>The Interface file format represents current state. Aside from session effective times, it does not carry full pedigree. However, if a party wishes to represent incremental changes to a file, it may do so using XML patch operations as specified in IETF RFC 5261.</p>
+<h3 id="interface">Interface</h3>
+<p>The root element <code>&lt;interfaces&gt;</code> contains one or more <code>&lt;interface&gt;</code> elements. An interface is a collection of protocols and services exposed by a counterparty. An interface may be configured for one or more service offerings and all the protocols that make up a communication stack. A service offering is exposed as a <code>&lt;service&gt;</code> element, and protocols are given as elements for each layer of a stack. Also, an interface may contain any number of session configurations under its child <code>&lt;sessions&gt;</code> element. An <code>&lt;interface&gt;</code> element has a <code>name</code> attribute.</p>
+<h3 id="protocols">Protocols</h3>
+<p>An <code>&lt;interface&gt;</code> element has children for each layer of a protocol stack. The children are <code>&lt;userInterface&gt;</code>, <code>&lt;encoding&gt;</code>, <code>&lt;sessionProtocol&gt;</code>, <code>&lt;transport&gt;</code>, and <code>&lt;protocol&gt;</code>. An <code>&lt;interface&gt;</code> may have multiple instances of a protocol. For example, a session may use primary and secondary transports.</p>
+<p>Any message-oriented protocol may have an <code>orchestration</code> attribute that consists of a URI. It is a link to an Orchestra file that describes message structures and workflow. A URI may link to a web resource or a local file.</p>
+<p>All the protocol elements have <code>name</code> and <code>version</code> attributes.</p>
+<h3 id="service">Service</h3>
+<p>A service is an application layer protocol. The <code>&lt;service&gt;</code> element is of XML protocolType, carrying the same attributes as other protocols.</p>
+<h3 id="transport">Transport</h3>
+<p>The <code>&lt;transport&gt;</code> element is derived from XML protocolType but has additional attributes address, messageCast and use. The optional <code>messageCast</code> attribute has an enumeration of values: unicast, multicast and broadcast. The optional <code>use</code> attribute can have values primary, secondary and alternate.</p>
+<h3 id="session">Session</h3>
+<p>A <code>&lt;session&gt;</code> inherits services and protocols from its parent <code>&lt;interface&gt;</code>, but it may have further refinement or overrides of protocol settings, such as a transport address.</p>
+<p>A session has one or more identifiers in child <code>&lt;identifier&gt;</code> elements. The <code>&lt;value&gt;</code> child of <code>&lt;identifier&gt;</code> may be of any XML type, even an element tree.</p>
+<h4 id="security-keys">Security keys</h4>
+<p>Security keys may be conveyed for a session in its child <code>&lt;securityKeys&gt;</code> element. The content of that element must conform to textual encoding as specified by IETF RFC 7468.</p>
+<h1 id="score-dsl">Score DSL</h1>
+<h2 id="grammar">Grammar</h2>
+<h3 id="comments">Comments</h3>
+<p>Comments may be inserted in Score expressions in two forms. Comments are ignored by an expression evaluator but give a humanly readable explanation.</p>
+<h4 id="c-language-style-comments">C-language style comments</h4>
+<p>C-language style comments are contained by tokens /* and */.</p>
+<p><strong>Example:</strong> /* This is a C style comment. */</p>
+<h4 id="line-comments">Line comments</h4>
+<p>Line comments extend from the token // to the next line break.</p>
+<p><strong>Example:</strong> // This is a line comment.</p>
+<h3 id="literals">Literals</h3>
+<p>A literal stands for a value that is assignable to a FIX datatype.</p>
+<h4 id="character-literal">Character literal</h4>
+<p>A character literal is of FIX datatype char. It is delimited by single quotes.</p>
+<p><strong>Example:</strong> ′a′</p>
+<h4 id="string-literal">String literal</h4>
+<p>A character literal is of FIX datatype String. It is delimited by double quotes.</p>
+<p><strong>Example:</strong> “A String literal”</p>
+<h4 id="integer-literal">Integer literal</h4>
+<p>An integer literal is of FIX datatype int. It is a sequence of digits and may be preceded by a hyphen character that represents the unary minus operator.</p>
+<p><strong>Examples:</strong> 123, -123</p>
+<h4 id="decimal-literal">Decimal literal</h4>
+<p>A decimal literal is assignable to FIX datatypes float, Price, Amt, Qty, PriceOffset or Percentage. It is a sequence of digits followed by a decimal point (period character) and another sequence of digits. At least one digit must precede and follow the decimal point. A decimal literal may be preceded by a unary minus operator (hyphen character).</p>
+<p><strong>Example:</strong> 123.456</p>
+<h4 id="date-time-literals">Date-time literals</h4>
+<p>Date, time of day, and date-time literals are delimited by the # character. The syntax within the delimiters is governed by the standard <a href="https://www.iso.org/standard/70907.html">ISO 8601:2019</a> “Date and time format”.</p>
+<h5 id="date-literal">Date literal</h5>
+<p>A date literal is of the form YYYY-MM-DD with a hyphen character separating the year, month and day parts. A date literal is of FIX datatype UTCDateOnly.</p>
+<p><strong>Example:</strong> #2017-03-21#</p>
+<h5 id="time-literal">Time literal</h5>
+<p>A time of day literal is of the form HH:MM:SS.FFFFFFFFFTZD with a colon character separating the hour, minute and optional second parts. An optional fraction of a second follows a decimal point (period character). It may represent nanosecond precision. Finally, a time literal contains a timezone designator, either the literal Z, or a timezone offset from UTC. A timezone offset is of the form [+|-]HH:MM. It represents an offset from UTC in hours and minutes. A time literal is of FIX datatype UTCTimeOnly.</p>
+<p><strong>Examples:</strong></p>
+<p>#09:58:24.123456789Z#</p>
+<p>#09:58:24Z#</p>
+<p>#09:58-06:00#</p>
+<h5 id="date-time-literal">Date-time literal</h5>
+<p>A time of day literal is of the form YYYY-MM-DD THH:MM:SS.FFFFFFFFFTZD. The syntax of the parts are the same as a date literal followed by a time literal. A date-time literal is of FIX datatype UTCTimestamp.</p>
+<p><strong>Examples:</strong></p>
+<p>#2017-03-21T09:58:24.123456789Z#</p>
+<p>#2017-03-21T09:58:24Z#</p>
+<p>#2017-03-21T09:58-06:00#</p>
+<h5 id="duration-literal">Duration literal</h5>
+<p>A duration literal is of the form PYMWDTHMS. In all cases, ‘P’ is a prefix, and ‘T’ separates date units from time of day units. The units of time are represented by literal Y=year, M=month, W=week, D=day, H=hour, M=minute, S=second. Each unit is optional, but they may be used in any combination.</p>
+<p>Currently, there is no FIX datatype that represents duration, but a duration literal may be used with date and time literals in date and time expressions in the DSL.</p>
+<p><strong>Examples:</strong></p>
+<p>7 days: #P7D#</p>
+<p>1 hour 30 minutes: #PT1H30M#</p>
+<p>10 seconds: #PT10S#</p>
+<p>N.B. Month duration is recognized by the <a href="https://www.iso.org/standard/70907.html">ISO 8601:2019</a> syntax, but since months are of different numbers of days, the resulting duration is indeterminate without some context about how to count days.</p>
+<h4 id="code-literal">Code literal</h4>
+<p>A code of a code set is designated by its name preceded by the ^ character. The code set that contains the code is generally inferred by a field scope within an expression.</p>
+<p><strong>Example:</strong> Code literal for OrdType(40)=3 is ^StopLimit.</p>
+<h3 id="variables">Variables</h3>
+<p>A variable is a named value that is independent of sent and received messages. A variable has a name and a value of any FIX datatype. A state variable is created and populated by an assignment expression (see below). The datatype of a state variable is set by the assignment.</p>
+<h4 id="variable-names">Variable names</h4>
+<p>The following entities must have distinct names to be used in conditional or assignment expressions.</p>
+<ul>
+<li><p>A field used as a state variable of an actor.</p></li>
+<li><p>The current state of a state machine, belonging to an actor.</p></li>
+<li><p>A timer that belongs to an actor.</p></li>
+</ul>
+<p>Variable names are always prefixed by the character $. Any meaningful name may be used; there is no need to conform to FIX message element names. All names must begin with a letter, and the rest of the name may contain upper or lower case letters, digits, or the underscore character. A name may consist of multiple qualifiers, each separated by a dot (period character). The first qualifier should correspond to an actor name. Variables may be grouped within actor context by further qualifiers.</p>
+<p><strong>Example:</strong> $myactor.totalQty</p>
+<h3 id="message-element-references">Message element references</h3>
+<p>The DSL syntax allows access to fields in received messages and population of field in messages to be sent.</p>
+<h4 id="field-names">Field names</h4>
+<p>The following entities must have distinct names to be used in conditional or assignment expressions.</p>
+<ul>
+<li><p>A field at the root level of a message</p></li>
+<li><p>A field contained by a repeating group. In the case of a repeating group, an entry is indexed or an entry may be selected by a conditional expression (see below).</p></li>
+</ul>
+<p>The high-level qualifier for a received message is “in”, and the high-level qualifier for an outbound message is “out”. In implementations, the scope of a message may be implicit, making the high-level qualifier unnecessary. Then a field can simply be referenced by name. However, qualification is needed if for example, an expression about a field in an outgoing response message refers to a field in its inbound request.</p>
+<h4 id="repeating-group-entry-selection">Repeating group entry selection</h4>
+<p>If a field is within a repeating group, then an entry in the group must be selected to retrieve the value of the field. This can be done in two ways. The first way is by using a one-based index (ordinal number) to select an entry. The index is surrounded by square brackets. The repeating group and field names are separated by a dot (period character).</p>
+<p><strong>Example:</strong> Reference MDEntryType(269) field in the second entry of its repeating group: MDIncGrp[2].MDEntryType.</p>
+<p>The second method of accessing a repeating group entry is by using an equality expression using a second field in the group as a key. The expression is placed in square brackets. The condition selects a repeating group entry by testing equality of a named field in the group entry to a literal value.</p>
+<p><strong>Example:</strong> References PartyID(448) field in the repeating group entry for which PartyRole(452) = 4 (Clearing Firm): Parties[PartyRole==4].PartyID</p>
+<p>Alternatively, the same field can be accessed by using a code literal in the equality expression.</p>
+<p><strong>Example:</strong> Reference field in the repeating group entry for which PartyRole(452) = 4 (Clearing Firm): Parties[PartyRole==^ClearingFirm].PartyID</p>
+<h3 id="conditional-expressions-1">Conditional expressions</h3>
+<p>Conditional expressions are used for multiple purposes in Orchestra:</p>
+<ul>
+<li><p>To tell when a conditionally required field is in fact required;</p></li>
+<li><p>To tell when a certain response to a received message is triggered;</p></li>
+<li><p>To select an entry in a repeating group using a field value, as described above.</p></li>
+</ul>
+<p>Conditional expressions take several forms:</p>
+<ul>
+<li><p>Relational expression: Compare a field’s value in a received message to a literal of the field’s datatype or a code designated by its name in a code set associated to the field.</p></li>
+<li><p>Relational expression: Compare a field’s value in a received message to the value of another field in the same message or to a field used as a state variable belonging to an actor.</p></li>
+<li><p>Relational expression: Compare the current state of a state machine to a literal representing one of its possible states.</p></li>
+<li><p>Compound relational conditions joined by “and” and “or”.</p></li>
+<li><p>Relational expressions may express set inclusion or data range inclusion.</p></li>
+<li><p>Relational expressions may depend on simple expressions that use arithmetic operators on terms.</p></li>
+</ul>
+<h4 id="relational-operators">Relational operators</h4>
+<p>These are the relational operators of the Scope grammar. Operands must be of the same or compatible datatypes.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Token</th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>&lt; or lt</td>
+<td>less than</td>
+</tr>
+<tr class="even">
+<td>&lt;= or le</td>
+<td>less than or equal</td>
+</tr>
+<tr class="odd">
+<td>&gt; or gt</td>
+<td>greater than</td>
+</tr>
+<tr class="even">
+<td>&gt;= or ge</td>
+<td>greater than or equal</td>
+</tr>
+</tbody>
+</table>
+<h4 id="equality-operators">Equality operators</h4>
+<p>These are the equality operators of the Scope grammar. Operands must be of the same or compatible datatypes.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Token</th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>== or eq</td>
+<td>equals</td>
+</tr>
+<tr class="even">
+<td>!= or ne</td>
+<td>not equals</td>
+</tr>
+</tbody>
+</table>
+<h4 id="logical-operators">Logical operators</h4>
+<p>These are the logical operators of the Scope grammar. Operands must be Boolean.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Token</th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>&amp;&amp; or and</td>
+<td>and</td>
+</tr>
+<tr class="even">
+<td>|| or or</td>
+<td>or</td>
+</tr>
+</tbody>
+</table>
+<h4 id="arithmetic-operators">Arithmetic operators</h4>
+<p>These are the arithmetic operators of the Scope grammar. Operands must be numeric. Multiplication and division have higher priority than addition and subtraction when not grouped by parentheses.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Token</th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>*</td>
+<td>multiplication</td>
+</tr>
+<tr class="even">
+<td>/</td>
+<td>division</td>
+</tr>
+<tr class="odd">
+<td>% or mod</td>
+<td>modulo</td>
+</tr>
+<tr class="even">
+<td>+</td>
+<td>addition</td>
+</tr>
+<tr class="odd">
+<td>-</td>
+<td>subtraction</td>
+</tr>
+</tbody>
+</table>
+<h4 id="unary-operators">Unary operators</h4>
+<p>These are the unary operators of the Scope grammar.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Token</th>
+<th>Name</th>
+<th>Operand type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>-</td>
+<td>minus</td>
+<td>numeric</td>
+</tr>
+<tr class="even">
+<td>!</td>
+<td>logical not</td>
+<td>Boolean</td>
+</tr>
+</tbody>
+</table>
+<h4 id="parentheses">Parentheses</h4>
+<p>Terms of an expression may be grouped by parentheses to override the default operator precedence. Opening and closing parentheses must always match.</p>
+<h4 id="set-operator">Set operator</h4>
+<p>The set operator tests whether a value is in a set of values of the same datatype. The result of the operation is Boolean. The syntax is as follows:</p>
+<p>value in {member, member …}</p>
+<p>Value may be a literal, state variable or reference to a message field. Each member may be a literal or other expression of the same datatype.</p>
+<h4 id="range-operator">Range operator</h4>
+<p>The range operator tests whether a value is in a range of values of the same datatype. The result of the operation is Boolean. The syntax is as follows:</p>
+<p>value between min and max</p>
+<p>The range operator is a shortcut for value &lt;= min and value &gt;= max. Value may be a literal, state variable or reference to a message field. Min and max may be a literal or other expression of the same datatype.</p>
+<h4 id="existence-operator">Existence operator</h4>
+<p>The existence operator tests whether a variable has been defined, or if an element is present in a message. The test is of Boolean type and may be combined with other logical operators to form a conditional expression. The syntax is of the form:</p>
+<p>exists variable/element</p>
+<h3 id="assignment-expressions-1">Assignment expressions</h3>
+<p>The following entities may be assigned values in an expression:</p>
+<ul>
+<li><p>A field of a message to be sent in a scenario.</p></li>
+<li><p>A field used as a state variable of an actor.</p></li>
+</ul>
+<p>The assignment operator is the = character. The left-hand operand must be either a state variable or a mutable message field. Literals are immutable so a literal cannot be the lvalue (left-hand operand) of an assignment expression. The right-hand operand can be any expression of a compatible datatype. In the case of a variable, it takes the datatype of the expression if it has never been assigned before.</p>
+<h2 id="syntax-errors">Syntax errors</h2>
+<p>Implementations should throw an exception if a DSL expression does not follow the syntax described above. For example, parentheses are mismatched.</p>
+<h2 id="semantic-errors">Semantic errors</h2>
+<p>Implementations should throw an exception in these cases:</p>
+<ul>
+<li><p>Operands are of incompatible datatypes. For example, a relational operator is asked to compare a price value to a UTC timestamp.</p></li>
+<li><p>A variable or message element referenced by an expression does not exist.</p></li>
+</ul>
+<h1 id="examples">Examples</h1>
+<p>Example Orchestra files are provided in the GitHub project <a href="https://github.com/FIXTradingCommunity/fix-orchestra">FIXTradingCommunity/fix-orchestra</a>.</p>
+<h1 id="appendix">Appendix</h1>
+<h2 id="differences-to-the-unified-repository-a.k.a.-repository-2010-edition">Differences to the Unified Repository (a.k.a. Repository 2010 Edition)</h2>
+<ul>
+<li><p>New features: metadata with provenance, actors, workflow, semantic concepts.</p></li>
+<li><p>An Orchestra file supports a single protocol version. If an organization supports multiple protocols, it should issue an Orchestra file for each.</p></li>
+<li><p>The <code>&lt;codeSets&gt;</code> element is now top-level while in the 2010 Edition, enumerations of valid values were contained by fields. This change was made to recognize that code sets may be shared by many fields and also, they may be managed by an external standard.</p></li>
+<li><p>The datatype element was enhanced to support mapping FIX datatypes to any other type system, and not just XML schema datatypes.</p></li>
+<li><p>The Orchestra schema provides a feature to explicitly link a field, called a discriminator, that modifies the value space of another field.</p></li>
+<li><p>Repeating groups were moved to their own parent element from other components.</p></li>
+<li><p>Scenarios overload the layout of a message or component for different use cases.</p></li>
+<li><p>The interfaces schema is new.</p></li>
+</ul>
+<h2 id="compliance">Compliance</h2>
+<p>To be useful, various implementations of FIX Orchestra must interoperate. The FIX Trading Community discourages implementations that deviate from this specification while promoting those that are compliant.</p>
+<p>At minimum, a compliant application:</p>
+<ul>
+<li><p>Must conform to the XML schemas published in the GitHub fix-orchestra project.</p></li>
+<li><p>Must conform to the DSL grammar published in the GitHub project.</p></li>
+</ul>
+<p>Additional compliance utilities may be published. Only applications that pass these checks will qualify for endorsement.</p>
+</body>
+</html>
