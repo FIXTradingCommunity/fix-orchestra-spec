@@ -996,7 +996,7 @@ override such as `presence=″required″` attribute is applied to the
 **Example:** Rules for a conditionally required field.
 
 ```xml
-<fixr:fieldRef id="99" presence="conditional">
+<fixr:fieldRef id="99" presence="optional">
 	<fixr:rule name="StopOrderRequiresStopPx" presence="required">
 		<fixr:when>OrdType == ^Stop</fixr:when>
 	</fixr:rule>
