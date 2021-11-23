@@ -566,7 +566,7 @@ code set. For example, if the datatype of a code set was “int”, value
 as character “2” and then character “7”.
 
 A `<codeSets>` element contains any number of `<codeSet>` child
-elements. The schema allows multiple instances of `<codeSets>`
+elements. The schema allows multiple instances of `<codeSet>`
 containers, each with a unique `name` attribute.
 
 The names of code sets and datatypes share a common namespace and must
