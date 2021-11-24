@@ -566,7 +566,7 @@ code set. For example, if the datatype of a code set was “int”, value
 as character “2” and then character “7”.
 
 A `<codeSets>` element contains any number of `<codeSet>` child
-elements. The schema allows multiple instances of `<codeSets>`
+elements. The schema allows multiple instances of `<codeSet>`
 containers, each with a unique `name` attribute.
 
 The names of code sets and datatypes share a common namespace and must
@@ -993,10 +993,10 @@ described in the conditional expressions section below. The attribute
 override such as `presence=″required″` attribute is applied to the
 `<when>` element.
 
-**Example:** Rules for a conditionally required field.
+**Example:** Rules for a conditionally required field. A stop price is only required in the context of a stop order. On the other hand, a stop price must not be present in case of a limit order (or any order type other than a stop order). In this case, the order type or the presence of the stop price may be wrong and it is better to reject the order based on the rule instead of the recipient trying to find out which part is incorrect.
 
 ```xml
-<fixr:fieldRef id="99" presence="conditional">
+<fixr:fieldRef id="99" presence="optional">
 	<fixr:rule name="StopOrderRequiresStopPx" presence="required">
 		<fixr:when>OrdType == ^Stop</fixr:when>
 	</fixr:rule>
