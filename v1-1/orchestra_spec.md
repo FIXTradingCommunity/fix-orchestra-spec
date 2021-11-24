@@ -229,7 +229,7 @@ pointer to a message is a **messageRef**.
 ### General Purpose Datatypes
 
 Pointer and array abstractions are defined by the standard ISO 11404. The
-code set abstraction is described in that standard as “state” type.
+code set abstraction is described in that standard as "state" type.
 
 ## Interfaces
 
@@ -329,7 +329,7 @@ Several of the elements in the schema support XML Inclusions (XInclude). This al
 
 ### Supplementary documentation
 
-See the separate document “FixRepository2020.html” for a detailed
+See the separate document "FixRepository2020.html" for a detailed
 technical reference for the Orchestra and Repository XML schema. The
 remainder of this section serves as an overview and explains motivations
 for the design.
@@ -547,7 +547,7 @@ The lower and upper bounds of a bounded datatype may be set with
 
 A code set contains a finite collection of valid values of a data
 element. Each unique valid value is called a code. In the terminology of
-ISO 11404, such a data element is called a “state”. (This is
+ISO 11404, such a data element is called a "state". (This is
 distinguished from an enumeration, in which the order of values matters.
 In a state, each of the values must be unique, but order is not
 significant. Hence, the values collection is a set.)
@@ -561,9 +561,9 @@ values. Codes may legally be of any type listed in the `<datatypes>`
 section, but typically are int, char or String datatypes in FIX. In an
 Orchestra file, a code value is presented as a string, but it should be
 actually transmitted in the correct encoding for the datatype of the
-code set. For example, if the datatype of a code set was “int”, value
-“27” should be transmitted in a binary wire format for integer 27, not
-as character “2” and then character “7”.
+code set. For example, if the datatype of a code set was "int", value
+"27" should be transmitted in a binary wire format for integer 27, not
+as character "2" and then character "7".
 
 A `<codeSets>` element contains any number of `<codeSet>` child
 elements. The schema allows multiple instances of `<codeSet>`
@@ -595,8 +595,7 @@ Codes may be documented with an `<annotation>` element tree.
 **Example:** An internal code set.
 
 ```xml
-<fixr:codeSet type="char" id="165" name="SettlInstSourceCodeSet"
-scenario="base">
+<fixr:codeSet type="char" id="165" name="SettlInstSourceCodeSet">
 	<fixr:code value="1" added="FIX.4.1" id="165001" name="BrokerCredit"/>
 	<fixr:code value="2" added="FIX.4.1" id="165002" name="Institution"/>
 	<fixr:code value="3" added="FIX.4.3" id="165003" name="Investor"/>
@@ -609,7 +608,7 @@ Code sets may have different supported codes in different scenarios. For
 example, outbound ExecutionReport(35=8) messages may have more enriched view
 of PartyRole(452) than is required on inbound order messages. Therefore, a
 `<codeset>` may be qualified by its `scenario` attribute. The default
-value of `scenario` is “base”, so the attribute need not be supplied if
+value of `scenario` is "base", so the attribute need not be supplied if
 there is only one form of a codeset.
 
 Uniqueness of codeset scenarios is enforced by the XML schema, both as
@@ -659,7 +658,7 @@ below.
 
 Fields may have different scenarios either to vary annotations or to use
 different code set scenarios for different use cases. The default value
-of `scenario` is “base”, so the attribute need not be supplied if there is
+of `scenario` is "base", so the attribute need not be supplied if there is
 only one form of a field.
 
 Uniqueness of field scenarios is enforced by the XML schema, both as the
@@ -676,8 +675,8 @@ element or a `<codeSet>` element by its `name` attribute. In the case of a
 arrive at a `<datatype>`.
 
 Since `<codeSet>` is also qualified by scenario, a field will link to
-the code set of the same scenario. By default, “base” scenario field
-links to “base” code set.
+the code set of the same scenario. By default, "base" scenario field
+links to "base" code set.
 
 **Example:** A field with a code set and another with a datatype domain.
 
@@ -812,14 +811,14 @@ and carries pedigree attributes of attribute group `entityAttribGrp`.
 
 The `scenario` attribute of a component identifies a use case; multiple
 components may have the same name, but the combination of name and
-scenario must be unique. Scenario has a default value of “base”, so if a
+scenario must be unique. Scenario has a default value of "base", so if a
 component only has one variation, there is no need to qualify it.
 
 #### Common block
 
 A common block component is designed to be specified once in detail but
 reused in multiple message types by reference. An example of a common
-block is “Instrument”. It is a collection of the possible fields
+block is "Instrument". It is a collection of the possible fields
 describing an instrument, and it is used in many FIX
 messages. A common block is implemented as a `<component>` element in
 the schema.
@@ -832,12 +831,12 @@ order on the wire.
 **Example:** A component containing field references.
 
 ```xml
-<fixr:component category="Common" added="FIX.4.4" id="1006" name="LegBenchmarkCurveData" abbrName="BnchmkCurve" scenario="base">
-	<fixr:fieldRef id="676" scenario="base"/>
-	<fixr:fieldRef id="677" scenario="base"/>
-	<fixr:fieldRef id="678" scenario="base"/>
-	<fixr:fieldRef id="679" scenario="base"/>
-	<fixr:fieldRef id="680" scenario="base"/>
+<fixr:component category="Common" added="FIX.4.4" id="1006" name="LegBenchmarkCurveData" abbrName="BnchmkCurve">
+	<fixr:fieldRef id="676"/>
+	<fixr:fieldRef id="677"/>
+	<fixr:fieldRef id="678"/>
+	<fixr:fieldRef id="679"/>
+	<fixr:fieldRef id="680"/>
 	<fixr:annotation>
 		<fixr:documentation purpose="SYNOPSIS">
          The LegBenchmarkCurveData is used to convey the benchmark information used for pricing in a multi-legged Fixed Income security.
@@ -865,11 +864,11 @@ present, then the repeating has unbound size.
 
 ```xml
 <fixr:group category="Common" id="1007" name="LegStipulations"
-abbrName="Stip" added="FIX.4.4" scenario="base">
+abbrName="Stip" added="FIX.4.4">
 	<fixr:numInGroup id="683"/>
-	<fixr:fieldRef added="FIX.4.4" id="688" scenario="base"
+	<fixr:fieldRef added="FIX.4.4" id="688"
 presence="optional"/>
-	<fixr:fieldRef added="FIX.4.4" id="689" scenario="base"
+	<fixr:fieldRef added="FIX.4.4" id="689"
 presence="optional"/>
 </fixr:group>
 ```
@@ -900,7 +899,7 @@ combination. A component must contain at least one member.
 ```xml
 <fixr:component category="Common" added="FIX.5.0SP2" addedEP="208"
 id="4400" name="UnderlyingPaymentStreamCompoundingDates"
-abbrName="CmpndgDts" scenario="base">
+abbrName="CmpndgDts">
 	<fixr:fieldRef added="FIX.5.0SP2" addedEP="208" id="42904"
 scenario="base" presence="optional"/>
 	<fixr:groupRef added="FIX.5.0SP2" addedEP="208" id="4401"
@@ -1013,20 +1012,20 @@ Sometimes members of a component or group are intended to be mutually exclusive.
 **Example:** The fields OrderQty(38) and CashOrderQty(152), and the nested component OrderQtyDataCIV are mutually exclusive members the OrderQtyData component.
 
 ```xml
-<fixr:component category="Common" added="FIX.4.3" id="1011" name="OrderQtyData" abbrName="OrdQty" scenario="base" which="oneOf">
-	<fixr:fieldRef added="FIX.4.3" id="38" scenario="base"/>
-	<fixr:fieldRef added="FIX.4.3" id="152" scenario="base"/>
-	<fixr:componentRef id="2011" scenario="base"/>
+<fixr:component category="Common" added="FIX.4.3" id="1011" name="OrderQtyData" abbrName="OrdQty" which="oneOf">
+	<fixr:fieldRef added="FIX.4.3" id="38"/>
+	<fixr:fieldRef added="FIX.4.3" id="152"/>
+	<fixr:componentRef id="2011"/>
 	<fixr:annotation>
 		<fixr:documentation purpose="SYNOPSIS">
          The OrderQtyData component block contains the fields commonly used for indicating the amount or quantity of an order. Note that when this component block is marked as "required" in a message either one of these three fields must be used to identify the amount: OrderQty, CashOrderQty or OrderPercent (in the case of CIV).
 		</fixr:documentation>
 	</fixr:annotation>
 </fixr:component>
-<fixr:component category="Common" added="FIX.4.3" id="2011" name="OrderQtyDataCIV" abbrName="OrdQty" scenario="base">
-	<fixr:fieldRef added="FIX.4.3" id="516" scenario="base" presence="required"/>
-	<fixr:fieldRef added="FIX.4.3" id="468" scenario="base"/>
-	<fixr:fieldRef added="FIX.4.3" id="469" scenario="base"/>
+<fixr:component category="Common" added="FIX.4.3" id="2011" name="OrderQtyDataCIV" abbrName="OrdQty">
+	<fixr:fieldRef added="FIX.4.3" id="516" presence="required"/>
+	<fixr:fieldRef added="FIX.4.3" id="468"/>
+	<fixr:fieldRef added="FIX.4.3" id="469"/>
 </fixr:component>
 ```
 
@@ -1481,7 +1480,7 @@ message. The element `<assign>` is used to describe that case.
 ```xml
 <fixr:response name="orderAck">
 	<fixr:messageRef name="ExecutionReport" msgType="8" implMaxOccurs="1"
-id="9" scenario="base" implMinOccurs="1">
+id="9" implMinOccurs="1">
 		<fixr:identifiers>
 			<fixr:correlate id="11"/>
 			<fixr:correlate id="2422"/>
@@ -1586,7 +1585,7 @@ FIX 4.2 encoding
 
 ```xml
 <fixr:concept name="BaseOrder">
-	<fixr:messageRef name="OrderSingle" msgType="D" scenario="base"/>
+	<fixr:messageRef name="OrderSingle" msgType="D"/>
 </fixr:concept>
 ```
 \
@@ -1594,7 +1593,7 @@ FIX 4.4 encoding
 
 ```xml
 <fixr:concept name="BaseOrder">
-	<fixr:messageRef name="NewOrderSingle" msgType="D" scenario="base"/>
+	<fixr:messageRef name="NewOrderSingle" msgType="D"/>
 </fixr:concept>
 ```
 
@@ -1630,7 +1629,7 @@ xsi:schemaLocation="http://fixprotocol.io/2020/orchestra/interfaces FixInterface
 
 ### Supplementary documentation
 
-See the separate document “FixInterfaces2020.html” for a detailed
+See the separate document "FixInterfaces2020.html" for a detailed
 technical reference for the Interfaces XML schema. The remainder of this
 section serves as an overview and explains motivations for the design.
 
