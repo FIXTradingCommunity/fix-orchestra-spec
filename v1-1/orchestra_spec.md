@@ -27,7 +27,7 @@ as data) and may include:
     a Domain Specific Language (DSL)
 
   - Document and exchange the Algorithmic Trading Definition Language
-    (FIXatdl) files associated with a FIX service offering
+    (FIXatdl&reg;) files associated with a FIX service offering
 
   - FIX session identification and transport configuration
 
@@ -290,7 +290,7 @@ It will be made available via the web at a URL consistent with its XML namespace
 
 ### Root element
 
-The root element an Orchestra respository XML file is `<repository>`. An Orchestra
+The root element an Orchestra repository XML file is `<repository>`. An Orchestra
 repository file contains all the message structures and workflow
 elements pertaining to a single protocol version. If an organization
 supports multiple versions of FIX, it should supply an Orchestra file
@@ -304,12 +304,13 @@ substantive change to the protocol.
 This snippet shows that element with required namespaces and attributes:
 
 ```xml
-<fixr:repository name="FIX.5.0SP2" version="FIX.5.0SP2_EP253"
+<fixr:repository name="FIX.Latest" version="FIX.Latest_EP273"
 xmlns="http://purl.org/dc/elements/1.1/"
 xmlns:fixr="http://fixprotocol.io/2020/orchestra/repository"
 xmlns:dc="http://purl.org/dc/terms/"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://fixprotocol.io/2020/orchestra/repository FixRepository2020.xsd">
+xmlns:xi="http://www.w3.org/2001/XInclude"
+xsi:schemaLocation="http://fixprotocol.io/2020/orchestra/repository repository.xsd">
 ```
 
 #### Repository attributes
@@ -327,9 +328,11 @@ to the attribute `expressionLanguage`.
 
 Several of the elements in the schema support XML Inclusions (XInclude). This allows assembly of an Orchestra XML infoset from multiple, reusable XML files. For example, several service offerings may share datatypes, fields, and even common message types.
 
+For example, `<fixr:datatypes>` element can be replaced with `<xi:include href="src/test/resources/datatypes.xml"/>`. The datatypes then need to be defined in a separate file `datatypes.xml`. The included file needs to contain the namespace as follows: `<fixr:datatypes xmlns:fixr="http://fixprotocol.io/2020/orchestra/repository">`
+
 ### Supplementary documentation
 
-See the separate document “FixRepository2020.html” for a detailed
+See the separate document “repository.html” in [GitHub](https://github.com/FIXTradingCommunity/fix-orchestra-spec/tree/master/v1-1/informative) for a detailed
 technical reference for the Orchestra and Repository XML schema. The
 remainder of this section serves as an overview and explains motivations
 for the design.
@@ -358,28 +361,29 @@ publisher, date, and rights.
 
 ```xml
 <fixr:metadata>
-	<dc:title>Orchestra Example</dc:title>
-	<dc:creator>Millennium IT</dc:creator>
-	<dc:publisher>FIX Trading Community</dc:publisher>
-	<dc:rights>Copyright 2019, FIX Protocol, Limited</dc:rights>
-	<dc:date>2019-01-09T16:09:16.904-06:00</dc:date>
-	<dc:format>Orchestra Repository</dc:format>
-	<dc:contributor>RepositoryCompressor</dc:contributor>
+	<dc:title>FIX.Latest_EP273</dc:title>
+  <dcterms:created>2022-09-27T14:27:48.680189</dcterms:created>
+	<dc:date>2022-09-27T14:19:31Z</dc:date>
+  <dcterms:rights>Copyright (c) FIX Protocol Ltd. All Rights Reserved.</dcterms:rights>
+  <dcterms:conformsTo>Orchestra v1.0</dcterms:conformsTo>
+  <dcterms:source>FIX Unified Repository 2010 Edition</dcterms:source>
 </fixr:metadata>
 ```
 
 ### Pedigree
 
 Most message elements in the schema support a complete history of
-creation, change and potentially deprecation with support of attribute group
-`entityAttribGrp`. Each historical event should be qualified by its extension pack (EP). In the past, they were also qualified by protocol version. However, each EP now produces FIX Latest; protocol versions will no longer change.
+creation, change, replacement, and potentially deprecation with support of attribute group
+`entityAttribGrp`. Each historical event should be qualified by its protocol version and may be qualified by its extension pack (EP).
 
 **Example:** A field that was added and updated
 
 ```xml
 <fixr:field type="String" id="17" name="ExecID" abbrName="ExecID" added="FIX.2.7" updated="FIX.5.0SP1" updatedEP="95">
 ```
-\
+
+Deprecated elements are not removed from the repository. They may still be used based upon bilateral agreement. However, the publisher of the Orchestra XML file recommends to avoid its usage and should use the `replacedByField` attribute in case of a 1:1 change. The `<annotation>` element may additionally be used to describe the alternate element(s) and new approach.
+
 **Example:** Code element that was deprecated
 
 ```xml
@@ -1625,12 +1629,13 @@ shows that element with required namespaces:
 <fixi:interfaces xmlns:dcterms="http://purl.org/dc/terms/"
 xmlns:fixi="http://fixprotocol.io/2020/orchestra/interfaces"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://fixprotocol.io/2020/orchestra/interfaces FixInterfaces2020.xsd">
+xmlns:xi="http://www.w3.org/2001/XInclude"
+xsi:schemaLocation="http://fixprotocol.io/2020/orchestra/interfaces interfaces.xsd">
 ```
 
 ### Supplementary documentation
 
-See the separate document “FixInterfaces2020.html” for a detailed
+See the separate document interfaces.html” in [GitHub](https://github.com/FIXTradingCommunity/fix-orchestra-spec/tree/master/v1-1/informative) for a detailed
 technical reference for the Interfaces XML schema. The remainder of this
 section serves as an overview and explains motivations for the design.
 
