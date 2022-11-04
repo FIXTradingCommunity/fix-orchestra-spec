@@ -1,9 +1,9 @@
 ---
-title: FIX Orchestra
+title: Orchestra Metadata Standard
 subtitle: Technical Specification
 author:
-- "Version 1.1 -- Release Candidate 1 -- XXXX XX, 202X"
-- "\x0D"
+- "Version 1.1 -- Release Candidate 1 -- November 4, 2022"
+- "---"
 - "THIS DOCUMENT IS A RELEASE CANDIDATE FOR A PROPOSED FIX TECHNICAL STANDARD. A RELEASE"
 - "CANDIDATE HAS BEEN APPROVED BY THE GLOBAL TECHNICAL COMMITTEE AS AN INITIAL STEP IN"
 - "CREATING A NEW FIX TECHNICAL STANDARD. POTENTIAL ADOPTERS ARE STRONGLY ENCOURAGED TO"

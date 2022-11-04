@@ -328,7 +328,7 @@ to the attribute `expressionLanguage`.
 
 Several of the elements in the schema support XML Inclusions (XInclude). This allows assembly of an Orchestra XML infoset from multiple, reusable XML files. For example, several service offerings may share datatypes, fields, and even common message types.
 
-For example, `<fixr:datatypes>` element can be replaced with `<xi:include href="src/test/resources/datatypes.xml"/>`. The datatypes then need to be defined in a separate file `datatypes.xml`. The included file needs to contain the namespace as follows: `<fixr:datatypes xmlns:fixr="http://fixprotocol.io/2020/orchestra/repository">`
+For example, `<fixr:datatypes>` element can be replaced with `<xi:include href="src/test/resources/datatypes.xml"/>`. The datatypes then need to be defined in a separate file `datatypes.xml`. The included file needs to contain the namespace as follows: `<fixr:datatypes xmlns:fixr="http://fixprotocol.io/2020/orchestra/repository">`.
 
 ### Supplementary documentation
 
@@ -390,6 +390,9 @@ Deprecated elements are not removed from the repository. They may still be used 
 <code value="3" name="LocalCommission" added="FIX.4.0"
 deprecated="FIX.5.0SP2" deprecatedEP="204"/>
 ```
+
+### Naming rules
+Since Orchestra supports both FIX and non-FIX protocols, naming rules are relaxed in the XML schema. FIX and other style rules should be enforced by other means, such as a validator application. The only restriction is that names are of XML schema datatype “token”, which trims leading and trailing spaces and disallows some non-printable characters like line feeds and carriage returns. Tokens are limited to 64 characters.
 
 ## Features for document and FIXML generation
 
