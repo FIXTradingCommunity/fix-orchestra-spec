@@ -99,7 +99,7 @@ platforms.
 
 **Provenance** – a record of ownership of an artifact.
 
-**Scenario** — a use case of a message type and its components.
+**Scenario** — a use case of a message, component, field, code set or datatype.
 
 **Semantic** — pertaining to the meaning of a message element, regardless
 of its representation.
@@ -151,13 +151,12 @@ not**" or "**not recommended**".
 In this document, the following formats are used for technical specifications
 and data examples.
 
-XML element and attribute names as well as FIX field and message names
-appear in this font: `codeSet`
+XML element names appear in the text as follows: `<field>`. XML attribute names appear in the text as follows: `name`
 
-This is a sample XML snippet:
+XML snippets are shown as follows:
 
 ```xml
-<fixr:field id="59" name="TimeInForce" type="TimeInForceCodeSet"/>
+<fixr:field id="59" name="TimeInForce" codeSet="TimeInForceCodeSet"/>
 ```
 
 ## References
@@ -203,27 +202,23 @@ structures.
 
 ### Message structure abstractions
 
-**Field**–carries a specific business meaning (semantics) as described
-in FIX specifications or other protocol. A pointer to a field is a **fieldRef**. The data domain of a field is either a datatype or a code
-set.
+**Field**–carries a specific business meaning (semantics) as described in FIX specifications or other protocol. A pointer to a field is a **fieldRef**. The data domain of a field is either a datatype or a code set.
 
-**Datatype**–the value space of a class of fields. FIX has about 20
+**Datatype**–the value space of a class of fields. For example, FIX tag=value encoding has about 20
 datatypes.
 
 **Code set**–a set of valid values of a field. They must all be of the
 same datatype.
 
-**Component**–a sequence of fields and nested components. There are
-two types of components, common block and repeating group. A common
-block is a component designed to be specified once in detail but reused in
+**Component**–a sequence of fields and nested components and/or groups. A
+component is designed to be specified once in detail but reused in
 multiple message types by reference. A pointer to a component is a **componentRef**.
 
-**Group, or repeating group**–like a common block but with one
-additional feature: it represents an *array of* blocks to be sent on the
+**Group, or repeating group**–an *array of* components to be sent on the
 wire. A pointer to a group is a **groupRef**.
 
 **Message**–a unit of information sent on the wire between
-counterparties. A message is composed of components and fields. A
+counterparties. A message is composed of components, groups, and fields. A
 pointer to a message is a **messageRef**.
 
 ### General Purpose Datatypes
@@ -321,7 +316,7 @@ minor changes are made to an Orchestra file while version should be
 updated for incremental changes.
 
 By default, the language for conditional expressions is the Score DSL
-(See section [Score DSL](#score-dsl) below). However, this may be overridden by setting a value
+(See section [Score DSL](#score-dsl)). However, this may be overridden by setting a value
 to the attribute `expressionLanguage`.
 
 ### Support for XInclude
@@ -488,7 +483,7 @@ collisions, names and IDs of deprecated elements should never be reused.
 
 ## Scenarios
 
-**[PLACEHOLDER: Add generic section about scenarios as first level elements]**
+A scenario may be used to distinguish multiple use cases of a single message, group, component, field, code set or datatype. The respective element may be defined more than once in the XML schema by adding `scenario` and/or `scenarioId` attributes in addition to the `id` and/or `name` attributes of the element. Scenarios in the context of the different elements are explained in more detail within the respective sections below.
 
 ## Datatypes
 
@@ -505,7 +500,7 @@ Each datatype is described by a `<datatype>` element, a child of
 
 ### FIX datatypes
 
-The term "FIX datatype" is used to refer to a datatype in the context of the FIX tagvalue encoding. FIX supports a number of encodings such as FIXML, SBE, GPB, and JSON. FIX fields are categorized into roughly 20 FIX datatypes. A datatype should be defined in terms of its value space, the range of its possible values, not in terms of its lexical space, its encoding format. In fact, a FIX datatype may be mapped to any number of wire formats (see the [datatype mappings](#datatype-mappings) section below).
+The term "FIX datatype" is used to refer to a datatype in the context of the FIX tag=value encoding. FIX supports a number of encodings such as FIXML, SBE, GPB, and JSON. FIX fields are categorized into roughly 20 FIX datatypes. A datatype should be defined in terms of its value space, the range of its possible values, not in terms of its lexical space, its encoding format. In fact, a FIX datatype may be mapped to any number of wire formats (see the [datatype mappings](#datatype-mappings) section below).
 
 A datatype may optionally inherit properties from a type specified by
 the `baseType` attribute. For example, FIX datatype "Qty", used by fields like
@@ -517,7 +512,21 @@ may contain different definitions for non-FIX protocols.
 
 ### Datatype scenarios
 
-Datatype definitions may optionally create different subsets of permitted values by means of the `scenario` and `scenarioId` attributes. In addition to the base datatype, for example integer, one may define different scenarios for 8-, 16-, 32-, or 64-bit and signed or unsigned integers. The `baseType` attribute is not applicable when using datatype scenarios and may be deprecated in a future version.
+Datatype definitions may optionally create different subsets of permitted values by means of the `scenario` and `scenarioId` attributes. In addition to the base datatype, for example integer, one may define different scenarios for 8-, 16-, 32-, or 64-bit and signed or unsigned integers. The `baseType` attribute is not needed when using datatype scenarios and may be deprecated in a future version of Orchestra.
+
+**Example:** An integer datatype with an additional scenario for sequence numbers.
+
+```xml
+<fixr:datatype name="int" scenario="base">
+	<fixr:mappedDatatype standard="XML" base="xs:integer"/>
+	<fixr:mappedDatatype standard="ISO11404" base="Integer"/>
+</fixr:datatype>
+
+<fixr:datatype name="int" scenario="SeqNum">
+	<fixr:mappedDatatype standard="XML" base="xs:positiveInteger"/>
+	<fixr:mappedDatatype standard="ISO11404" base="Ordinal"/>
+</fixr:datatype>
+```
 
 ### Datatype mappings
 
@@ -538,7 +547,7 @@ encoding protocol.
 The ISO/IEC 11404 General Purpose Datatypes standard contains a taxonomy
 of programming language-independent types and enumerates their
 characteristics. One of the benefits of following this standard is that
-it will be easier to map FIX data types to other message standards, such
+it will be easier to map FIX datatypes to other message standards, such
 as ISO 20022 (SWIFT). Rather than creating numerous one-off mappings to
 other type systems, is it likely more efficient to map each to ISO 11404
 once, and then compare mappings in an associative model to identify the
@@ -551,7 +560,7 @@ The lower and upper bounds of a bounded datatype may be set with
 used to define the field length in the target encoding, e.g. to support
 mappings to fixed-length encodings such as SBE.
 
-**Example:** A FIX datatype with mappings to XML schema and General-Purpose Datatypes.
+**Example:** A datatype using a base type with mappings to XML schema and General-Purpose Datatypes.
 
 ```xml
 <fixr:datatype name="SeqNum" baseType="int">
@@ -560,7 +569,7 @@ mappings to fixed-length encodings such as SBE.
 </fixr:datatype>
 ```
 
-**Example:** A FIX datatype scenario with a mapping to SBE.
+**Example:** A datatype scenario with a mapping to SBE.
 
 ```xml
 <fixr:datatype name="String" scenario="MIC">
@@ -630,14 +639,14 @@ Codes may be documented with an `<annotation>` element tree.
 #### Code set scenarios
 
 Code sets may have different supported codes in different scenarios. For
-example, outbound FIX ExecutionReport(35=8) messages may have more enriched view
+example, outbound FIX ExecutionReport(35=8) messages may have a more enriched view
 of PartyRole(452) than is required on inbound order messages. Therefore, a
-`<codeSet>` may be qualified by its `scenario` attribute. The default
-value of `scenario` is "base", so the attribute need not be supplied if
+`<codeSet>` may be qualified by its `scenario` and/or `scenarioId` attribute. The default
+values of `scenario` and `scenarioId` are "base" and 1, respectively, so the attributes need not be supplied if
 there is only one form of a code set.
 
 Uniqueness of code set scenarios is enforced by the XML schema, both as
-the combination of `name` + `scenario` as well as `id` + `scenario`.
+the combination of `name` + `scenario` as well as `id` + `scenarioId`.
 
 #### Code validation
 
@@ -666,11 +675,11 @@ with `<annotation>` elements.
 In the case of an external code set, `<code>` elements are not listed in
 the Orchestra file.
 
-**Example:** An external code set CurrencyCode is defined as a FIX datatype Currency with valid
+**Example:** An external code set ExtCurrencyCode is defined as a FIX tag=value datatype Currency with valid
 values defined by standard ISO 4217.
 
 ```xml
-<fixr:codeSet name="CurrencyCode" type="Currency" specUrl="
+<fixr:codeSet name="ExtCurrencyCode" type="Currency" specUrl="
 http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=64758">
 ```
 
@@ -695,20 +704,17 @@ below.
 
 ### Field scenarios
 
-Fields may have different scenarios when any of the attributes need to differ, for example to vary annotations or to use different code set scenarios for different use cases. Scenarios also support different field lengths when using the `implLength` attribute. The default value of `scenario` is "base", so the attribute need not be supplied if there is only one form of a field.
+Fields may have different scenarios when any of the attributes need to differ, for example to vary annotations or to use different code set scenarios for different use cases. Scenarios also support different field lengths when using the `implLength` attribute. The default
+values of `scenario` and `scenarioId` are "base" and 1, respectively, so the attribute need not be supplied if there is only one form of a field.
 
 Uniqueness of field scenarios is enforced by the XML schema, both as the
 combination of `name` + `scenario` as well as `id` + `scenarioId`.
 
 ### Data domain of a field
 
-Every field must have a data domain of either a `<datatype>` name or more
-specifically, a collection of valid values specified by a `<codeSet>`
-reference. In either case, the domain of a field is specified in its
-`type` attribute. The attribute `type` refers to either a `<datatype>`
-element or a `<codeSet>` element by its `name` attribute. In the case of a
-`<codeSet>`, there is a level of indirection to its `type` attribute to
-arrive at a `<datatype>`.
+Every field must have a data domain of either a datatype name or more specifically, a collection of valid values specified by a code set reference. The domain of a field is specified in its `type` attribute in case of a datatype and in its `codeSet` attribute in case of a code set. The attribute `type` refers to a `<datatype>` element and the `codeSet` attribute refers to a `<codeSet>` element by the respective `name` attribute. In the case of a `<codeSet>`, there is a level of indirection to its `codeSet` attribute to arrive at a `<datatype>`.
+
+**[ISSUE: Has the following paragraph become obsolete? No automatic link of field and code set scenario.]**
 
 Since `<codeSet>` is also qualified by scenario, a field will link to
 the code set of the same scenario. By default, "base" scenario field
@@ -717,7 +723,7 @@ links to "base" code set.
 **Example:** A field with a code set and another with a datatype domain.
 
 ```xml
-<fixr:field id="59" name="TimeInForce" type="TimeInForceCodeSet"/>
+<fixr:field id="59" name="TimeInForce" codeSet="TimeInForceCodeSet"/>
 <fixr:field id="60" name="TransactTime" type="UTCTimestamp"/>
 ```
 
@@ -733,14 +739,14 @@ Fields may support a range of user-defined values in addition to those defined e
 
 ### Data fields
 
-A field of data datatype is variable length. In FIX tag=value encoding,
+A field of datatype "data" is variable length. In FIX tag=value encoding,
 the length of such a field is prefixed by a separate field of type
 Length. In other encodings, the length is implicit in the presentation
-protocol. For data fields, the associated Length field is referenced by the
+protocol. For data fields, the associated length field is referenced by the
 `lengthId` attribute, a reference to its `id`
 attribute.
 
-**Example:** A data field and its corresponding Length field.
+**Example:** A data field and its corresponding length field.
 
 ```xml
 <field added="FIX.2.7" id="95" name="RawDataLength" type="Length"/>
@@ -837,11 +843,8 @@ A combination of fields defines scope of uniqueness.
 
 ### Components
 
-A component is a sequence of fields and nested components. There are two
-types of components, common blocks and repeating groups. Simple
-`<component>` blocks are contained by the `<components>` parent element
-while `<group>` repeating groups are contained by the `<groups>`
-parent element.
+A component is a sequence of fields and nested components or [repeating groups](#repeating-groups).
+Individual `<component>` elements are contained by the `<components>` parent element.
 
 Like the messages that contain them, components and groups may be
 overloaded for slightly different layouts for different scenarios.
@@ -855,66 +858,37 @@ attributes among components.
 Like a field, a component can be annotated for documentation
 and carries pedigree attributes of attribute group `entityAttribGrp`.
 
-The `scenario` attribute of a component identifies a use case; multiple
+The `scenario` and `scenarioId` attributes of a component identify a use case; multiple
 components may have the same name, but the combination of name and
-scenario must be unique. Scenario has a default value of "base", so if a
+scenario must be unique. Scenario name and ID have default values of "base" and 1, respectively, so if a
 component only has one variation, there is no need to qualify it.
 
-#### Common block
-
-A common block component is designed to be specified once in detail but
-reused in multiple message types by reference. An example of a common
-block is "Instrument". It is a collection of the possible fields
+A component is designed to be specified once in detail but
+reused in multiple message types by reference. An example of a FIX component
+is "Instrument". It is a collection of the possible fields
 describing an instrument, and it is used in many FIX
-messages. A common block is implemented as a `<component>` element in
+messages. A component is implemented as a `<component>` element in
 the schema.
 
-Rules about order of fields or nested components, if any, depend upon
+Rules about the order of fields or nested components, if any, depend upon
 the presentation protocol. Since Orchestra supports multiple encodings,
 the order of fields in an Orchestra file is not guaranteed to match the
 order on the wire.
 
-**Example:** A component containing field references.
+**Example:** A component containing field references (names are optional).
 
 ```xml
-<fixr:component category="Common" added="FIX.4.4" id="1006" name="LegBenchmarkCurveData" abbrName="BnchmkCurve">
-	<fixr:fieldRef id="676"/>
-	<fixr:fieldRef id="677"/>
-	<fixr:fieldRef id="678"/>
-	<fixr:fieldRef id="679"/>
-	<fixr:fieldRef id="680"/>
+<fixr:component category="Common" id="1006" name="LegBenchmarkCurveData" abbrName="BnchmkCurve">
+	<fixr:fieldRef id="676" name="LegBenchmarkCurveCurrency"/>
+	<fixr:fieldRef id="677" name="LegBenchmarkCurveName"/>
+	<fixr:fieldRef id="678" name="LegBenchmarkCurvePoint"/>
+	<fixr:fieldRef id="679" name="LegBenchmarkPrice"/>
+	<fixr:fieldRef id="680" name="LegBenchmarkPriceType"/>
 	<fixr:annotation>
 		<fixr:documentation purpose="SYNOPSIS">
          The LegBenchmarkCurveData is used to convey the benchmark information used for pricing in a multi-legged Fixed Income security.
       </fixr:documentation>
 </fixr:component>
-```
-
-#### Repeating group
-
-A repeating group is like a common block but with one additional
-feature: it represents an *array of* blocks to be sent on the wire. In
-FIX tag=value encoding, a counter of datatype NumInGroup precedes the
-array when transmitted. In other encodings, such as FIXML, the array is
-implicit in the presentation protocol.
-
-A repeating group is specified by a `<group>` element. It has a child
-element to specify the associated NumInGroup field by id,
-`<numInGroup>`, and optionally by name.
-
-Limits on the size of a repeating group may optionally be specified with
-`implMinOccurs` and `implMaxOccurs` attributes. If those attributes are not
-present, then the repeating has unbound size.
-
-**Example:** A repeating group with member fields and reference to the NumInGroup field.
-
-```xml
-<fixr:group category="Common" id="1007" name="LegStipulations"
-abbrName="Stip" added="FIX.4.4">
-	<fixr:numInGroup id="683" name="NoLegStipulations"/>
-	<fixr:fieldRef added="FIX.4.4" id="688" name="LegStipulationType"/>
-	<fixr:fieldRef added="FIX.4.4" id="689" name="LegStipulationValue"/>
-</fixr:group>
 ```
 
 #### Component members
@@ -935,16 +909,16 @@ combination. A component must contain at least one member.
     A `name` attribute may optionally be provided.
 
   - A `<groupRef>` element similarly refers to a nested `<group>`
-    repeating group element by its `id` and `scenarioId` attributes. Limits of
+    element (see [below](#repeating-groups)) by its `id` and `scenarioId` attributes. Limits of
     the size of a particular instance of a repeating group may be
     overridden by setting `implMinOccurs` and `implMaxOccurs` attributes on
     the `<groupRef>` element.
     A `name` attribute may optionally be provided.
 
-**Example:** A component with all kinds of members.
+**Example:** A component with different kinds of members and pedigree information.
 
 ```xml
-<fixr:component category="Common" added="FIX.5.0SP2" addedEP="208"
+<fixr:component added="FIX.5.0SP2" addedEP="208"
 id="4400" name="UnderlyingPaymentStreamCompoundingDates" abbrName="CmpndgDts">
 	<fixr:fieldRef added="FIX.5.0SP2" addedEP="208" id="42904"/>
 	<fixr:groupRef added="FIX.5.0SP2" addedEP="208" id="4401"
@@ -964,10 +938,36 @@ implMaxOccurs="unbounded"/>
 </fixr:component>
 ```
 
-### Presence
+### Repeating groups
 
-Each of the members of a component or message, namely `<fieldRef>`, `<componentRef>` or `<groupRef>`, have a `presence` attribute. The
-possible values of presence are:
+A repeating group is like a component but with one additional
+feature: it represents an *array of* components to be sent on the wire.
+
+A repeating group is specified by a `<group>` element and the `<group>`
+elements are contained by the `<groups>` parent element. The `<group>` element
+has a child element to specify the associated cardinality field by id,
+`<numInGroup>`, and optionally by name. In
+FIX tag=value encoding, a cardinality field of FIX datatype NumInGroup precedes the
+array when transmitted. In other encodings, such as FIXML, the array is
+implicit in the presentation protocol.
+
+Limits on the size of a repeating group may optionally be specified with
+`implMinOccurs` and `implMaxOccurs` attributes. If those attributes are not
+present, then the repeating group has unbounded size.
+
+**Example:** A repeating group with member fields and a reference to the cardinality field.
+
+```xml
+<fixr:group id="1007" name="LegStipulations" abbrName="Stip">
+	<fixr:numInGroup id="683" name="NoLegStipulations"/>
+	<fixr:fieldRef added="FIX.4.4" id="688" name="LegStipulationType"/>
+	<fixr:fieldRef added="FIX.4.4" id="689" name="LegStipulationValue"/>
+</fixr:group>
+```
+
+### Member presence
+
+Each of the members of a component, group or message, namely `<fieldRef>`, `<componentRef>` or `<groupRef>`, have a `presence` attribute. The possible values of presence are:
 
   - **required**—the member MUST always be present in a message.
 
@@ -994,7 +994,7 @@ constant field need not be transmitted on the wire.
 **Example:** A constant field. SecurityIDSource is always code '1' (CUSIP).
 
 ```xml
-<fixr:fieldRef id="22" presence="constant" value="1"/>
+<fixr:fieldRef id="22" name="SecurityIDSource" presence="constant" value="1"/>
 ```
 
 #### Default value of an optional field
@@ -1005,7 +1005,7 @@ does not provide the field.
 **Example:** An optional field with a default value. TimeInForce(59) default is '0' (Day).
 
 ```xml
-<fixr:fieldRef id="59" presence="optional" value="0"/>
+<fixr:fieldRef id="59" name="TimeInForce" presence="optional" value="0"/>
 ```
 
 #### Conditionally required field
@@ -1028,7 +1028,7 @@ override such as `presence=″required″` attribute is applied to the
 **Example:** Rules for a conditionally required field. A stop price is only required in the context of a stop order. On the other hand, a stop price must not be present in case of a limit order (or any order type other than a stop order). In this case, the order type or the presence of the stop price may be wrong and it is better to reject the order based on the rule instead of the recipient trying to find out which part is incorrect.
 
 ```xml
-<fixr:fieldRef id="99" presence="optional">
+<fixr:fieldRef id="99" name="StopPx" presence="optional">
 	<fixr:rule name="StopOrderRequiresStopPx" presence="required">
 		<fixr:when>OrdType == ^Stop</fixr:when>
 	</fixr:rule>
@@ -1045,20 +1045,21 @@ Sometimes members of a component or group are intended to be mutually exclusive.
 **Example:** The fields OrderQty(38) and CashOrderQty(152), and the nested component OrderQtyDataCIV are mutually exclusive members the OrderQtyData component.
 
 ```xml
-<fixr:component category="Common" added="FIX.4.3" id="1011" name="OrderQtyData" abbrName="OrdQty" which="oneOf">
-	<fixr:fieldRef added="FIX.4.3" id="38"/>
-	<fixr:fieldRef added="FIX.4.3" id="152"/>
-	<fixr:componentRef id="2011"/>
+<fixr:component id="1011" name="OrderQtyData" abbrName="OrdQty" which="oneOf">
+	<fixr:fieldRef id="38" name="OrderQty"/>
+	<fixr:fieldRef id="152" name="CashOrderQty"/>
+	<fixr:componentRef id="9999" name="OrderQtyDataCIV"/>
 	<fixr:annotation>
 		<fixr:documentation purpose="SYNOPSIS">
          The OrderQtyData component block contains the fields commonly used for indicating the amount or quantity of an order. Note that when this component block is marked as "required" in a message either one of these three fields must be used to identify the amount: OrderQty, CashOrderQty or OrderPercent (in the case of CIV).
 		</fixr:documentation>
 	</fixr:annotation>
 </fixr:component>
-<fixr:component category="Common" added="FIX.4.3" id="2011" name="OrderQtyDataCIV" abbrName="OrdQty">
-	<fixr:fieldRef added="FIX.4.3" id="516" presence="required"/>
-	<fixr:fieldRef added="FIX.4.3" id="468"/>
-	<fixr:fieldRef added="FIX.4.3" id="469"/>
+
+<fixr:component id="9999" name="OrderQtyDataCIV" abbrName="OrdQty">
+	<fixr:fieldRef id="516" name="OrderPercent" presence="required"/>
+	<fixr:fieldRef id="468" name="RoundingDirection"/>
+	<fixr:fieldRef id="469" name="RoundingModulus"/>
 </fixr:component>
 ```
 
@@ -1104,29 +1105,29 @@ repeating group.
 <fixr:message name="TradingSessionList" id="100" msgType="BJ"
 category="MarketStructureReferenceData" section="PreTrade">
 	<fixr:structure>
-		<fixr:componentRef id="1024" presence="required"/>
-		<fixr:componentRef id="1057"/>
-		<fixr:fieldRef id="335"/>
-		<fixr:groupRef id="2099" presence="required"/>
-		<fixr:componentRef id="1025" presence="required"/>
+		<fixr:componentRef id="1024" name="StandardHeader" presence="required"/>
+		<fixr:componentRef id="1057" name="ApplicationSequenceControl"/>
+		<fixr:fieldRef id="335" name="TradSesReqID"/>
+		<fixr:groupRef id="2099" name="TrdSessLstGrp" presence="required"/>
+		<fixr:componentRef id="1025" name="StandardTrailer" presence="required"/>
 	</fixr:structure>
 </fixr:message>
 ```
 
-#### Scenarios
+#### Message scenarios
 
 Message structures commonly vary with scenario or use case. For example,
-an ExecutionReport might look quite different in its execution use case
-versus a cancel-confirmation use case. The attribute that names a use
-case is scenario. If no scenario is explicitly given, it defaults to
-"base".
+a FIX ExecutionReport(35=8) might look quite different in its execution use case
+versus a cancel-confirmation use case. The attributes that name a use
+case are `scenario` and `scenarioId`. If no scenario name or ID is explicitly
+given, they defaults to "base" and 1.
 
-The combination of `id` and `scenario` attributes must be unique.
+The combination of `id`, `scenario`, and `scenarioId` attributes must be unique.
 
 #### Responses
 
 Aside from `<structure>`, `<message>` has another child element called
-`<responses>`; it is explained in the section [Workflow](#workflow) below.
+`<responses>` (see section [Workflow](#workflow)).
 
 ## Expressions
 
@@ -1155,7 +1156,7 @@ Conditional expressions are used in Orchestra:
     action taken.
 
 All conditions are declared in the XML content of a `<when>` element.
-See the section [Score DSL](#score-dsl) below for details of the grammar.
+See section [Score DSL](#score-dsl) for details of the grammar.
 
 ### Assignment expressions
 
@@ -1174,7 +1175,7 @@ datatype compatible with the type of the field.
 **Example:** Echo the value of a field from an incoming message.
 
 ```xml
-<fixr:fieldRef id="11" added="FIX.2.7" updated="FIX.5.0SP2" updatedEP="188">
+<fixr:fieldRef id="11" name="ClOrdID">
 	<fixr:assign>in.ClOrdID</fixr:assign>
 </fixr:fieldRef>
 ```
@@ -1191,27 +1192,26 @@ shown above.
 **Example:** Assignment of two entries in the Parties repeating group.
 
 ```xml
-<fixr:groupRef id="1012" added="FIX.4.3" updated="FIX.5.0SP2"
-updatedEP="188">
+<fixr:groupRef id="1012" name="Parties">
 	<fixr:blockAssignment>
-		<fixr:fieldRef id="448">
+		<fixr:fieldRef id="448" name="PartyID">
 			<fixr:assign>"ABC"</fixr:assign>
 		</fixr:fieldRef>
-		<fixr:fieldRef id="447" >
+		<fixr:fieldRef id="447" name="PartyIDSource">
 			<fixr:assign>^GeneralIdentifier</fixr:assign>
 		</fixr:fieldRef>
-		<fixr:fieldRef id="452">
+		<fixr:fieldRef id="452" name="PartyRole">
 			<fixr:assign>^ExecutingFirm</fixr:assign>
 		</fixr:fieldRef>
 	</fixr:blockAssignment>
 	<fixr:blockAssignment>
-		<fixr:fieldRef id="448">
+		<fixr:fieldRef id="448" name="PartyID">
 			<fixr:assign>"DEF"</fixr:assign>
 		</fixr:fieldRef>
-		<fixr:fieldRef id="447">
+		<fixr:fieldRef id="447" name="PartyIDSource">
 			<fixr:assign>^GeneralIdentifier</fixr:assign>
 		</fixr:fieldRef>
-		<fixr:fieldRef id="452">
+		<fixr:fieldRef id="452" name="PartyIDRole">
 			<fixr:assign>^ClearingFirm</fixr:assign>
 		</fixr:fieldRef>
 	</fixr:blockAssignment>
@@ -1222,8 +1222,8 @@ updatedEP="188">
 
 To assign the value of a state variable when an event occurs, use the
 `<assign>` element within a response. The expression contained by the
-element must refer to a state variable contained by an actor. See the
-section [Responses](#responses) below.
+element must refer to a state variable contained by an actor. See
+section [Responses](#responses).
 
 ### Field attribute rules
 
@@ -1286,29 +1286,29 @@ violations.
 ### Response conditions
 
 A `<when>` element with a conditional expression is also supported in the
-`<message>/<responses>` element tree. See section [Workflow](#workflow) below for usage.
+`<message>/<responses>` element tree. See section [Workflow](#workflow) for usage.
 
 ## Workflow
 
-Workflow is the behavior of a FIX party with respect to the exchange of
+Workflow is the behavior of a party with respect to the exchange of
 messages. For each received message type, one or more possible actions
 can be specified under the `<message>/<responses>` element.
 
 Workflow in Orchestra recognizes that there is not always a 1:1
-relationship between a FIX MsgType(35) and a use case. Some FIX message
-types such as ExecutionReport(35=8) are overloaded for many different
+relationship between a message type and a use case. Some message
+types, for example the FIX ExecutionReport(35=8) message are overloaded for many different
 use cases. Therefore, messages in Orchestra are identified primarily by
-their FIX MsgType(35) value, but with a qualification for a specific use case. Each message use case is called a scenario.
+their `msgType` value, but with a qualification for a specific use case. Each message use case is called a scenario.
 
-Behavior may depend upon more information than a receive message itself.
+Behavior may depend upon more information than a received message itself.
 External state information enters it as well, e.g. the state of an order
 book. The `<actors>` element tree provides a place to store such
 external state information. An actor can also be used to identify the
 originator or receiver of a message.
 
-### Scenarios
+### Workflows with message scenarios
 
-A scenario is one use case of a specific message type, as identified by
+A message scenario is one use case of a specific message type, as identified by
 key attributes `name` and `msgType` in the `messageAttribGrp` attribute group
 supported by `<message>`. A scenario name is stored in the `scenario`
 attribute of `<message>`. If there is only one use case for a message
@@ -1328,9 +1328,9 @@ own message contents in its `<structure>` child element and its own
 
 *This section is non-normative.*
 
-The task of mapping an actual received message to a scenario declaration
+The task of mapping an actual received FIX message to a scenario declaration
 in Orchestra is left to implementations. The first level of matching is
-on the `msgType` attribute. However, that message type may have
+on the `msgType` attribute with the FIX MsgType(35) field. However, that message type may have
 several scenarios. Pattern matching strategies might include comparing a
 message to expected required fields, mapping values of a distinguishing
 field like ExecType(150) to its code set literals, and so forth.
@@ -1348,11 +1348,11 @@ unique within an Orchestra file.
 
 #### State variables
 
-Actors can hold state variables in the form of FIX fields. That is, each
+Actors can hold state variables in the form of fields. That is, each
 state variable has an id and name for identification and a value of a
-FIX datatype. Like any field, valid values can be constrained to a code
-set or range. The datatype or code set is declared in the `type`
-attribute, just like any field.
+datatype. Like any field, valid values can be constrained to a code
+set or range. The datatype or code set is declared in the `type` or `codeSet`
+attribute of the field.
 
 If a state variable corresponds to a standard FIX field, it can be
 declared as a `<fieldRef>` element child of the `<actor>`.
@@ -1474,11 +1474,8 @@ messageCast="multicast" reliability="bestEffort"/>
 Responses to a received message can be of these types:
 
   - A message is sent in reply to the received message
-
   - A state variable is changed
-
   - A state machine transition is invoked
-
   - A timer is started or canceled
 
 Multiple responses can be specified for a given message scenario as
@@ -1486,7 +1483,7 @@ children of its `<responses>` element.
 
 A `<when>` element supplies a conditional expression that triggers a
 response if the condition is true. The expression is in the Score DSL
-grammar (see section [Score DSL](#score-dsl) below). It is possible to trigger multiple
+grammar (see section [Score DSL](#score-dsl)). It is possible to trigger multiple
 responses if more than one conditional expression evaluates true. If no
 `<when>` element is provided for a `<response>`, then the response is
 unconditional.
