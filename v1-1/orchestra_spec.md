@@ -5,16 +5,17 @@
 
 ## Objectives
 
-FIX Orchestra was conceived as **machine readable rules of engagement**
+FIX Orchestra was conceived as **machine-readable rules of engagement**
 between counterparties. As such, it is a standard for exchange of
-metadata about the behavior of FIX applications. Orchestra is intended
-to cut time to onboard counterparties.
+metadata about the behavior of message-based, electronic interfaces.
+Orchestra is intended to automate the development, testing, and documentation
+of programmable interfaces and cut time to onboard counterparties.
 
-The contents of Orchestra files are machine readable (that is, processed
+The contents of Orchestra files are machine-readable (that is, processed
 as data) and may include:
 
   - Message structure by each scenario, implemented as an extension of
-    FIX Repository.
+    FIX Repository. **[ISSUE: what do we want to say here?]**
 
   - Accepted values of enumerations by message scenario
 
@@ -29,15 +30,15 @@ as data) and may include:
   - Document and exchange the Algorithmic Trading Definition Language
     (FIXatdl&reg;) files associated with a FIX service offering
 
-  - FIX session identification and transport configuration
+  - Session identification and transport configuration
 
 From the contents, firms and vendors will be enabled to develop tools to
-automate configuration of FIX engines and applications, and generation
+automate configuration of interface engines and applications, and generation
 of code, test cases, and documentation. The various aspects are not an
 all-or-nothing proposition, however. Users may implement only the
 features that they find most beneficial and add features as needed.
 
-Orchestra supports but does not change FIX protocol itself in any way,
+Orchestra supports but does not change FIX Protocol itself in any way,
 nor does it obsolete existing FIX engines or tools.
 
 ## Protocol coverage
@@ -45,12 +46,12 @@ nor does it obsolete existing FIX engines or tools.
 The features of Orchestra are intended to be generic and capable of
 covering both FIX and non-FIX messaging protocols. One of the
 foundational features to support non-FIX protocols is the ability to
-describe any set of datatypes, not just FIX datatypes (see the [Datatypes](#datatypes)
-section below).
+describe any set of datatypes, not just FIX tag=value datatypes
+(see section [Datatypes](#datatypes)).
 
 ## Design principles
 
-As a standard for delivering metadata about FIX messages and application
+As a standard for delivering metadata about electronic messages and application
 behavior, Orchestra relies on technologies that are well supported
 across all popular platforms and programming languages, particularly XML
 and XML Schema.
@@ -65,7 +66,7 @@ technologies will continue to be supported for the foreseeable future.
 
 ## Glossary
 
-**Actor** — either a counterparty to a FIX session or an external entity
+**Actor** — either a counterparty to a session or an external entity
 that holds state relevant to application or session behavior. An actor
 can take actions such as assigning state or transitioning a state
 machine, and it can send messages.
@@ -86,8 +87,8 @@ variant.
 **Encoding** – a wire format for data representation. Also known as
 lexical space or the presentation layer (layer 6) in a protocol stack.
 
-**Extension Pack (EP)** – incremental extension of the FIX application
-layer, aka *FIX Latest*.
+**Extension Pack (EP)** – incremental extension of a version of an
+interface application.
 
 **Lexical space** – the representation of a data element. It belongs to
 the presentation layer. For character-based encodings, it is defined as
@@ -163,13 +164,14 @@ XML snippets are shown as follows:
 
 ### Related FIX Standards
 
-For FIX semantics, see the current FIX message specification, which is
-currently [FIX Latest](https://www.fixtrading.org/online-specification/).
+The examples in this document are based on the FIX Protocol.
+For FIX semantics, see the FIX online specification, a.k.a.
+[FIX Latest](https://www.fixtrading.org/online-specification/).
 
 ### Dependencies on other standards
 
 Orchestra imports [Dublin Core XML schemas version 2008-02-11](http://dublincore.org/schemas/xmls/) for artifact
-provenance. Dublin Core is standardized as IETF RFC 5013 and ISO 15836.
+provenance. [Dublin Core](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/) is standardized as IETF RFC 5013 and ISO 15836.
 
 XML 1.1 schema standards are located at [W3C XML Schema](http://www.w3.org/XML/Schema.html#dev)
 
@@ -268,8 +270,8 @@ settings, such as a transport address.
 ## Repository XML Schema (XSD)
 
 The Repository XML schema is used to control the format of XML files that
-describe message structures. Additionally it contains elements and attributes
-for work flow, state variables, conditional logic and so forth.
+describe message structures. Additionally, it contains elements and attributes
+for work flow, state variables, conditional logic and more.
 
 ### Conformance
 
@@ -279,9 +281,7 @@ related tools.
 
 ### Schema location
 
-The XML schema is currently available in GitHub project fix-orchestra module
-[repository](https://github.com/FIXTradingCommunity/fix-orchestra/tree/master/repository).
-It will be made available via the web at a URL consistent with its XML namespace.
+The XML schema is available via the web at the URL http://fixprotocol.io/2023/orchestra/repository/, which is consistent with its XML namespace.
 
 ### Root element
 
@@ -301,11 +301,11 @@ This snippet shows that element with required namespaces and attributes:
 ```xml
 <fixr:repository name="FIX.Latest" version="FIX.Latest_EP273"
 xmlns="http://purl.org/dc/elements/1.1/"
-xmlns:fixr="http://fixprotocol.io/2020/orchestra/repository"
+xmlns:fixr="http://fixprotocol.io/2023/orchestra/repository"
 xmlns:dc="http://purl.org/dc/terms/"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xmlns:xi="http://www.w3.org/2001/XInclude"
-xsi:schemaLocation="http://fixprotocol.io/2020/orchestra/repository repository.xsd">
+xsi:schemaLocation="http://fixprotocol.io/2023/orchestra/repository repository.xsd">
 ```
 
 #### Repository attributes
@@ -327,15 +327,12 @@ For example, `<fixr:datatypes>` element can be replaced with `<xi:include href="
 
 ### Supplementary documentation
 
-See the separate document "repository.html" in [GitHub](https://github.com/FIXTradingCommunity/fix-orchestra-spec/tree/master/v1-1/informative) for a detailed
-technical reference for the Orchestra and Repository XML schema. The
-remainder of this section serves as an overview and explains motivations
-for the design.
+See the separate document "repository.html" in [GitHub](https://github.com/FIXTradingCommunity/fix-orchestra-spec/tree/master/v1-1/informative) for a detailed technical reference for the Repository XML schema. The remainder of this section serves as an overview and explains motivations for the design.
 
 ### Protocol relationship
 
-The schema was primarily designed to describe metadata about FIX
-protocols. However, it was also intended to be generic enough to work
+The schema was primarily designed to describe metadata about the FIX
+Protocol. However, it was also intended to be generic enough to work
 with other common financial industry protocols, especially when FIX is
 used in combination with other protocols, or a translation must be
 performed between protocols.
@@ -352,9 +349,48 @@ workflows, including pre-trade, trade, and post-trade flows.
 The `<metadata>` element is used to identify a particular Orchestra file
 and the issuer of that file. It can contain any of the elements defined
 by the Dublin Core XML schema. Recommended elements include title,
-publisher, date, and rights.
+publisher, date issued, and rights.
 
-**Example:** Metadata
+Table: Dublin Core Terms for Orchestra
+
+------------------------------------------------------------------------------------------------------------
+DCMI Term               Definition                            Recommended Usage
+----------------------- ------------------------------------- ----------------------------------------------
+title                   A name given to the resource.         Use for display or in generated documentation.
+
+creator                 An entity responsible for making      Name of the firm or person that created the
+                        the resource.                         Orchestra file.
+
+created                 Date of creation of the resource.     Date and time of creation of the Orchestra file.
+
+contributor             An entity responsible for making      Application supporting the creation of the
+                        contributions to the resource.        Orchestra file.
+
+publisher               An entity responsible for making      Distributor of the Orchestra file (may be
+                        the resource available.               different than the creator).
+
+issued                  Date of formal issuance of the        Reference date for the publication.
+                        resource.
+
+rights                  Information about rights held         Copyright notice.
+                        in and over the resource.
+
+license                 A legal document giving official      URL to a license or IP statement.
+                        permission to do something with
+                        the resource.
+
+conformsTo              An established standard to which      Version of the Orchestra Technical Standard
+                        the described resource conforms.      that was used to create the Orchestra file.
+
+format                  The file format, physical medium,     Internet Media Type (formerly known as MIME type)
+                        or dimensions of the resource.        "application/xml".
+
+isRequiredBy            A related resource that requires      Used to denote downstream service dependencies
+                        the described resource to support     (e.g. FIXimate).
+                        its function, delivery, or coherence.
+------------------------------------------------------------------------------------------------------------
+
+**Example:** FIX Latest Metadata
 
 ```xml
 <fixr:metadata>
@@ -548,7 +584,10 @@ The ISO/IEC 11404 General Purpose Datatypes standard contains a taxonomy
 of programming language-independent types and enumerates their
 characteristics. One of the benefits of following this standard is that
 it will be easier to map FIX datatypes to other message standards, such
-as ISO 20022 (SWIFT). Rather than creating numerous one-off mappings to
+as ISO 20022 (SWIFT).
+
+**[PLACEHOLDER: Should this paragraph be removed or marker as non-normative?]**
+Rather than creating numerous one-off mappings to
 other type systems, is it likely more efficient to map each to ISO 11404
 once, and then compare mappings in an associative model to identify the
 commonalities. (The XML schema standard claims to derive its datatypes
@@ -650,17 +689,19 @@ the combination of `name` + `scenario` as well as `id` + `scenarioId`.
 
 #### Code validation
 
-Since Orchestra supports both FIX and non-FIX protocols, rules for the validation of codes are relaxed in the XML schema. Style rules should be enforced by other means, such as a validator application.
+Since Orchestra supports both FIX and non-FIX protocols, rules for the validation of code names are relaxed in the XML schema. Style rules should be enforced by other means, such as a validator application.
 
-#### User-defined codes
+#### Union datatypes for code sets {#union-datatype}
 
-Code sets may support a range of user-defined values in addition to those defined explicitly as codes. Orchestra supports this by means of the `unionDataType` attribute of the `<codeSet>` element. The datatype of a code set may be combined with the following union datatypes that need to be defined as separate `<datatype>` elements.
+Code sets may have a second datatype to extend the list of values defined as codes with the underlying datatype given by the `type` attribute. Orchestra supports this by means of the `unionDataType` attribute of the `<codeSet>` element. The underlying datatype of a code set may be combined with the following union datatypes defined in the XML schema that also need to be defined as separate `<datatype>` elements in the XML file.
 
-- Reserved100Plus: integer values of 100 and above, supporting the union with standard values below 100
-- Reserved1000Plus: integer values of 1000 and above, supporting the union with standard values below 1000
-- Reserved4000Plus: integer values of 4000 and above, supporting the union with standard values below 4000
-- Qty: decimal values to support unions of strings (e.g. "S" for a small quantity) and numeric values
-- Tenor: string values, supporting the union with flexible FX standard tenors (e.g. "Dx" for x number of days)
+- Reserved100Plus: integer values of 100 and above,
+- Reserved1000Plus: integer values of 1000 and above
+- Reserved4000Plus: integer values of 4000 and above
+- Qty: decimal values, supporting unions of strings and explicit numeric values
+- Tenor: string values, supporting unions of explicit code sets with flexible patterns
+
+FIX uses the ReservedXXXPlus datatypes to support a range of user-defined values as a union with standard FIX values that have a reserved range below a certain threshold. The Qty datatype is used by FIX for backward compatibility to combine the legacy approach for IOI quantities (e.g. "S" for a small quantity) with explicit numeric values. FIX uses the Tenor datatype to express standard settlement types (e.g. 2=Next Day) together with FX standard tenors (e.g. "Dx" for x number of days).
 
 ### External code sets
 
@@ -675,8 +716,8 @@ with `<annotation>` elements.
 In the case of an external code set, `<code>` elements are not listed in
 the Orchestra file.
 
-**Example:** An external code set ExtCurrencyCode is defined as a FIX tag=value datatype Currency with valid
-values defined by standard ISO 4217.
+**Example:** An external code set ExtCurrencyCode is defined to have the underlying
+datatype "Currency" with valid values defined by standard ISO 4217.
 
 ```xml
 <fixr:codeSet name="ExtCurrencyCode" type="Currency" specUrl="
@@ -693,7 +734,7 @@ field must not be reused. The pedigree attributes of attribute group
 `entityAttribGrp` are used to tell the history of a field, including the
 protocol version in which it was added.
 
-In FIX, a field has two unique identifiers, numeric id, also known as
+In Orchestra, a field has two unique identifiers, numeric id, also known as
 "tag", and a descriptive string name.
 
 Like other message elements, a field may be documented with an
@@ -727,24 +768,17 @@ links to "base" code set.
 <fixr:field id="60" name="TransactTime" type="UTCTimestamp"/>
 ```
 
-#### User-defined field values
+#### Union datatypes for fields
 
-Fields may support a range of user-defined values in addition to those defined explicitly by a `<codeSet>` reference. Orchestra supports this by means of the `unionDataType` attribute of the `<field>` element. The explicit field values may be combined with the following union datatypes that need to be defined as separate `<datatype>` elements.
-
-- Reserved100Plus: integer values of 100 and above, supporting the union with standard values below 100
-- Reserved1000Plus: integer values of 1000 and above, supporting the union with standard values below 1000
-- Reserved4000Plus: integer values of 4000 and above, supporting the union with standard values below 4000
-- Qty: decimal values to support unions of strings (e.g. "S" for a small quantity) and numeric values
-- Tenor: string values, supporting the union with flexible FX standard tenors (e.g. "Dx" for x number of days)
+Fields may have a second datatype to extend the values supported by the `type` or `codeSet` attribute. Orchestra supports this by means of the `unionDataType` attribute of the `<field>` element. The available union datatypes are defined by Orchestra, see [Union datatypes for code sets](#union-datatype) for details.
 
 ### Data fields
 
 A field of datatype "data" is variable length. In FIX tag=value encoding,
 the length of such a field is prefixed by a separate field of type
 Length. In other encodings, the length is implicit in the presentation
-protocol. For data fields, the associated length field is referenced by the
-`lengthId` attribute, a reference to its `id`
-attribute.
+protocol. Where needed explicitly for data fields, the associated length field is referenced by the
+`lengthId` attribute, a reference to its `id` attribute.
 
 **Example:** A data field and its corresponding length field.
 
@@ -1647,7 +1681,7 @@ It will also be made available at a URI consistent with its XML namespace.
 
 ### Root element
 
-The root element an Interfaces XML file is `<interfaces>`. This snippet
+The root element an Orchestra interfaces XML file is `<interfaces>`. This snippet
 shows that element with required namespaces:
 
 ```xml
@@ -2004,6 +2038,8 @@ Conditional expressions take several forms:
 These are the relational operators of the Scope grammar. Operands must
 be of the same or compatible datatypes.
 
+Table: Relational operators
+
 | Token     | Name                  |
 | --------- | --------------------- |
 | \< or lt  | less than             |
@@ -2016,6 +2052,8 @@ be of the same or compatible datatypes.
 These are the equality operators of the Scope grammar. Operands must be
 of the same or compatible datatypes.
 
+Table: Equality operators
+
 | Token     | Name       |
 | --------- | ---------- |
 | \== or eq | equals     |
@@ -2025,6 +2063,8 @@ of the same or compatible datatypes.
 
 These are the logical operators of the Scope grammar. Operands must be
 Boolean.
+
+Table: Logical operators
 
 | Token     | Name |
 | --------- | ---- |
@@ -2037,6 +2077,8 @@ These are the arithmetic operators of the Scope grammar. Operands must
 be numeric. Multiplication and division have higher priority than
 addition and subtraction when not grouped by parentheses.
 
+Table: Arithmetic operators
+
 | Token    | Name           |
 | -------- | -------------- |
 | \*       | multiplication |
@@ -2048,6 +2090,8 @@ addition and subtraction when not grouped by parentheses.
 #### Unary operators
 
 These are the unary operators of the Scope grammar.
+
+Table: Unary operators
 
 | Token | Name        | Operand type |
 | ----- | ----------- | ------------ |
@@ -2130,6 +2174,8 @@ Example Orchestra files are provided in the GitHub project
 
 # Appendix
 
+**[PLACEHOLDER: Should this section be maintained as part of the normative specification?]**
+
 ## Differences to the Unified Repository (a.k.a. Repository 2010 Edition)
 
   - New features: metadata with provenance, actors, workflow, semantic
@@ -2139,7 +2185,7 @@ Example Orchestra files are provided in the GitHub project
     organization supports multiple protocols, it should issue an
     Orchestra file for each.
 
-  - The `<codeSets>` element is now top-level while in the 2010 Edition,
+  - The `<codeSets>` element is top-level while in the 2010 Edition,
     enumerations of valid values were contained by fields. This change
     was made to recognize that code sets may be shared by many fields
     and also, they may be managed by an external standard.
@@ -2153,14 +2199,14 @@ Example Orchestra files are provided in the GitHub project
 
   - Repeating groups were moved to their own parent element from other components.
 
-  - Scenarios overload the layout of a message or component for
+  - Scenarios overload the layout of a message, component, field or datatype for
     different use cases.
 
   - The interfaces schema is new.
 
 ## Compliance
 
-To be useful, various implementations of FIX Orchestra must
+To be useful, various implementations of Orchestra must
 interoperate. The FIX Trading Community discourages implementations that
 deviate from this specification while promoting those that are
 compliant.
