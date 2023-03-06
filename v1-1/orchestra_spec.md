@@ -200,7 +200,7 @@ The metamodels presented do not strictly conform to the UML Meta-Object Facility
 The UML metamodel depicted below is a conceptual view of message
 structures.
 
-![](media/FIX-Repository-MetaModel.png)
+![Orchestra Repository Metamodel](media/FIX-Repository-MetaModel.png)
 
 ### Message structure abstractions
 
@@ -230,12 +230,12 @@ code set abstraction is described in that standard as "state" type.
 
 ## Interfaces
 
-The interface metamodel is an abstraction of service offerings and
-session provisioning. This UML model depicts the main classes.
+The interface metamodel is an abstraction of
+session provisioning and service offerings. This UML model depicts the main classes.
 
-![](media/Interfaces-1.png)
+![Orchestra Interfaces Metamodel -- Session Provisioning](media/Interfaces-1.png)
 
-![](media/Interfaces-2.png)
+![Orchestra Interfaces Metamodel -- Service Offering](media/Interfaces-2.png)
 
 ### Interface abstractions
 
@@ -323,7 +323,7 @@ to the attribute `expressionLanguage`.
 
 Several of the elements in the schema support XML Inclusions (XInclude). This allows assembly of an Orchestra XML infoset from multiple, reusable XML files. For example, several service offerings may share datatypes, fields, and even common message types.
 
-For example, `<fixr:datatypes>` element can be replaced with `<xi:include href="src/test/resources/datatypes.xml"/>`. The datatypes then need to be defined in a separate file `datatypes.xml`. The included file needs to contain the namespace as follows: `<fixr:datatypes xmlns:fixr="http://fixprotocol.io/2020/orchestra/repository">`.
+For example, `<fixr:datatypes>` element can be replaced with `<xi:include href="src/test/resources/datatypes.xml"/>`. The datatypes then need to be defined in a separate file `datatypes.xml`. The included file needs to contain the namespace as follows: `<fixr:datatypes xmlns:fixr="http://fixprotocol.io/2022/orchestra/repository">`.
 
 ### Supplementary documentation
 
@@ -726,6 +726,8 @@ http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=647
 
 ## Fields
 
+**[PLACEHOLDER: add section to define baseFieldId]**
+
 A field carries a specific business meaning (semantic) as described in
 FIX specifications or another protocol. In the schema, a `<field>` element
 is contained by parent element `<fields>`. The collection of fields
@@ -926,6 +928,8 @@ order on the wire.
 ```
 
 #### Component members
+
+**[PLACEHOLDER: add definition of baseFieldId]**
 
 A component may contain reference elements of three types in any
 combination. A component must contain at least one member.

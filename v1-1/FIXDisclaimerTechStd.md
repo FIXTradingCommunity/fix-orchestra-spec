@@ -1,3 +1,11 @@
+::: {custom-style="TOC Heading"}
+Table of Tables
+:::
+
+::: {custom-style="TOC Heading"}
+Table of Figures
+:::
+
 ::: {custom-style=Disclaimer}
 DISCLAIMER
 :::
