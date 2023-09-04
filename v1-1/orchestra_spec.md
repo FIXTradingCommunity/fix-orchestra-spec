@@ -14,8 +14,8 @@ of programmable interfaces and cut time to onboard counterparties.
 The contents of Orchestra files are machine-readable (that is, processed
 as data) and may include:
 
-  - Message structure by each scenario, implemented as an extension of
-    FIX Repository. **[ISSUE: what do we want to say here?]**
+  - Message structure by each scenario, implemented as an extension of the FIX Repository.
+    **[ISSUE (Hanno): what do we want to say here?]**
 
   - Accepted values of enumerations by message scenario
 
@@ -29,6 +29,7 @@ as data) and may include:
 
   - Document and exchange the Algorithmic Trading Definition Language
     (FIXatdl&reg;) files associated with a FIX service offering
+    **[ISSUE (Hanno): this is never mentioned again in the spec]**
 
   - Session identification and transport configuration
 
@@ -87,9 +88,6 @@ variant.
 **Encoding** – a wire format for data representation. Also known as
 lexical space or the presentation layer (layer 6) in a protocol stack.
 
-**Extension Pack (EP)** – incremental extension of a version of an
-interface application.
-
 **Lexical space** – the representation of a data element. It belongs to
 the presentation layer. For character-based encodings, it is defined as
 a particular sequence of characters. For binary encodings, it may
@@ -99,6 +97,8 @@ platforms.
 **Pedigree** – recorded history of an artifact.
 
 **Provenance** – a record of ownership of an artifact.
+
+**Release** – incremental extension of a version of an interface application, e.g. a FIX extension Pack (EP).
 
 **Scenario** — a use case of a message, component, field, code set or datatype.
 
@@ -197,8 +197,9 @@ The metamodels presented do not strictly conform to the UML Meta-Object Facility
 
 ## Message structures
 
-The UML metamodel depicted below is a conceptual view of message
-structures.
+The UML metamodel depicted below is a conceptual view of message structures.
+
+**[ISSUE (Hanno): We need to update the diagram, e.g. it refers to FIX datatypes only.]**
 
 ![Orchestra Repository Metamodel](media/FIX-Repository-MetaModel.png)
 
@@ -281,6 +282,8 @@ related tools.
 
 ### Schema location
 
+**[ISSUE (Hanno): Can we already make this available online for RC1?]**
+
 The XML schema is available via the web at the URL http://fixprotocol.io/2023/orchestra/repository/, which is consistent with its XML namespace.
 
 ### Root element
@@ -288,7 +291,7 @@ The XML schema is available via the web at the URL http://fixprotocol.io/2023/or
 The root element an Orchestra repository XML file is `<repository>`. An Orchestra
 repository file contains all the message structures and workflow
 elements pertaining to a single protocol version. If an organization
-supports multiple versions of FIX, it should supply an Orchestra file
+supports multiple versions of a protocol, it should supply an Orchestra file
 for each.
 
 The `name` attribute of `<repository>` identifies an implementation of a
@@ -315,6 +318,15 @@ and `version` attributes are required. Name should be stable even when
 minor changes are made to an Orchestra file while version should be
 updated for incremental changes.
 
+The following repository attributes are optionally available:
+
+**[ISSUE (GitHub #186): Add repository attribute for application extension ID]**
+
+- `applVerId` contains the application version
+- `specURL` points to an online reference documentation
+- `guid` is a globally unique identifier for the given schema file
+- `namespace` contains an associated namespace as URI
+
 By default, the language for conditional expressions is the Score DSL
 (See section [Score DSL](#score-dsl)). However, this may be overridden by setting a value
 to the attribute `expressionLanguage`.
@@ -323,7 +335,7 @@ to the attribute `expressionLanguage`.
 
 Several of the elements in the schema support XML Inclusions (XInclude). This allows assembly of an Orchestra XML infoset from multiple, reusable XML files. For example, several service offerings may share datatypes, fields, and even common message types.
 
-For example, `<fixr:datatypes>` element can be replaced with `<xi:include href="src/test/resources/datatypes.xml"/>`. The datatypes then need to be defined in a separate file `datatypes.xml`. The included file needs to contain the namespace as follows: `<fixr:datatypes xmlns:fixr="http://fixprotocol.io/2022/orchestra/repository">`.
+For example, `<fixr:datatypes>` element can be replaced with `<xi:include href="src/test/resources/datatypes.xml"/>`. The datatypes then need to be defined in a separate file `datatypes.xml`. The included file needs to contain the namespace as follows: `<fixr:datatypes xmlns:fixr="http://fixprotocol.io/2023/orchestra/repository">`.
 
 ### Supplementary documentation
 
@@ -331,20 +343,15 @@ See the separate document "repository.html" in [GitHub](https://github.com/FIXTr
 
 ### Protocol relationship
 
-The schema was primarily designed to describe metadata about the FIX
-Protocol. However, it was also intended to be generic enough to work
-with other common financial industry protocols, especially when FIX is
-used in combination with other protocols, or a translation must be
-performed between protocols.
+The schema was primarily designed to describe metadata about the FIX Protocol. However, it is generic enough to work with other common financial industry protocols, especially when FIX is used in combination with other protocols, or a translation must be performed between protocols.
 
-Usage should be supported for all phases of financial industry
-workflows, including pre-trade, trade, and post-trade flows.
+Usage should be supported for all phases of financial industry workflows, including pre-trade, trade, and post-trade flows.
 
 ## Content ownership and history
 
 ### Provenance
 
-**[PLACEHOLDER: Update this section to make a clear recommendation of DC terms to be used and their semantics]**
+**[ISSUE (Hanno): Update this section to make a clear recommendation of DC terms to be used and their semantics]**
 
 The `<metadata>` element is used to identify a particular Orchestra file
 and the issuer of that file. It can contain any of the elements defined
@@ -396,21 +403,23 @@ isRequiredBy            A related resource that requires      Used to denote dow
 <fixr:metadata>
   <dcterms:title>FIX.Latest_EP276</dcterms:title>
   <dcterms:created>2022-12-21T16:27:25.164791</dcterms:created>
-  <dcterms:date>2022-12-21T10:59:14Z</dcterms:date>
+  <dcterms:issued>2022-12-22T10:59:14Z</dcterms:date>
   <dcterms:rights>Copyright (c) FIX Protocol Ltd. All Rights Reserved.</dcterms:rights>
   <dcterms:conformsTo>Orchestra v1.0</dcterms:conformsTo>
-  <dcterms:source>FIX Unified Repository 2010 Edition</dcterms:source>
 </fixr:metadata>
 ```
 
 ### Pedigree
 
-Most message elements in the schema support a complete history of creation, change, replacement, and potentially deprecation with support of attribute group `entityAttribGrp`. Each historical event should be qualified by its protocol version and may be qualified by its extension pack (EP). The EP is an integer value that can be used to increase the granularity of the version string, e.g. to identify patches.
+Most message elements in the schema support a complete history of creation, change, replacement, and potentially deprecation with support of attribute group `entityAttribGrp`. Each historical event should be qualified by its protocol version and may be qualified by its release. This is an integer value, e.g. a FIX extension pack (EP) number that can be used to increase the granularity of the version string, e.g. to identify patches.
 
 **Example:** A field that was added and updated
 
 ```xml
-<fixr:field type="String" id="17" name="ExecID" abbrName="ExecID" added="FIX.2.7" updated="FIX.5.0SP1" updatedEP="95">
+<fixr:field
+  type="String" id="17" name="ExecID" abbrName="ExecID"
+  added="FIX.2.7" updated="FIX.5.0SP1" updatedEP="95">
+</fixr:field>
 ```
 
 Deprecated elements are not removed from the repository. They may still be used based upon bilateral agreement. However, the publisher of the Orchestra XML file recommends to avoid its usage and should use the `replacedByField` attribute in case of a 1:1 change. The `<annotation>` element may additionally be used to describe the alternate element(s) and new approach.
@@ -418,14 +427,16 @@ Deprecated elements are not removed from the repository. They may still be used 
 **Example:** Code element that was deprecated
 
 ```xml
-<code value="3" name="LocalCommission" added="FIX.4.0"
-deprecated="FIX.5.0SP2" deprecatedEP="204"/>
+<fixr:code
+  value="3" name="LocalCommission"
+  added="FIX.4.0" deprecated="FIX.5.0SP2" deprecatedEP="204">
+</fixr:code>
 ```
 
 ### Naming rules
 Since Orchestra supports both FIX and non-FIX protocols, naming rules are relaxed in the XML schema. FIX and other style rules should be enforced by other means, such as a validator application. The only restriction is that names are of XML schema datatype "token", which trims leading and trailing spaces and disallows some non-printable characters like line feeds and carriage returns. Tokens are limited to 64 characters.
 
-## Features for document and FIXML generation
+## Features for document and schema generation
 
 The XML schema retains features that have long been used to generate FIX
 documentation and other outputs. These elements are optional.
@@ -444,11 +455,9 @@ they have been organized around pre-trade, trade, and post-trade information flo
 
 ### Metadata about any element
 
-The schema provides features to provide metadata about almost any
-element. All such metadata appears under element `<annotation>`. There
-is no limit to the number of metadata entries per `<annotation>` element.
+The schema provides features to provide metadata about almost any element. All such metadata appears under element `<annotation>`. There is no limit to the number of metadata entries per `<annotation>` element.
 
-Introductory documentation can be provided to the element trees `<categories>`, `<sections>`, `<messages>`, `<groups>`, `<components>`, `<fields>`, `<codeSets>`, `<datatypes>` to describe their child elements in their entirety.
+Introductory documentation can be provided to the element trees `<categories>`, `<sections>`, `<messages>`, `<groups>`, `<components>`, `<fields>`, `<codeSets>`, `<datatypes>`, `<scenarios>` to describe their child elements in their entirety.
 
 #### Documentation
 
@@ -519,7 +528,9 @@ collisions, names and IDs of deprecated elements should never be reused.
 
 ## Scenarios
 
-A scenario may be used to distinguish multiple use cases of a single message, group, component, field, code set or datatype. The respective element may be defined more than once in the XML schema by adding `scenario` and/or `scenarioId` attributes in addition to the `id` and/or `name` attributes of the element. Scenarios in the context of the different elements are explained in more detail within the respective sections below.
+A scenario may be used to distinguish multiple use cases of a single message, group, component, field, code set or datatype. The respective element may be referenced more than once in the XML schema by adding `scenario` and/or `scenarioId` attributes in addition to the `id` and/or `name` attributes of the element. Scenarios in the context of the different elements are explained in more detail within the respective sections below.
+
+Each scenario is described by a `<scenario>` element, a child of `<scenarios>`.
 
 ## Datatypes
 
@@ -531,8 +542,7 @@ syntax of that encoding, also known as lexical space.
 Some fields are specified as a set of valid values. This is known as
 *code set*, and it can be thought of as a specialized datatype (see the [Code sets](#code-sets) section below).
 
-Each datatype is described by a `<datatype>` element, a child of
-`<datatypes>`.
+Each datatype is described by a `<datatype>` element, a child of `<datatypes>`.
 
 ### FIX datatypes
 
@@ -586,7 +596,8 @@ characteristics. One of the benefits of following this standard is that
 it will be easier to map FIX datatypes to other message standards, such
 as ISO 20022 (SWIFT).
 
-**[PLACEHOLDER: Should this paragraph be removed or marker as non-normative?]**
+**[ISSUE (Don): This suggestion should be marked non-normative. Furthermore, we intend to develop a standard for mapping.]**
+
 Rather than creating numerous one-off mappings to
 other type systems, is it likely more efficient to map each to ISO 11404
 once, and then compare mappings in an associative model to identify the
@@ -639,8 +650,10 @@ code set. For example, if the datatype of a code set was "int", value
 as character "2" and then character "7".
 
 A `<codeSets>` element contains any number of `<codeSet>` child
-elements. The schema allows multiple instances of `<codeSet>`
-containers, each with a unique `name` attribute.
+elements. The schema allows zero or more instances of `<codeSet>`
+elements, each with a unique `name` attribute.
+
+**[ISSUE (Hanno): Is the following still true after GitHub issue #170 splitting type vs codeSet for a field?]**
 
 The names of code sets and datatypes share a common namespace and must
 be unique within a schema. This constraint is enforced by the XML
@@ -687,11 +700,13 @@ there is only one form of a code set.
 Uniqueness of code set scenarios is enforced by the XML schema, both as
 the combination of `name` + `scenario` as well as `id` + `scenarioId`.
 
-#### Code validation
+#### Code name validation
 
 Since Orchestra supports both FIX and non-FIX protocols, rules for the validation of code names are relaxed in the XML schema. Style rules should be enforced by other means, such as a validator application.
 
 #### Union datatypes for code sets {#union-datatype}
+
+**[ISSUE (Don): An Orchestra file published by a firm exposes its service offering, so it would not allow users to define their own codes. The use case for this is the FIX standard staking out reserved ranges of code values to extend the standard.]**
 
 Code sets may have a second datatype to extend the list of values defined as codes with the underlying datatype given by the `type` attribute. Orchestra supports this by means of the `unionDataType` attribute of the `<codeSet>` element. The underlying datatype of a code set may be combined with the following union datatypes defined in the XML schema that also need to be defined as separate `<datatype>` elements in the XML file.
 
@@ -705,19 +720,11 @@ FIX uses the ReservedXXXPlus datatypes to support a range of user-defined values
 
 ### External code sets
 
-In some cases, FIX shares code sets with other protocols. Examples
-include currency, language, and country codes defined by another
-standard. This is called an external code set because the valid values
-are maintained by the external standard, not within the Repository or
-Orchestra file. To provide a reference to an external standard, use
-`<codeSet>` attribute `specUrl`. Additional references can be supplied
-with `<annotation>` elements.
+In some cases, code sets are shared with other protocols. Examples include currency, language, and country codes defined by ISO. This is called an external code set because the valid values are maintained by the external standard, not within the Repository or Orchestra file. To provide a reference to an external standard, use `<codeSet>` attribute `specUrl`. Additional references can be supplied with `<annotation>` elements.
 
-In the case of an external code set, `<code>` elements are not listed in
-the Orchestra file.
+In the case of an external code set, `<code>` elements are not listed in the Orchestra file.
 
-**Example:** An external code set ExtCurrencyCode is defined to have the underlying
-datatype "Currency" with valid values defined by standard ISO 4217.
+**Example:** An external code set ExtCurrencyCode is defined to have the underlying datatype "Currency" with valid values defined by the ISO 4217 standard.
 
 ```xml
 <fixr:codeSet name="ExtCurrencyCode" type="Currency" specUrl="
@@ -726,7 +733,7 @@ http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=647
 
 ## Fields
 
-**[PLACEHOLDER: add section to define baseFieldId]**
+**[ISSUE (GitHub #94): add section to define baseFieldId for a field]**
 
 A field carries a specific business meaning (semantic) as described in
 FIX specifications or another protocol. In the schema, a `<field>` element
@@ -757,7 +764,7 @@ combination of `name` + `scenario` as well as `id` + `scenarioId`.
 
 Every field must have a data domain of either a datatype name or more specifically, a collection of valid values specified by a code set reference. The domain of a field is specified in its `type` attribute in case of a datatype and in its `codeSet` attribute in case of a code set. The attribute `type` refers to a `<datatype>` element and the `codeSet` attribute refers to a `<codeSet>` element by the respective `name` attribute. In the case of a `<codeSet>`, there is a level of indirection to its `codeSet` attribute to arrive at a `<datatype>`.
 
-**[ISSUE: Has the following paragraph become obsolete? No automatic link of field and code set scenario.]**
+**[ISSUE (Hanno): Has the following paragraph become obsolete? No automatic link of field and code set scenario.]**
 
 Since `<codeSet>` is also qualified by scenario, a field will link to
 the code set of the same scenario. By default, "base" scenario field
@@ -772,7 +779,7 @@ links to "base" code set.
 
 #### Union datatypes for fields
 
-Fields may have a second datatype to extend the values supported by the `type` or `codeSet` attribute. Orchestra supports this by means of the `unionDataType` attribute of the `<field>` element. The available union datatypes are defined by Orchestra, see [Union datatypes for code sets](#union-datatype) for details.
+Fields may have a second datatype to extend the values supported by the `type` or `codeSet` attribute. Orchestra supports this by means of the `unionDataType` attribute of the `<field>` element. The available union datatypes are defined by Orchestra, see [Union datatypes for code sets](#union-datatype) for details. It is recommended to use the `unionDataType` attribute of the `<codeSet>` element rather than the one of the `<field>` element. The latter is available for backward compatibility.
 
 ### Data fields
 
@@ -785,11 +792,25 @@ protocol. Where needed explicitly for data fields, the associated length field i
 **Example:** A data field and its corresponding length field.
 
 ```xml
-<field added="FIX.2.7" id="95" name="RawDataLength" type="Length"/>
-<field added="FIX.2.7" id="96" name="RawData" type="data" lengthId="95"/>
+<field id="95" name="RawDataLength" type="Length"/>
+<field id="96" name="RawData" type="data" lengthId="95"/>
+```
+
+### Encoded fields
+
+A field may have an encoded version represented by two other fields. A `baseFieldId` attribute is used to link the encoded version of a field to the non-encoded version. Additionally, a `lengthId` attribute is used for encoded fields to link it to the field that contains the length of the encoded field.
+
+**Example:** A data field and its corresponding length field.
+
+```xml
+<field id="106" name="Issuer" type="Length"/>
+<fixr:field name="EncodedIssuer" id="349" type="data" lengthId="348" baseFieldId="106">
+<fixr:field name="EncodedIssuerLen" id="348" type="Length">
 ```
 
 ### Discriminator fields
+
+**[ISSUE (Don): A topic for mapping discussion: in ISO 20022 they have a commonly used datatype called identifier set that serves the same purpose. The discriminator is a member of the datatype. The difference is that the structured datatype belongs to a single field, not across two fields as in tag value encoding.]**
 
 FIX contains fields for which its value domain is modified by another
 field. This is variously called a choice, discriminated union, tagged
@@ -803,11 +824,12 @@ adding the attribute `discriminatorId` to a field.
 **Example:** A field modified by a discriminator.
 
 ```xml
-<fixr:field added="FIX.2.7" id="48" name="SecurityID" type="String"
+<fixr:field id="48" name="SecurityID" type="String"
 abbrName="ID" discriminatorId="22">
 	<fixr:annotation>
 		<fixr:documentation purpose="SYNOPSIS">
-Security identifier value of SecurityIDSource (22) type (e.g. CUSIP, SEDOL, ISIN, etc). Requires ecurityIDSource.
+       Security identifier value of SecurityIDSource (22) type (e.g. CUSIP, SEDOL,
+       ISIN, etc). Requires SecurityIDSource.
 		</fixr:documentation>
 	</fixr:annotation>
 </fixr:field>
@@ -820,7 +842,7 @@ length, may be overridden for a particular usage in the message
 structure that contains a field reference. However, the key identifiers
 id and name as well as type attribute may not be overridden. It is
 possible to override which codes of a code set are supported in a
-particular scenario, however. See the message structure section below.
+particular scenario, however. See section [Message structures](#message-structures) below.
 
 ### Field value uniqueness
 
@@ -851,10 +873,10 @@ A key field provides the scope of uniqueness.
 **Example:** Unique values per day
 
 ```xml
-<fixr:fieldRef id="11" presence="required">  
+<fixr:fieldRef id="11" name="ClOrdID" presence="required">  
   <fixr:rule>  
     <fixr:unique>  
-      <fixr:fieldRef id="75"/>  
+      <fixr:fieldRef id="75" name="TradeDate"/>  
     </fixr:unique>  
   </fixr:rule>
 </fixr:fieldRef>
@@ -865,11 +887,11 @@ A combination of fields defines scope of uniqueness.
 **Example:** Unique values per day and market segment.
 
 ```xml
-<fixr:fieldRef id="11" presence="required">  
+<fixr:fieldRef id="11" name="ClOrdID" presence="required">  
   <fixr:rule>  
     <fixr:unique>  
-      <fixr:fieldRef id="75"/>
-      <fixr:fieldRef id="1300"/>  
+      <fixr:fieldRef id="75" name="TradeDate"/>
+      <fixr:fieldRef id="1300" name="MarketSegmentID"/>  
     </fixr:unique>  
   </fixr:rule>
 <fixr:fieldRef>
@@ -929,50 +951,41 @@ order on the wire.
 
 #### Component members
 
-**[PLACEHOLDER: add definition of baseFieldId]**
-
 A component may contain reference elements of three types in any
 combination. A component must contain at least one member.
 
   - A `<fieldRef>` element represents a field in a block or repeating
     group. It is a reference to a `<field>` element within the
     `<fields>` container by its `id` and `scenarioId` attributes.
-    A `name` attribute may optionally be provided.
+    A `name` attribute for display purposes may optionally be provided.
+    A `baseFieldId` attribute is used to link the referenced field to another
+    field reference inside the same component, e.g. to link an encoded version
+    of a field to the non-encoded version.
+    A `lengthId` attribute is used for encoded fields to link the referenced
+    field to the field reference inside the same component that contains the
+    length of the encoded field.
 
   - A `<componentRef>` element represents a nested component. There is
     no limit in the schema to the level of nesting, although a
     presentation protocol may have rules about it, and there may be
     practical limits. The reference must match the referenced
     `<component>` on both `id` and `scenarioId` attributes.
-    A `name` attribute may optionally be provided.
+    A `name` attribute for display purposes may optionally be provided.
 
   - A `<groupRef>` element similarly refers to a nested `<group>`
     element (see [below](#repeating-groups)) by its `id` and `scenarioId` attributes. Limits of
     the size of a particular instance of a repeating group may be
     overridden by setting `implMinOccurs` and `implMaxOccurs` attributes on
     the `<groupRef>` element.
-    A `name` attribute may optionally be provided.
+    A `name` attribute for display purposes may optionally be provided.
 
 **Example:** A component with different kinds of members and pedigree information.
 
 ```xml
-<fixr:component added="FIX.5.0SP2" addedEP="208"
-id="4400" name="UnderlyingPaymentStreamCompoundingDates" abbrName="CmpndgDts">
-	<fixr:fieldRef added="FIX.5.0SP2" addedEP="208" id="42904"/>
-	<fixr:groupRef added="FIX.5.0SP2" addedEP="208" id="4401"
-implMaxOccurs="unbounded"/>
-	<fixr:fieldRef added="FIX.5.0SP2" addedEP="208" id="42905"/>
-	<fixr:fieldRef added="FIX.5.0SP2" addedEP="208" id="42906"/>
-	<fixr:fieldRef added="FIX.5.0SP2" addedEP="208" id="42907"/>
-	<fixr:fieldRef added="FIX.5.0SP2" addedEP="208" id="42908"/>
-	<fixr:fieldRef added="FIX.5.0SP2" addedEP="208" id="42909"/>
-	<fixr:componentRef added="FIX.5.0SP2" addedEP="208" id="4404"/>
-	<fixr:componentRef added="FIX.5.0SP2" addedEP="208" id="4402"/>
-	<fixr:fieldRef added="FIX.5.0SP2" addedEP="208" id="42910"/>
-	<fixr:fieldRef added="FIX.5.0SP2" addedEP="208" id="42911"/>
-	<fixr:fieldRef added="FIX.5.0SP2" addedEP="208" id="42912"/>
-	<fixr:fieldRef added="FIX.5.0SP2" addedEP="208" id="42913"/>
-	<fixr:fieldRef added="FIX.5.0SP2" addedEP="208" id="42914"/>
+<fixr:component added="FIX.4.3" category="Common" abbrName="Instrmt" id="1003" name="Instrument">
+    <fixr:fieldRef id="55" name="Symbol" added="FIX.4.3" updated="FIX.Latest" updatedEP="277">
+    <fixr:fieldRef id="48" name="SecurityID" added="FIX.4.3">
+    <fixr:fieldRef id="22" name="SecurityIDSource" added="FIX.4.3" updatedEP="161" updated="FIX.5.0SP2">
 </fixr:component>
 ```
 
@@ -996,10 +1009,13 @@ present, then the repeating group has unbounded size.
 **Example:** A repeating group with member fields and a reference to the cardinality field.
 
 ```xml
-<fixr:group id="1007" name="LegStipulations" abbrName="Stip">
-	<fixr:numInGroup id="683" name="NoLegStipulations"/>
-	<fixr:fieldRef added="FIX.4.4" id="688" name="LegStipulationType"/>
-	<fixr:fieldRef added="FIX.4.4" id="689" name="LegStipulationValue"/>
+<fixr:group added="FIX.4.3" category="Common" abbrName="Pty" id="1012" name="Parties">
+    <fixr:numInGroup id="453" name="NoPartyIDs" added="FIX.4.3"/>
+    <fixr:fieldRef id="448" name="PartyID" added="FIX.4.3" updatedEP="204" updated="FIX.5.0SP2"/>
+    <fixr:fieldRef id="447" name="PartyIDSource" added="FIX.4.3" updatedEP="204" updated="FIX.5.0SP2"/>
+    <fixr:fieldRef id="452" name="PartyRole" added="FIX.4.3" updatedEP="204" updated="FIX.5.0SP2"/>
+    <fixr:fieldRef id="2376" name="PartyRoleQualifier" added="FIX.5.0SP2" addedEP="179"/>
+    <fixr:groupRef id="2077" name="PtysSubGrp" added="FIX.4.4"/>
 </fixr:group>
 ```
 
@@ -1111,15 +1127,8 @@ A message in an Orchestra file describes a unit to be sent on the wire
 between counterparties.
 
 Like a `<component>`, a `<message>` element has `id` and `name` attributes.
-It also has an `msgType` attribute, a short name. In tag=value encoding,
-msgType is the value of the FIX field MsgType(35).
-
-In FIX, a single MsgType(35) value is often reused for multiple use cases. For example,
-an ExecutionReport(35=8), is overloaded for acceptance of an
-order, rejection, execution, cancel confirmation, etc. In the Orchestra
-schema, the `scenario` attribute is used to name each of those use cases.
-Each of the variations of a single MsgType(35) value can have slightly different message
-structures.
+It also has an `msgType` attribute, a short name defining the message type. In FIX,
+`msgType` is used for the value of the FIX field MsgType(35).
 
 Another attribute of `<message>` called `flow` ties a message to an
 exchange of messages between actors.
@@ -1132,12 +1141,11 @@ similar to a `<component>`; they contain the same member types and share
 most attributes. However, `<message>` is a top-level entity only; it
 cannot be contained by other message parts, nor can messages be nested.
 
-Unlike `<component>`, the parts of a message are contained by a child
+Unlike `<component>`, the parts of a message are contained by a an optional child
 `<structure>` element, which in turn holds `<fieldRef>`,
 `<componentRef>` and `<groupRef>` elements.
 
-**Example:** A message structure with a field, nested components, and a nested
-repeating group.
+**Example:** A message structure with a field, nested components, and a nested repeating group.
 
 ```xml
 <fixr:message name="TradingSessionList" id="100" msgType="BJ"
@@ -1154,18 +1162,28 @@ category="MarketStructureReferenceData" section="PreTrade">
 
 #### Message scenarios
 
-Message structures commonly vary with scenario or use case. For example,
-a FIX ExecutionReport(35=8) might look quite different in its execution use case
-versus a cancel-confirmation use case. The attributes that name a use
-case are `scenario` and `scenarioId`. If no scenario name or ID is explicitly
-given, they defaults to "base" and 1.
+A single message type is often reused for multiple use cases. Each of the variations of a single message type can have a slightly different message structure. For example, a FIX ExecutionReport(35=8) message is overloaded for acceptance, rejection, execution, cancel confirmation of an order. The attributes that name a use case are `scenario` and `scenarioId`. If no scenario name or ID is explicitly given, they default to "base" and 1. The combination of `id`, `scenario`, and `scenarioId` attributes must be unique.
 
-The combination of `id`, `scenario`, and `scenarioId` attributes must be unique.
+An optional `when` element allows to provide an expression to describe the condition under which a scenario is valid. The contents of `<when>` is a Score DSL expression. It is a predicate (Boolean expression) that tells if the scenario applies, i.e. if the expression evaluates to true. This can be used to determine the scenario for the validation of an incoming message or for the generation of an outgoing message. The expression can reference one or more elements of the message, e.g. specific field and its value(s).
 
-#### Responses
+**Example:** A message scenario with a condition.
 
-Aside from `<structure>`, `<message>` has another child element called
-`<responses>` (see section [Workflow](#workflow)).
+```xml
+<fixr:scenario name="Execution" id="6"/>
+...
+<fixr:message msgType="8" id="9" name="ExecutionReport" scenarioId="6">
+	<fixr:structure>
+		<fixr:componentRef presence="required" id="1024" name="StandardHeader"/>
+		...
+		<fixr:componentRef presence="required" id="1025" name="StandardTrailer"/>
+	</fixr:structure>
+	<fixr:when>ExecType == ^Trade/>
+</fixr:message>
+```
+
+#### Message responses
+
+Aside from `<structure>`, `<message>` has another optional child element called `<responses>`. It can be used to define messages that are used to respond to a given message supporting the definition of complete workflows. See section [Workflow](#workflow) for details.
 
 ## Expressions
 
@@ -1304,7 +1322,7 @@ violations.
 <fixr:fieldRef id="44">
 	<fixr:rule name="tick" >
 		<fixr:assign>$validator.ViolationGrp[].ruleViolated="tick"</fixr:assign>
-    <!-- price not even tick increment of .05 -->
+    <!-- price not equal to tick increment of .05 -->
 	<fixr:when>(Price * 100) % 5 != 0</fixr:when>
 	</fixr:rule>
 </fixr:fieldRef>
@@ -1334,7 +1352,7 @@ can be specified under the `<message>/<responses>` element.
 
 Workflow in Orchestra recognizes that there is not always a 1:1
 relationship between a message type and a use case. Some message
-types, for example the FIX ExecutionReport(35=8) message are overloaded for many different
+types, for example the FIX ExecutionReport(35=8) message, are overloaded for many different
 use cases. Therefore, messages in Orchestra are identified primarily by
 their `msgType` value, but with a qualification for a specific use case. Each message use case is called a scenario.
 
@@ -1543,24 +1561,29 @@ applies to the response message and sourceId applies to original
 message. Also, it is possible to assign new identifiers in the response
 message. The element `<assign>` is used to describe that case.
 
+**[ISSUE (GitHub #187): Allow names in correlation and assignment references]**
+
 **Example:** Send a response message and show correlated and new identifiers.
 
 ```xml
 <fixr:response name="orderAck">
-	<fixr:messageRef name="ExecutionReport" msgType="8" implMaxOccurs="1"
-id="9" implMinOccurs="1">
+	<fixr:messageRef
+    name="ExecutionReport" msgType="8" implMaxOccurs="1" id="9" implMinOccurs="1">
 		<fixr:identifiers>
 			<fixr:correlate id="11"/>
 			<fixr:correlate id="2422"/>
 			<fixr:assign id="37"/>
 			<fixr:annotation>
 				<fixr:documentation>
-				ExecutionReport(35=8) echoes ClOrdId(11) and OrderRequestID(2422) from order message and assigns OrderID(37).
+				      ExecutionReport(35=8) echoes ClOrdId(11) and OrderRequestID(2422)
+              from order message and assigns OrderID(37).
 				</fixr:documentation>
 			</fixr:annotation>
 		</fixr:identifiers>
 	</fixr:messageRef>
-	<fixr:when>$Market.SecMassStatGrp[SecurityID==in.SecurityID].SecurityTradingStatus != ^TradingHalt and $Market.Phase == "Open"</fixr:when>
+	<fixr:when>$Market.SecMassStatGrp[SecurityID==in.SecurityID].SecurityTradingStatus !=
+             ^TradingHalt and $Market.Phase == "Open"
+  </fixr:when>
 </fixr:response>
 ```
 
@@ -1653,7 +1676,7 @@ FIX 4.2 encoding
 
 ```xml
 <fixr:concept name="BaseOrder">
-	<fixr:messageRef name="OrderSingle" msgType="D"/>
+	<fixr:messageRef id="14" name="OrderSingle" msgType="D"/>
 </fixr:concept>
 ```
 \
@@ -1661,7 +1684,7 @@ FIX 4.4 encoding
 
 ```xml
 <fixr:concept name="BaseOrder">
-	<fixr:messageRef name="NewOrderSingle" msgType="D"/>
+	<fixr:messageRef id="14" name="NewOrderSingle" msgType="D"/>
 </fixr:concept>
 ```
 
@@ -1670,7 +1693,7 @@ FIX 4.4 encoding
 ## XML Schema (XSD)
 
 The FIXInterfaces schema represents service offering and session
-provisioning. Its XML namespace is "http://fixprotocol.io/2020/orchestra/interfaces".
+provisioning. Its XML namespace is "http://fixprotocol.io/2023/orchestra/interfaces".
 
 ### Conformance
 
@@ -1679,9 +1702,7 @@ schema. This can be validated with common XML parsers and related tools.
 
 ### Schema location
 
-The XML schema is currently available in GitHub project fix-orchestra module
-[interfaces](https://github.com/FIXTradingCommunity/fix-orchestra/tree/master/interfaces).
-It will also be made available at a URI consistent with its XML namespace.
+The XML schema is available via the web at the URL http://fixprotocol.io/2023/orchestra/interfaces/, which is consistent with its XML namespace.
 
 ### Root element
 
@@ -1690,17 +1711,15 @@ shows that element with required namespaces:
 
 ```xml
 <fixi:interfaces xmlns:dcterms="http://purl.org/dc/terms/"
-xmlns:fixi="http://fixprotocol.io/2020/orchestra/interfaces"
+xmlns:fixi="http://fixprotocol.io/2023/orchestra/interfaces"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xmlns:xi="http://www.w3.org/2001/XInclude"
-xsi:schemaLocation="http://fixprotocol.io/2020/orchestra/interfaces interfaces.xsd">
+xsi:schemaLocation="http://fixprotocol.io/2023/orchestra/interfaces interfaces.xsd">
 ```
 
 ### Supplementary documentation
 
-See the separate document interfaces.html" in [GitHub](https://github.com/FIXTradingCommunity/fix-orchestra-spec/tree/master/v1-1/informative) for a detailed
-technical reference for the Interfaces XML schema. The remainder of this
-section serves as an overview and explains motivations for the design.
+See the separate document "interfaces.html" in [GitHub](https://github.com/FIXTradingCommunity/fix-orchestra-spec/tree/master/v1-1/informative) for a detailed technical reference for the Interfaces XML schema. The remainder of this section serves as an overview and explains motivations for the design.
 
 ### Protocol relationship
 
@@ -1756,6 +1775,8 @@ stack. The children are `<userInterface>`, `<encoding>`,
 may have multiple instances of a protocol. For example, a session may
 use primary and secondary transports.
 
+Each of these child elements may have effective dates and times (`activationTime`, `deactivationTime`) for auditing, analysis and other purposes. It allows to correlate an interface version to a message that was captured on a certain date. The attribute `deprecated` may be used to inform users that a service offering may be removed or replaced in the future.
+
 Any message-oriented protocol may have an `orchestration` attribute that
 consists of a URI. It is a link to an Orchestra file that describes
 message structures and workflow. A URI may link to a web resource or a
@@ -1765,8 +1786,7 @@ All the protocol elements have `name` and `version` attributes.
 
 ### Service
 
-A service is an application layer protocol. The `<service>` element is
-of XML protocolType, carrying the same attributes as other protocols.
+A service is an application layer protocol. The `<service>` element is of XML protocolType, carrying the same attributes as other protocols and including effective dates and times and a deprecation indicator.
 
 ### Transport
 
@@ -2178,7 +2198,7 @@ Example Orchestra files are provided in the GitHub project
 
 # Appendix
 
-**[PLACEHOLDER: Should this section be maintained as part of the normative specification?]**
+**[ISSUE (Hanno): Should this section be maintained as part of the normative specification?]**
 
 ## Differences to the Unified Repository (a.k.a. Repository 2010 Edition)
 
