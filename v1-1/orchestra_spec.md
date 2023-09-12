@@ -511,7 +511,7 @@ corresponding to any number of type systems. Type systems include XML,
 SBE, GPB, JSON, and ISO 11404, a generic type taxonomy. An XML schema
 mapping is obviously needed by FIXML.
 
-The `standard` attribute of `<datatype>` tells which type system the
+The `standard` attribute of `<mappedDatatype>` tells which type system the
 mapping is for. Its `base` attribute tells what the FIX datatype maps to
 in the particular standard. For example, FIX type Qty maps to XML schema
 type xs:decimal.
