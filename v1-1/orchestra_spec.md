@@ -15,7 +15,6 @@ The contents of Orchestra files are machine-readable (that is, processed
 as data) and may include:
 
   - Message structure by each scenario, implemented as an extension of the FIX Repository.
-    **[ISSUE 1 (Hanno): what do we want to say here?]**
 
   - Accepted values of enumerations by message scenario
 
@@ -29,7 +28,6 @@ as data) and may include:
 
   - Document and exchange the Algorithmic Trading Definition Language
     (FIXatdl&reg;) files associated with a FIX service offering
-    **[ISSUE 2 (Hanno): this is never mentioned again in the spec]**
 
   - Session identification and transport configuration
 
@@ -183,9 +181,7 @@ Textual encoding of security keys must conform to [IETF RFC 7468](https://tools.
 
 Documentation content types should be chosen from the registry of media types (formerly known as MIME) maintained by the Internet Assigned Numbers Authority (IANA). See the registry of text media types at [Media Types](https://www.iana.org/assignments/media-types/media-types.xhtml#text). [Markdown](https://tools.ietf.org/html/rfc7763) is recommended for rich text while `text/plain` is the default.
 
-[ISO 8601:2019](https://www.iso.org/standard/70907.html) Data elements and interchange formatsInformation
-interchange - Representation of dates and times. Used for representation
-of dates, times, and time intervals in DSL expressions.
+[ISO 8601:2019](https://www.iso.org/standard/70907.html) Data elements and interchange formats -- Information interchange -- Representation of dates and times. Used for representation of dates, times, and time intervals in DSL expressions.
 
 # Metamodel
 
@@ -198,8 +194,6 @@ The metamodels presented do not strictly conform to the UML Meta-Object Facility
 ## Message structures
 
 The UML metamodel depicted below is a conceptual view of message structures.
-
-**[ISSUE 3 (Hanno): We need to update the diagram, e.g. it refers to FIX datatypes only.]**
 
 ![Orchestra Repository Metamodel](media/FIX-Repository-MetaModel.png)
 
@@ -282,8 +276,6 @@ related tools.
 
 ### Schema location
 
-**[ISSUE 4 (Hanno): Can we already make this available online for RC1?]**
-
 The XML schema is available via the web at the URL http://fixprotocol.io/2023/orchestra/repository/, which is consistent with its XML namespace.
 
 ### Root element
@@ -302,7 +294,7 @@ substantive change to the protocol.
 This snippet shows that element with required namespaces and attributes:
 
 ```xml
-<fixr:repository name="FIX.Latest" version="FIX.Latest_EP273"
+<fixr:repository name="FIX.Latest" version="FIX.Latest_EP284"
 xmlns="http://purl.org/dc/elements/1.1/"
 xmlns:fixr="http://fixprotocol.io/2023/orchestra/repository"
 xmlns:dc="http://purl.org/dc/terms/"
@@ -319,8 +311,6 @@ minor changes are made to an Orchestra file while version should be
 updated for incremental changes.
 
 The following repository attributes are optionally available:
-
-**[ISSUE 5 (GitHub #186): Add repository attribute for application extension ID]**
 
 - `applVerId` contains the application version
 - `specURL` points to an online reference documentation
@@ -350,8 +340,6 @@ Usage should be supported for all phases of financial industry workflows, includ
 ## Content ownership and history
 
 ### Provenance
-
-**[ISSUE 6 (Hanno): Update this section to make a clear recommendation of DC terms to be used and their semantics]**
 
 The `<metadata>` element is used to identify a particular Orchestra file
 and the issuer of that file. It can contain any of the elements defined
@@ -596,8 +584,6 @@ characteristics. One of the benefits of following this standard is that
 it will be easier to map FIX datatypes to other message standards, such
 as ISO 20022 (SWIFT).
 
-**[ISSUE 7 (Don): This suggestion should be marked non-normative. Furthermore, we intend to develop a standard for mapping.]**
-
 Rather than creating numerous one-off mappings to
 other type systems, is it likely more efficient to map each to ISO 11404
 once, and then compare mappings in an associative model to identify the
@@ -653,7 +639,7 @@ A `<codeSets>` element contains any number of `<codeSet>` child
 elements. The schema allows zero or more instances of `<codeSet>`
 elements, each with a unique `name` attribute.
 
-**[ISSUE 8 (Hanno): Is the following still true after GitHub issue #170 splitting type vs codeSet for a field?]**
+**[ISSUE 8: Is the following still true after GitHub issue #170 splitting type vs codeSet for a field?]**
 
 The names of code sets and datatypes share a common namespace and must
 be unique within a schema. This constraint is enforced by the XML
@@ -706,8 +692,6 @@ Since Orchestra supports both FIX and non-FIX protocols, rules for the validatio
 
 #### Union datatypes for code sets {#union-datatype}
 
-**[ISSUE 9 (Don): An Orchestra file published by a firm exposes its service offering, so it would not allow users to define their own codes. The use case for this is the FIX standard staking out reserved ranges of code values to extend the standard.]**
-
 Code sets may have a second datatype to extend the list of values defined as codes with the underlying datatype given by the `type` attribute. Orchestra supports this by means of the `unionDataType` attribute of the `<codeSet>` element. The underlying datatype of a code set may be combined with the following union datatypes defined in the XML schema that also need to be defined as separate `<datatype>` elements in the XML file.
 
 - Reserved100Plus: integer values of 100 and above,
@@ -733,8 +717,6 @@ http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=647
 
 ## Fields
 
-**[ISSUE 10 (GitHub #94): add section to define baseFieldId for a field]**
-
 A field carries a specific business meaning (semantic) as described in
 FIX specifications or another protocol. In the schema, a `<field>` element
 is contained by parent element `<fields>`. The collection of fields
@@ -744,7 +726,7 @@ field must not be reused. The pedigree attributes of attribute group
 protocol version in which it was added.
 
 In Orchestra, a field has two unique identifiers, numeric id, also known as
-"tag", and a descriptive string name.
+"tag" in the context of FIX, and a descriptive string name.
 
 Like other message elements, a field may be documented with an
 `<annotation>` element tree as described above. Also, the `baseCategory`
@@ -763,8 +745,6 @@ combination of `name` + `scenario` as well as `id` + `scenarioId`.
 ### Data domain of a field
 
 Every field must have a data domain of either a datatype name or more specifically, a collection of valid values specified by a code set reference. The domain of a field is specified in its `type` attribute in case of a datatype and in its `codeSet` attribute in case of a code set. The attribute `type` refers to a `<datatype>` element and the `codeSet` attribute refers to a `<codeSet>` element by the respective `name` attribute. In the case of a `<codeSet>`, there is a level of indirection to its `codeSet` attribute to arrive at a `<datatype>`.
-
-**[ISSUE 11 (Hanno): Has the following paragraph become obsolete? There should be no more automatic link of field and code set scenario with v1.1.]**
 
 Since `<codeSet>` is also qualified by scenario, a field will link to
 the code set of the same scenario. By default, "base" scenario field
@@ -792,8 +772,33 @@ protocol. Where needed explicitly for data fields, the associated length field i
 **Example:** A data field and its corresponding length field.
 
 ```xml
-<field id="95" name="RawDataLength" type="Length"/>
-<field id="96" name="RawData" type="data" lengthId="95"/>
+<fixr:field id="95" name="RawDataLength" type="Length"/>
+<fixr:field id="96" name="RawData" type="data" lengthId="95"/>
+```
+
+### Base fields
+A field or a field reference may reference another field by means of the `baseFieldId` attribute for the purpose of providing an explicit relationship. The main use case is for fields available in an encoded as well as a non-encoded version, see [Encoded fields](#encoded-fields) for details. Base field references may also be used to connect identical fields having different names. For example, the FIX Protocol can use this capability to explicitly link party identifier fields that are needed due to the requirement of field name uniqueness for the tag=value encoding.
+
+**Example:** A data field with a datatype as base field for other fields.
+
+```xml
+<fixr:field name="PartyID" id="448" type="String"/>
+<fixr:field name="RootPartyID" id="1117" type="String" baseFieldId="448">
+<fixr:field name="NestedPartyID" id="524" type="String" baseFieldId="448">
+<fixr:field name="Nested2PartyID" id="757" type="String" baseFieldId="448">
+<fixr:field name="Nested3PartyID" id="949" type="String" baseFieldId="448">
+<fixr:field name="Nested4PartyID" id="1415" type="String" baseFieldId="448">
+```
+
+**Example:** A data field with a code set as base field for other fields.
+
+```xml
+<fixr:field name="SecurityType" id="167" codeSet="SecurityTypeCodeSet"/>
+<fixr:field name="LegSecurityType" id="609" codeSet="SecurityTypeCodeSet" baseFieldId="167">
+<fixr:field name="UnderlyingSecurityType" id="310" codeSet="SecurityTypeCodeSet" baseFieldId="167">
+<fixr:field name="DerivativeSecurityType" id="1249" codeSet="SecurityTypeCodeSet" baseFieldId="167">
+<fixr:field name="RelatedSecurityType" id="1652" codeSet="SecurityTypeCodeSet" baseFieldId="167">
+<fixr:field name="InstrumentScopeSecurityType" id="1547" codeSet="SecurityTypeCodeSet" baseFieldId="167">
 ```
 
 ### Encoded fields
@@ -803,14 +808,12 @@ A field may have an encoded version represented by two other fields. A `baseFiel
 **Example:** A data field and its corresponding length field.
 
 ```xml
-<field id="106" name="Issuer" type="Length"/>
+<fixr:field id="106" name="Issuer" type="Length"/>
 <fixr:field name="EncodedIssuer" id="349" type="data" lengthId="348" baseFieldId="106">
 <fixr:field name="EncodedIssuerLen" id="348" type="Length">
 ```
 
 ### Discriminator fields
-
-**[ISSUE 12 (Don): A topic for mapping discussion: in ISO 20022 they have a commonly used a datatype called "identifier set" that serves the same purpose. The discriminator is a member of the datatype. The difference is that the structured datatype belongs to a single field, not across two fields as in tag value encoding.]**
 
 FIX contains fields for which its value domain is modified by another
 field. This is variously called a choice, discriminated union, tagged
@@ -2195,36 +2198,6 @@ Example Orchestra files are provided in the GitHub project
 [FIXTradingCommunity/fix-orchestra](https://github.com/FIXTradingCommunity/fix-orchestra).
 
 # Appendix
-
-**[ISSUE 13 (Hanno): Should this section be maintained as part of the normative specification?]**
-
-## Differences to the Unified Repository (a.k.a. Repository 2010 Edition)
-
-  - New features: metadata with provenance, actors, workflow, semantic
-    concepts.
-
-  - An Orchestra file supports a single protocol version. If an
-    organization supports multiple protocols, it should issue an
-    Orchestra file for each.
-
-  - The `<codeSets>` element is top-level while in the 2010 Edition,
-    enumerations of valid values were contained by fields. This change
-    was made to recognize that code sets may be shared by many fields
-    and also, they may be managed by an external standard.
-
-  - The datatype element was enhanced to support mapping FIX datatypes
-    to any other type system, and not just XML schema datatypes.
-
-  - The Orchestra schema provides a feature to explicitly link a field,
-    called a discriminator, that modifies the value space of another
-    field.
-
-  - Repeating groups were moved to their own parent element from other components.
-
-  - Scenarios overload the layout of a message, component, field or datatype for
-    different use cases.
-
-  - The interfaces schema is new.
 
 ## Compliance
 
