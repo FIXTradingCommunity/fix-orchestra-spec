@@ -276,11 +276,11 @@ related tools.
 
 ### Schema location
 
-The XML schema is available via the web at the URL http://fixprotocol.io/2023/orchestra/repository/, which is consistent with its XML namespace.
+The XML schema is available via the web at the URL https://fixprotocol.io/2023/orchestra/repository/, which is consistent with its XML namespace.
 
 ### Root element
 
-The root element an Orchestra repository XML file is `<repository>`. An Orchestra
+The root element of an Orchestra repository XML file is `<repository>`. An Orchestra
 repository file contains all the message structures and workflow
 elements pertaining to a single protocol version. If an organization
 supports multiple versions of a protocol, it should supply an Orchestra file
@@ -300,7 +300,7 @@ xmlns:fixr="http://fixprotocol.io/2023/orchestra/repository"
 xmlns:dc="http://purl.org/dc/terms/"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xmlns:xi="http://www.w3.org/2001/XInclude"
-xsi:schemaLocation="http://fixprotocol.io/2023/orchestra/repository repository.xsd">
+xsi:schemaLocation="https://fixprotocol.io/2023/orchestra/repository repository.xsd">
 ```
 
 #### Repository attributes
@@ -639,8 +639,6 @@ A `<codeSets>` element contains any number of `<codeSet>` child
 elements. The schema allows zero or more instances of `<codeSet>`
 elements, each with a unique `name` attribute.
 
-**[ISSUE 8: Is the following still true after GitHub issue #170 splitting type vs codeSet for a field?]**
-
 The names of code sets and datatypes share a common namespace and must
 be unique within a schema. This constraint is enforced by the XML
 schema.
@@ -776,40 +774,15 @@ protocol. Where needed explicitly for data fields, the associated length field i
 <fixr:field id="96" name="RawData" type="data" lengthId="95"/>
 ```
 
-### Base fields
-A field or a field reference may reference another field by means of the `baseFieldId` attribute for the purpose of providing an explicit relationship. The main use case is for fields available in an encoded as well as a non-encoded version, see [Encoded fields](#encoded-fields) for details. Base field references may also be used to connect identical fields having different names. For example, the FIX Protocol can use this capability to explicitly link party identifier fields that are needed due to the requirement of field name uniqueness for the tag=value encoding.
-
-**Example:** A data field with a datatype as base field for other fields.
-
-```xml
-<fixr:field name="PartyID" id="448" type="String"/>
-<fixr:field name="RootPartyID" id="1117" type="String" baseFieldId="448">
-<fixr:field name="NestedPartyID" id="524" type="String" baseFieldId="448">
-<fixr:field name="Nested2PartyID" id="757" type="String" baseFieldId="448">
-<fixr:field name="Nested3PartyID" id="949" type="String" baseFieldId="448">
-<fixr:field name="Nested4PartyID" id="1415" type="String" baseFieldId="448">
-```
-
-**Example:** A data field with a code set as base field for other fields.
-
-```xml
-<fixr:field name="SecurityType" id="167" codeSet="SecurityTypeCodeSet"/>
-<fixr:field name="LegSecurityType" id="609" codeSet="SecurityTypeCodeSet" baseFieldId="167">
-<fixr:field name="UnderlyingSecurityType" id="310" codeSet="SecurityTypeCodeSet" baseFieldId="167">
-<fixr:field name="DerivativeSecurityType" id="1249" codeSet="SecurityTypeCodeSet" baseFieldId="167">
-<fixr:field name="RelatedSecurityType" id="1652" codeSet="SecurityTypeCodeSet" baseFieldId="167">
-<fixr:field name="InstrumentScopeSecurityType" id="1547" codeSet="SecurityTypeCodeSet" baseFieldId="167">
-```
-
 ### Encoded fields
 
-A field may have an encoded version represented by two other fields. A `baseFieldId` attribute is used to link the encoded version of a field to the non-encoded version. Additionally, a `lengthId` attribute is used for encoded fields to link it to the field that contains the length of the encoded field.
+A field may have an encoded version represented by two other fields. A `nonEncodedFieldId` attribute is used to link the encoded version of a field to the non-encoded version. Additionally, a `lengthId` attribute is used for encoded fields to link it to the field that contains the length of the encoded field.
 
 **Example:** A data field and its corresponding length field.
 
 ```xml
 <fixr:field id="106" name="Issuer" type="Length"/>
-<fixr:field name="EncodedIssuer" id="349" type="data" lengthId="348" baseFieldId="106">
+<fixr:field name="EncodedIssuer" id="349" type="data" lengthId="348" nonEncodedFieldId="106">
 <fixr:field name="EncodedIssuerLen" id="348" type="Length">
 ```
 
@@ -1694,7 +1667,7 @@ FIX 4.4 encoding
 ## XML Schema (XSD)
 
 The FIXInterfaces schema represents service offering and session
-provisioning. Its XML namespace is "http://fixprotocol.io/2023/orchestra/interfaces".
+provisioning. Its XML namespace is "https://fixprotocol.io/2023/orchestra/interfaces".
 
 ### Conformance
 
@@ -1703,11 +1676,11 @@ schema. This can be validated with common XML parsers and related tools.
 
 ### Schema location
 
-The XML schema is available via the web at the URL http://fixprotocol.io/2023/orchestra/interfaces/, which is consistent with its XML namespace.
+The XML schema is available via the web at the URL https://fixprotocol.io/2023/orchestra/interfaces/, which is consistent with its XML namespace.
 
 ### Root element
 
-The root element an Orchestra interfaces XML file is `<interfaces>`. This snippet
+The root element of an Orchestra interfaces XML file is `<interfaces>`. This snippet
 shows that element with required namespaces:
 
 ```xml
@@ -1715,7 +1688,7 @@ shows that element with required namespaces:
 xmlns:fixi="http://fixprotocol.io/2023/orchestra/interfaces"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xmlns:xi="http://www.w3.org/2001/XInclude"
-xsi:schemaLocation="http://fixprotocol.io/2023/orchestra/interfaces interfaces.xsd">
+xsi:schemaLocation="https://fixprotocol.io/2023/orchestra/interfaces interfaces.xsd">
 ```
 
 ### Supplementary documentation
