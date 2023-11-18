@@ -22,7 +22,7 @@ pandoc -f markdown -t docx+native_numbering "$DISCLAIMER" $FILES -o "$TARGET/doc
 echo Orchestra document version created
 
 # Create base online version without disclaimer
-pandoc $FILES -o "$TARGET/debug/OrchestraONLINE.html" --metadata-file="$YAML" -s --toc --toc-depth=2
+pandoc $FILES -o "$TARGET/debug/OrchestraONLINE.html" --metadata-file="$YAML" -s --toc --toc-depth=2 --wrap=none
 
 # Remove title as it is redundant to page header
 sed -i '.bak1' '/<h1 class="title">/d' "$TARGET/debug/OrchestraONLINE.html"
@@ -34,7 +34,7 @@ sed -i '.bak2' '/<nav id="TOC" role="doc-toc">/i\
 
 # Create separate online versions for production and test website by including appropriate link prefixes
 sed 's,img src="media/,img src="https://www.fixtrading.org'$WPFOLDER',g' "$TARGET/debug/OrchestraONLINE.html" > "$TARGET/html/OrchestraONLINE_PROD.html"
-sed s/www.fixtrading.org/www.technical-fixprotocol.org/g "$TARGET/html/OrchestraONLINE_PROD.html" > "$TARGET/html/OrchestraONLINE_TEST.html"
+sed s/www.fixtrading.org/v1-9.technical-fixprotocol.org/g "$TARGET/html/OrchestraONLINE_PROD.html" > "$TARGET/html/OrchestraONLINE_TEST.html"
 echo Orchestra ONLINE version created for PROD and TEST
 
 echo Compilation ended!
