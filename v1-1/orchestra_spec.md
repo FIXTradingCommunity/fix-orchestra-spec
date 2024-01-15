@@ -191,9 +191,9 @@ Each of the two metamodels are implemented in their respective XML schemas. Any 
 
 The metamodels presented do not strictly conform to the UML Meta-Object Facility architecture (MOF).
 
-## Message structures
+## Repository
 
-The UML metamodel depicted below is a conceptual view of message structures.
+The repository metamodel is a conceptual view of message structures.
 
 ![Orchestra Repository Metamodel](media/FIX-Repository-MetaModel.png)
 
