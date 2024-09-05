@@ -1535,7 +1535,9 @@ a common identifier is assumed to be in the same field in the message
 and its response. If it is in different fields, then the `id` attribute
 applies to the response message and sourceId applies to original
 message. Also, it is possible to assign new identifiers in the response
-message. The element `<assign>` is used to describe that case.
+message. The element `<assign>` is used to describe that case. An optional
+`name` attribute is provided alongside the mandatory `id` attribute for both
+the `<correlate>` and the `<assign>` element.
 
 **Example:** Send a response message and show correlated and new identifiers.
 
@@ -1544,12 +1546,12 @@ message. The element `<assign>` is used to describe that case.
 	<fixr:messageRef
     name="ExecutionReport" msgType="8" implMaxOccurs="1" id="9" implMinOccurs="1">
 		<fixr:identifiers>
-			<fixr:correlate id="11"/>
-			<fixr:correlate id="2422"/>
-			<fixr:assign id="37"/>
+			<fixr:correlate id="11" name="ClOrdID"/>
+			<fixr:correlate id="2422" name="OrderRequestID"/>
+			<fixr:assign id="37" name="OrderID"/>
 			<fixr:annotation>
 				<fixr:documentation>
-				      ExecutionReport(35=8) echoes ClOrdId(11) and OrderRequestID(2422)
+				      ExecutionReport(35=8) echoes ClOrdID(11) and OrderRequestID(2422)
               from order message and assigns OrderID(37).
 				</fixr:documentation>
 			</fixr:annotation>
