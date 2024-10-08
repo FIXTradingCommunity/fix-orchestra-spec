@@ -10,7 +10,7 @@ STYLE="FIX_TechStd_Style_MASTER.docx"
 TARGET="$SOURCE/target"
 YAML="$SOURCE/Orchestra.yaml"
 FILES="orchestra_spec.md"
-WPFOLDER="/wp-content/uploads/2020/02/"
+WPFOLDER="/wp-content/uploads/fixspecimages/"
 
 mkdir -p target
 cd target
@@ -18,7 +18,8 @@ mkdir -p debug docx pdf html
 cd ..
 
 # Create document version with disclaimer
-pandoc -f markdown -t docx+native_numbering "$DISCLAIMER" $FILES -o "$TARGET/docx/Orchestra V1.1 RC1.docx" --reference-doc="$STYLE" --metadata-file="$YAML" --toc --toc-depth=4
+pandoc -f markdown -t docx+native_numbering "$DISCLAIMER" $FILES -o "$TARGET/docx/Orchestra V1.1 RC2.docx"\
+       --reference-doc="$STYLE" --metadata-file="$YAML" --toc --toc-depth=4 --lot --lof
 echo Orchestra document version created
 
 # Create base online version without disclaimer
