@@ -312,7 +312,6 @@ updated for incremental changes.
 
 The following repository attributes are optionally available:
 
-- `applVerId` contains the application version
 - `specURL` points to an online reference documentation
 - `guid` is a globally unique identifier for the given schema file
 - `namespace` contains an associated namespace as URI
