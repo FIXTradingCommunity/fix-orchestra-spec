@@ -1395,12 +1395,12 @@ repeating groups.
 A state variable can be tested in a conditional expression or set by an
 assignment expression.
 
-**Example:** An actor with state variables for TradingSession(336) and TradeDate(75).
+**Example:** An actor with state variables for TradingSessionID(336) and TradeDate(75).
 
 ```xml
 <fixr:actor name="Market">
-	<fixr:fieldRef id="336"/>
-	<fixr:fieldRef id="75"/>
+	<fixr:fieldRef id="336" name="TradingSessionID"/>
+	<fixr:fieldRef id="75" name ="TradeDate"/>
 </fixr:actor>
 ```
 
@@ -1493,11 +1493,11 @@ messages on the flow. It takes one of these values:
 	<fixr:actor name="BuySide"/>
 	<fixr:actor name="SellSide"/>
 	<fixr:flow name="OrderEntry" source="BuySide" destination="SellSide"
-messageCast="unicast" reliability="idempotent"/>
+             messageCast="unicast" reliability="idempotent"/>
 	<fixr:flow name="Executions" source="SellSide" destination="BuySide"
-messageCast="unicast" reliability="recoverable"/>
+             messageCast="unicast" reliability="recoverable"/>
 	<fixr:flow name="MarketData" source="SellSide" destination="BuySide"
-messageCast="multicast" reliability="bestEffort"/>
+             messageCast="multicast" reliability="bestEffort"/>
 </fixr:actors>
 ```
 
