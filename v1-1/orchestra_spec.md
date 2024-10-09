@@ -1341,9 +1341,9 @@ originator or receiver of a message.
 ### Workflows with message scenarios
 
 A message scenario is one use case of a specific message type, as identified by
-key attributes `name` and `msgType` in the `messageAttribGrp` attribute group
-supported by `<message>`. A scenario name is stored in the `scenario`
-attribute of `<message>`. If there is only one use case for a message
+key attributes `msgType` of the `<message>` element and `name` in the attribute group
+`oidGrp` supported by `<message>`.  A scenario name is stored in the `scenario`
+attribute of `oidGrp`. If there is only one use case for a message
 type, then scenario need not be populated. It defaults to "base".
 Scenarios must be unique per message type and it is an error to have
 more than one `<message>` element of the same type without a scenario
