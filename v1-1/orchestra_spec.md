@@ -426,20 +426,15 @@ Since Orchestra supports both FIX and non-FIX protocols, naming rules are relaxe
 
 ## Features for document and schema generation
 
-The XML schema retains features that have long been used to generate FIX
-documentation and other outputs. These elements are optional.
+The XML schema retains features that have long been used to generate FIX documentation and other outputs. These elements are optional but may be used to group messages for non-FIX protocols on two levels, i.e. sections containing categories.
 
 ### Categories
 
-The `<categories>` element tree is used to associate FIX elements to
-business areas, such as single general order handling, market data, and so
-forth, for documentation generation. Also, categories are used to
-organize FIXML schema files.
+The `<categories>` element tree is used to associate elements to business areas for documentation generation. For example, FIX defines categories such as "SingleGeneralOrderHandling", "MarketData", and "SecuritiesReferenceData". FIX also uses category information (attributes `FIXMLFileName`, `componentType`, `includeFile`) to organize FIXML schema files. The `<categories>` element has a number of attributes, including the `entityAttribGrp` attribute group that supports pedigree attributes (see [Pedigree](#pedigree) for details). Categories must be grouped by sections and hence have a `name` and a `section` attribute.
 
 ### Sections
 
-The `<sections>` element tree names higher level business processes. Typically, a section contains multiple categories. Traditionally,
-they have been organized around pre-trade, trade, and post-trade information flows.
+The `<sections>` element tree names higher level business processes and requires the `name` attribute. Typically, a section contains multiple categories. Traditionally, they have been organized around pre-trade, trade, and post-trade information flows. A single message can only belong to a single section and category. The `displayOrder`attribute may be used to define the ordering of sections in the documentation. FIX uses the section attribute `FIXMLFileName` to organize FIXML schema files.
 
 ### Metadata about any element
 
