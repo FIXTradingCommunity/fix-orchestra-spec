@@ -516,7 +516,7 @@ collisions, names and IDs of deprecated elements should never be reused.
 
 ## Scenarios
 
-A scenario may be used to distinguish multiple use cases of a single message, group, component, field, code set or datatype. The respective element may be referenced more than once in the XML schema by adding `scenario` and/or `scenarioId` attributes in addition to the `id` and/or `name` attributes of the element. Scenarios in the context of the different elements are explained in more detail within the respective sections below.
+A scenario may be used to distinguish multiple use cases of a single message, group, component, field, code set or datatype. The respective element may be defined more than once in the XML schema by adding `scenarioId` and/or `scenario` attributes in addition to the `id` and/or `name` attributes of the element. Scenarios for messages, groups, components or code sets may reference another scenario of the same element by adding `scenarioRefId` and/or `scenarioRef` attributes when it is restricting the referenced message, group, component or code set, i.e. contains less elements or codes. In the case of messages, this is equivalent to the ISO 20022 concept of variants (see [https://www.iso20022.org/catalogue-messages/additional-content-messages/variants](https://www.iso20022.org/catalogue-messages/additional-content-messages/variants) for details). It may contain the same number of elements, e.g. when one or more elements use a different scenario. Scenarios in the context of the different elements are explained in more detail within the respective sections below. The ordering of elements should be identical to the referenced scenario.
 
 Each scenario is described by a `<scenario>` element, a child of `<scenarios>`.
 
@@ -676,10 +676,12 @@ Codes may be documented with an `<annotation>` element tree.
 
 Code sets may have different supported codes in different scenarios. For
 example, outbound FIX ExecutionReport(35=8) messages may have a more enriched view
-of PartyRole(452) than is required on inbound order messages. Therefore, a
+of PartyRole(452) than is required on inbound FIX NewOrderSingle(35=D) messages. Therefore, a
 `<codeSet>` may be qualified by its `scenario` and/or `scenarioId` attribute. The default
 values of `scenario` and `scenarioId` are "base" and 1, respectively, so the attributes need not be supplied if
 there is only one form of a code set.
+
+A code set may reference another scenario of the same code set with the `scenarioRef` and/or `scenarioRefId` attribute when it contains less codes than the code set scenario it is referencing. It may contain the same number of codes, e.g. when one or more codes require different annotations. The ordering of codes should not be changed.
 
 Uniqueness of code set scenarios is enforced by the XML schema, both as
 the combination of `name` + `scenario` as well as `id` + `scenarioId`.
@@ -896,6 +898,8 @@ The `scenario` and `scenarioId` attributes of a component identify a use case; m
 components may have the same name, but the combination of name and
 scenario must be unique. Scenario name and ID have default values of "base" and 1, respectively, so if a
 component only has one variation, there is no need to qualify it.
+
+A component may reference another scenario of the same component with the `scenarioRef` and/or `scenarioRefId` attribute when it contains less elements than the component scenario it is referencing. It may contain the same number of elements, e.g. when one or more elements use a different scenario. The ordering of elements should not be changed.
 
 A component is designed to be specified once in detail but
 reused in multiple message types by reference. An example of a FIX component
@@ -1139,6 +1143,8 @@ category="MarketStructureReferenceData" section="PreTrade">
 #### Message scenarios
 
 A single message type is often reused for multiple use cases. Each of the variations of a single message type can have a slightly different message structure. For example, a FIX ExecutionReport(35=8) message is overloaded for acceptance, rejection, execution, cancel confirmation of an order. The attributes that name a use case are `scenario` and `scenarioId`. If no scenario name or ID is explicitly given, they default to "base" and 1. The combination of `id`, `scenario`, and `scenarioId` attributes must be unique.
+
+A message may reference another scenario of the same message with the `scenarioRef` and/or `scenarioRefId` attribute when it contains less elements than the message scenario it is referencing. It may contain the same number of codes, e.g. when one or more elements use a different scenario. The ordering of elements should not be changed.
 
 An optional `when` element allows to provide an expression to describe the condition under which a scenario is valid. The contents of `<when>` is a Score DSL expression. It is a predicate (Boolean expression) that tells if the scenario applies, i.e. if the expression evaluates to true. This can be used to determine the scenario for the validation of an incoming message or for the generation of an outgoing message. The expression can reference one or more elements of the message, e.g. specific field and its value(s).
 
