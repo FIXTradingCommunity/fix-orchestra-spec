@@ -340,11 +340,14 @@ Usage should be supported for all phases of financial industry workflows, includ
 ## Content ownership and history
 
 ### Provenance
-
 The `<metadata>` element is used to identify a particular Orchestra file
-and the issuer of that file. It can contain any of the elements defined
+and the creator of that file. It can contain any of the elements defined
 by the Dublin Core XML schema. Recommended elements include title,
-publisher, date issued, and rights.
+creator, created, conformsTo and source.
+
+Recommended additional elements for document generation include
+alternative, abstract, issued, dateAccepted, publisher, contributor and
+subject.
 
 Table: Dublin Core Terms for Orchestra
 
@@ -352,48 +355,88 @@ Table: Dublin Core Terms for Orchestra
 DCMI Term               Definition                            Recommended Usage
 ----------------------- ------------------------------------- ----------------------------------------------
 title                   A name given to the resource.         Use for display or in generated documentation.
+                                                              If not set, default to the repository name.
 
 creator                 An entity responsible for making      Name of the firm or person that created the
                         the resource.                         Orchestra file.
 
 created                 Date of creation of the resource.     Date and time of creation of the Orchestra file.
+                                                              If not set, default to the current system time.
 
-contributor             An entity responsible for making      Application supporting the creation of the
-                        contributions to the resource.        Orchestra file.
+conformsTo              An established standard to which      Version of the Orchestra Technical Standard
+                        the described resource conforms.      that was used to create the Orchestra file.
+                                                              If not set, default to the latest official
+                                                              version.
 
-publisher               An entity responsible for making      Distributor of the Orchestra file (may be
-                        the resource available.               different than the creator).
+source                  A related resource from which the     URL to another Orchestra file. Required if
+                        described resource is derived.        a reference specification was used to create
+                                                              the Orchestra file.
 
-issued                  Date of formal issuance of the        Reference date for the publication.
-                        resource.
+isFormatOf              A pre-existing related resource       URL to an original resource that the Orchestra
+                        that is substantially the same as     file is based on. For example, a PDF document
+                        the described resource, but in        published by an Exchange.
+                        another format.
 
-rights                  Information about rights held         Copyright notice.
+rights                  Information about rights held         Copyright notice for the Orchestra file.
                         in and over the resource.
 
 license                 A legal document giving official      URL to a license or IP statement.
                         permission to do something with
                         the resource.
 
-conformsTo              An established standard to which      Version of the Orchestra Technical Standard
-                        the described resource conforms.      that was used to create the Orchestra file.
+contributor             An entity responsible for making      Name of the firm or person supporting the
+                        contributions to the resource.        creation of the Orchestra file.
+
+publisher               An entity responsible for making      Distributor of the Orchestra file (may be
+                        the resource available.               different than the creator). If not set,
+                                                              default to the creator.
+
+issued                  Date of formal issuance of the        Date the creator issued the Orchestra file.
+                        resource.                             If not set, default to created date.
+
+dateAccepted            Date of acceptance of the resource.   Date the creator accepted the Orchestra file.
+                                                              If not set, default to issued date. If issued
+                                                              date is also not set, default to created date.
+
+abstract                A summary of the resource.            A brief description of the main objectives
+                                                              of the Orchestra file.
+
+alternative             An alternative name for the           Subtitle of the Orchestra file.
+                        resource.
+
+subject                 The topic of the resource.            A comma-separated list of keywords used for
+                                                              search and categorisation purposes.
 
 format                  The file format, physical medium,     Internet Media Type (formerly known as MIME type)
                         or dimensions of the resource.        "application/xml".
-
-isRequiredBy            A related resource that requires      Used to denote downstream service dependencies
-                        the described resource to support     (e.g. FIXimate).
-                        its function, delivery, or coherence.
 ------------------------------------------------------------------------------------------------------------
 
 **Example:** FIX Latest Metadata
 
 ```xml
 <fixr:metadata>
-  <dcterms:title>FIX.Latest_EP276</dcterms:title>
-  <dcterms:created>2022-12-21T16:27:25.164791</dcterms:created>
-  <dcterms:issued>2022-12-22T10:59:14Z</dcterms:date>
-  <dcterms:rights>Copyright (c) FIX Protocol Ltd. All Rights Reserved.</dcterms:rights>
+  <dcterms:title>FIX Latest</dcterms:title>
+  <dcterms:creator>FIX Protocol Ltd.</dcterms:creator>
+  <dcterms:created>2024-08-12T16:27:25.164Z</dcterms:created>
   <dcterms:conformsTo>Orchestra v1.0</dcterms:conformsTo>
+  <dcterms:rights>Copyright (c) FIX Protocol Ltd. All Rights Reserved.</dcterms:rights>
+</fixr:metadata>
+```
+
+**Example:** FIX Latest Metadata (for document generation)
+
+```xml
+<fixr:metadata>
+  <dcterms:title>FIX Latest</dcterms:title>
+  <dcterms:creator>FIX Protocol Ltd.</dcterms:creator>
+  <dcterms:created>2024-08-08T16:27:25.164Z</dcterms:created>
+  <dcterms:conformsTo>Orchestra v1.0</dcterms:conformsTo>
+  <dcterms:rights>Copyright (c) FIX Protocol Ltd. All Rights Reserved.</dcterms:rights>
+  <dcterms:alternative>FIX Application Layer as of EP292</dcterms:alternative>
+  <dcterms:abstract>The Financial Information Exchange (FIX) Protocol is a message standard developed to facilitate the electronic exchange of information related to securities transactions. It is intended for use between trading partners wishing to automate communications.</dcterms:abstract>
+  <dcterms:issued>2024-08-07</dcterms:issued>
+  <dcterms:publisher>FIX Trading Community</dcterms:publisher>
+  <dcterms:subject>FIX, Trading</dcterms:subject>
 </fixr:metadata>
 ```
 
