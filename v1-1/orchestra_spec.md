@@ -1407,10 +1407,13 @@ own message contents in its `<structure>` child element and its own
 
 *This section is non-normative.*
 
-The task of mapping an actual received FIX message to a scenario declaration
-in Orchestra is left to implementations. The first level of matching is
-on the `msgType` attribute with the FIX MsgType(35) field. However, that message type may have
-several scenarios. Pattern matching strategies might include comparing a
+The task of mapping an actual received message to a scenario declaration
+in Orchestra is left to implementations. The first level of matching may be
+on the `msgType` attribute, e.g. by comparing it with the FIX MsgType(35) field.
+However, that message type may have several scenarios. The `<when>` element as
+part of a `<message>` element can be used to define an expression that references
+specific fields in the received message.
+Pattern matching strategies might include comparing a
 message to expected required fields, mapping values of a distinguishing
 field like ExecType(150) to its code set literals, and so forth.
 
