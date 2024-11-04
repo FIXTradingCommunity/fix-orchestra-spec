@@ -631,6 +631,8 @@ characteristics. One of the benefits of following this standard is that
 it will be easier to map FIX datatypes to other message standards, such
 as ISO 20022 (SWIFT).
 
+*The following paragraph is non-normative.*
+
 Rather than creating numerous one-off mappings to
 other type systems, is it likely more efficient to map each to ISO 11404
 once, and then compare mappings in an associative model to identify the
