@@ -452,16 +452,25 @@ documentation from an Orchestra file and compile external documents.
 Multiple languages can be supported by specifying the language of each
 element in its `langId` attribute. Also, multiple categories of
 documentation are supported by populating the `purpose` attribute.
-Suggested values of purpose include "SYNOPSIS", "ELABORATION",
-"EXAMPLE", and "DISPLAY".
 
-**Example:** Field element with documentation.
+The following categories are defined in the schema and should be used based on the definitions below. Additional categories may be defined based upon bilateral agreement but should not overlap semantically with those defined in the schema.
+
+- **SYNOPSIS** -- Brief summary of the element, typically highlighting its key function or purpose, restricted to one paragraph for conciseness.
+- **ELABORATION** -- Detailed explanation of the element, clarifying its usage, functionality, or background.
+- **EXAMPLE** -- Sample or illustration demonstrating how the element is used in practice.
+- **DISPLAY** -- For UI when different from canonical name; may have multi-language displays.
+- **CAPTION** -- Descriptive label or title for the element, may be used for tables, figures, headings or brief annotations.
+- **TOOLTIP** -- Short message or hint that appears when hovering over the element, usually explaining its function or use.
+- **DEFINITION** -- Precise and formal explanation of the element, restricted to one sentence in length to ensure brevity.
+
+\
+**Example:** Field element with documentation providing a brief summary in the English language.
 
 ```xml
 <fixr:field id="45" name="RefSeqNum">
 	<fixr:annotation>
 		<fixr:documentation langId="en-us" purpose="SYNOPSIS">
-		Reference message sequence number
+		    Reference message sequence number
 		</fixr:documentation>
 	</fixr:annotation>
 </fixr:field>
@@ -472,14 +481,15 @@ support rich text. The default value of attribute `contentType` is
 "text/plain". If a rich text encoding is embedded in the XML document,
 appropriate XML namespaces may be required.
 
-Documentation elements may set the media type in the `contentType` attribute to any text encoding registered with IANA.
+Documentation elements may set the media type in the `contentType` attribute to any text encoding registered with IANA (see [https://www.iana.org/assignments/media-types/media-types.xhtml#text](https://www.iana.org/assignments/media-types/media-types.xhtml#text) for details).
 
 **Example:** Documentation as markdown.
 
 ```xml
 	<fixr:annotation>
 		<fixr:documentation purpose="SYNOPSIS" contentType="text/markdown">
-**Account mnemonic** as agreed between buy and sell sides, e.g. broker and institution or investor/intermediary and fund manager.
+          **Account mnemonic** as agreed between buy and sell sides, e.g. broker
+          and institution or investor/intermediary and fund manager.
 		</fixr:documentation>
 	</fixr:annotation>
 ```
