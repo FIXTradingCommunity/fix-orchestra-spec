@@ -429,14 +429,14 @@ format                  The file format, physical medium,     Internet Media Typ
 <fixr:metadata>
   <dcterms:title>FIX Latest</dcterms:title>
   <dcterms:creator>FIX Protocol Ltd.</dcterms:creator>
-  <dcterms:created>2024-08-08T16:27:25.164Z</dcterms:created>
-  <dcterms:conformsTo>Orchestra v1.0</dcterms:conformsTo>
+  <dcterms:created>2024-08-07T16:27:25.164Z</dcterms:created>
+  <dcterms:conformsTo>Orchestra v1.1</dcterms:conformsTo>
   <dcterms:rights>Copyright (c) FIX Protocol Ltd. All Rights Reserved.</dcterms:rights>
-  <dcterms:alternative>FIX Application Layer as of EP292</dcterms:alternative>
+  <dcterms:alternative>FIX Protocol as of EP292</dcterms:alternative>
   <dcterms:abstract>The Financial Information Exchange (FIX) Protocol is a message standard developed to facilitate the electronic exchange of information related to securities transactions. It is intended for use between trading partners wishing to automate communications.</dcterms:abstract>
-  <dcterms:issued>2024-08-07</dcterms:issued>
+  <dcterms:issued>2024-08-08</dcterms:issued>
   <dcterms:publisher>FIX Trading Community</dcterms:publisher>
-  <dcterms:subject>FIX, Trading</dcterms:subject>
+  <dcterms:subject>FIX, Orchestra</dcterms:subject>
 </fixr:metadata>
 ```
 
