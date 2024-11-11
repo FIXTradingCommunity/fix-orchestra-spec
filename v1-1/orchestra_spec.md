@@ -401,7 +401,7 @@ isRequiredBy            A related resource that requires      Used to denote dow
 
 Most message elements in the schema support a complete history of creation, latest change, replacement, and potentially deprecation with support of attribute group `entityAttribGrp`. Each historical event should be qualified by its protocol version and may be qualified by its release. This is an integer value, e.g. a FIX extension pack (EP) number that can be used to increase the granularity of the version string, e.g. to identify patches. The latest change may be qualified with the `changeType` attribute as being definitional or only editorial (e.g. adding or updating a `documentation` element of an annotation).
 
-**Example:** A field that was added and then updated to correct an error in the desscription
+**Example:** A field that was added and then updated to correct an error in the description
 
 ```xml
 <fixr:field
