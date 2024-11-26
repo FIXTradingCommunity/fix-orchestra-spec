@@ -18,7 +18,7 @@ mkdir -p debug docx pdf html
 cd ..
 
 # Create document version with disclaimer
-pandoc -f markdown -t docx+native_numbering "$DISCLAIMER" $FILES -o "$TARGET/docx/Orchestra V1.1 RC2.docx"\
+pandoc -f markdown -t docx+native_numbering "$DISCLAIMER" $FILES -o "$TARGET/docx/Orchestra V1.1 RC2 Technical Specification.docx"\
        --reference-doc="$STYLE" --metadata-file="$YAML" --toc --toc-depth=4 --lot --lof
 echo Orchestra document version created
 
