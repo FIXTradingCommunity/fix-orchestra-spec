@@ -191,9 +191,9 @@ Each of the two metamodels are implemented in their respective XML schemas. Any 
 
 The metamodels presented do not strictly conform to the UML Meta-Object Facility architecture (MOF).
 
-## Message structures
+## Repository
 
-The UML metamodel depicted below is a conceptual view of message structures.
+The repository metamodel is a conceptual view of message structures.
 
 ![Orchestra Repository Metamodel](media/FIX-Repository-MetaModel.png)
 
@@ -312,7 +312,6 @@ updated for incremental changes.
 
 The following repository attributes are optionally available:
 
-- `applVerId` contains the application version
 - `specURL` points to an online reference documentation
 - `guid` is a globally unique identifier for the given schema file
 - `namespace` contains an associated namespace as URI
@@ -340,11 +339,14 @@ Usage should be supported for all phases of financial industry workflows, includ
 ## Content ownership and history
 
 ### Provenance
-
 The `<metadata>` element is used to identify a particular Orchestra file
-and the issuer of that file. It can contain any of the elements defined
+and the creator of that file. It can contain any of the elements defined
 by the Dublin Core XML schema. Recommended elements include title,
-publisher, date issued, and rights.
+creator, created, conformsTo and source.
+
+Recommended additional elements for document generation include
+alternative, abstract, issued, dateAccepted, publisher, contributor and
+subject.
 
 Table: Dublin Core Terms for Orchestra
 
@@ -352,61 +354,101 @@ Table: Dublin Core Terms for Orchestra
 DCMI Term               Definition                            Recommended Usage
 ----------------------- ------------------------------------- ----------------------------------------------
 title                   A name given to the resource.         Use for display or in generated documentation.
+                                                              If not set, default to the repository name.
 
 creator                 An entity responsible for making      Name of the firm or person that created the
                         the resource.                         Orchestra file.
 
 created                 Date of creation of the resource.     Date and time of creation of the Orchestra file.
+                                                              If not set, default to the current system time.
 
-contributor             An entity responsible for making      Application supporting the creation of the
-                        contributions to the resource.        Orchestra file.
+conformsTo              An established standard to which      Version of the Orchestra Technical Standard
+                        the described resource conforms.      that was used to create the Orchestra file.
+                                                              If not set, default to the latest official
+                                                              version.
 
-publisher               An entity responsible for making      Distributor of the Orchestra file (may be
-                        the resource available.               different than the creator).
+source                  A related resource from which the     URL to another Orchestra file. Required if
+                        described resource is derived.        a reference specification was used to create
+                                                              the Orchestra file.
 
-issued                  Date of formal issuance of the        Reference date for the publication.
-                        resource.
+isFormatOf              A pre-existing related resource       URL to an original resource that the Orchestra
+                        that is substantially the same as     file is based on. For example, a PDF document
+                        the described resource, but in        published by an Exchange.
+                        another format.
 
-rights                  Information about rights held         Copyright notice.
+rights                  Information about rights held         Copyright notice for the Orchestra file.
                         in and over the resource.
 
 license                 A legal document giving official      URL to a license or IP statement.
                         permission to do something with
                         the resource.
 
-conformsTo              An established standard to which      Version of the Orchestra Technical Standard
-                        the described resource conforms.      that was used to create the Orchestra file.
+contributor             An entity responsible for making      Name of the firm or person supporting the
+                        contributions to the resource.        creation of the Orchestra file.
+
+publisher               An entity responsible for making      Distributor of the Orchestra file (may be
+                        the resource available.               different than the creator). If not set,
+                                                              default to the creator.
+
+issued                  Date of formal issuance of the        Date the creator issued the Orchestra file.
+                        resource.                             If not set, default to created date.
+
+dateAccepted            Date of acceptance of the resource.   Date the creator accepted the Orchestra file.
+                                                              If not set, default to issued date. If issued
+                                                              date is also not set, default to created date.
+
+abstract                A summary of the resource.            A brief description of the main objectives
+                                                              of the Orchestra file.
+
+alternative             An alternative name for the           Subtitle of the Orchestra file.
+                        resource.
+
+subject                 The topic of the resource.            A comma-separated list of keywords used for
+                                                              search and categorisation purposes.
 
 format                  The file format, physical medium,     Internet Media Type (formerly known as MIME type)
                         or dimensions of the resource.        "application/xml".
-
-isRequiredBy            A related resource that requires      Used to denote downstream service dependencies
-                        the described resource to support     (e.g. FIXimate).
-                        its function, delivery, or coherence.
 ------------------------------------------------------------------------------------------------------------
 
 **Example:** FIX Latest Metadata
 
 ```xml
 <fixr:metadata>
-  <dcterms:title>FIX.Latest_EP276</dcterms:title>
-  <dcterms:created>2022-12-21T16:27:25.164791</dcterms:created>
-  <dcterms:issued>2022-12-22T10:59:14Z</dcterms:date>
-  <dcterms:rights>Copyright (c) FIX Protocol Ltd. All Rights Reserved.</dcterms:rights>
+  <dcterms:title>FIX Latest</dcterms:title>
+  <dcterms:creator>FIX Protocol Ltd.</dcterms:creator>
+  <dcterms:created>2024-08-12T16:27:25.164Z</dcterms:created>
   <dcterms:conformsTo>Orchestra v1.0</dcterms:conformsTo>
+  <dcterms:rights>Copyright (c) FIX Protocol Ltd. All Rights Reserved.</dcterms:rights>
+</fixr:metadata>
+```
+
+**Example:** FIX Latest Metadata (for document generation)
+
+```xml
+<fixr:metadata>
+  <dcterms:title>FIX Latest</dcterms:title>
+  <dcterms:creator>FIX Protocol Ltd.</dcterms:creator>
+  <dcterms:created>2024-08-07T16:27:25.164Z</dcterms:created>
+  <dcterms:conformsTo>Orchestra v1.1</dcterms:conformsTo>
+  <dcterms:rights>Copyright (c) FIX Protocol Ltd. All Rights Reserved.</dcterms:rights>
+  <dcterms:alternative>FIX Protocol as of EP292</dcterms:alternative>
+  <dcterms:abstract>The Financial Information Exchange (FIX) Protocol is a message standard developed to facilitate the electronic exchange of information related to securities transactions. It is intended for use between trading partners wishing to automate communications.</dcterms:abstract>
+  <dcterms:issued>2024-08-08</dcterms:issued>
+  <dcterms:publisher>FIX Trading Community</dcterms:publisher>
+  <dcterms:subject>FIX, Orchestra</dcterms:subject>
 </fixr:metadata>
 ```
 
 ### Pedigree
 
-Most message elements in the schema support a complete history of creation, change, replacement, and potentially deprecation with support of attribute group `entityAttribGrp`. Each historical event should be qualified by its protocol version and may be qualified by its release. This is an integer value, e.g. a FIX extension pack (EP) number that can be used to increase the granularity of the version string, e.g. to identify patches.
+Most message elements in the schema support a complete history of creation, latest change, replacement, and potentially deprecation with support of attribute group `entityAttribGrp`. Each historical event should be qualified by its protocol version and may be qualified by its release. This is an integer value, e.g. a FIX extension pack (EP) number that can be used to increase the granularity of the version string, e.g. to identify patches. The latest change may be qualified with the `changeType` attribute as being definitional or only editorial (e.g. adding or updating a `documentation` element of an annotation).
 
-**Example:** A field that was added and updated
+**Example:** A field that was added and then updated to correct an error in the description
 
 ```xml
 <fixr:field
   type="String" id="17" name="ExecID" abbrName="ExecID"
-  added="FIX.2.7" updated="FIX.5.0SP1" updatedEP="95">
+  added="FIX.2.7" updated="FIX.5.0SP1" updatedEP="95" changeType="Editorial">
 </fixr:field>
 ```
 
@@ -426,20 +468,15 @@ Since Orchestra supports both FIX and non-FIX protocols, naming rules are relaxe
 
 ## Features for document and schema generation
 
-The XML schema retains features that have long been used to generate FIX
-documentation and other outputs. These elements are optional.
+The XML schema retains features that have long been used to generate FIX documentation and other outputs. These elements are optional but may be used to group messages for non-FIX protocols on two levels, i.e. sections containing categories.
 
 ### Categories
 
-The `<categories>` element tree is used to associate FIX elements to
-business areas, such as single general order handling, market data, and so
-forth, for documentation generation. Also, categories are used to
-organize FIXML schema files.
+The `<categories>` element tree is used to associate elements to business areas for documentation generation. For example, FIX defines categories such as "SingleGeneralOrderHandling", "MarketData", and "SecuritiesReferenceData". FIX also uses category information (attributes `FIXMLFileName`, `componentType`, `includeFile`) to organize FIXML schema files. The `<categories>` element has a number of attributes, including the `entityAttribGrp` attribute group that supports pedigree attributes (see [Pedigree](#pedigree) for details). Categories must be grouped by sections and hence have a `name` and a `section` attribute.
 
 ### Sections
 
-The `<sections>` element tree names higher level business processes. Typically, a section contains multiple categories. Traditionally,
-they have been organized around pre-trade, trade, and post-trade information flows.
+The `<sections>` element tree names higher level business processes and requires the `name` attribute. Typically, a section contains multiple categories. Traditionally, they have been organized around pre-trade, trade, and post-trade information flows. A single message can only belong to a single section and category. The `displayOrder`attribute may be used to define the ordering of sections in the documentation. FIX uses the section attribute `FIXMLFileName` to organize FIXML schema files.
 
 ### Metadata about any element
 
@@ -458,16 +495,25 @@ documentation from an Orchestra file and compile external documents.
 Multiple languages can be supported by specifying the language of each
 element in its `langId` attribute. Also, multiple categories of
 documentation are supported by populating the `purpose` attribute.
-Suggested values of purpose include "SYNOPSIS", "ELABORATION",
-"EXAMPLE", and "DISPLAY".
 
-**Example:** Field element with documentation.
+The following categories are defined in the schema and should be used based on the definitions below. Additional categories may be defined based upon bilateral agreement but should not overlap semantically with those defined in the schema.
+
+- **SYNOPSIS** -- Brief summary of the element, typically highlighting its key function or purpose, restricted to one paragraph for conciseness.
+- **ELABORATION** -- Detailed explanation of the element, clarifying its usage, functionality, or background.
+- **EXAMPLE** -- Sample or illustration demonstrating how the element is used in practice.
+- **DISPLAY** -- For UI when different from canonical name; may have multi-language displays.
+- **CAPTION** -- Descriptive label or title for the element, may be used for tables, figures, headings or brief annotations.
+- **TOOLTIP** -- Short message or hint that appears when hovering over the element, usually explaining its function or use.
+- **DEFINITION** -- Precise and formal explanation of the element, restricted to one sentence in length to ensure brevity.
+
+\
+**Example:** Field element with documentation providing a brief summary in the English language.
 
 ```xml
 <fixr:field id="45" name="RefSeqNum">
 	<fixr:annotation>
 		<fixr:documentation langId="en-us" purpose="SYNOPSIS">
-		Reference message sequence number
+		    Reference message sequence number
 		</fixr:documentation>
 	</fixr:annotation>
 </fixr:field>
@@ -478,14 +524,15 @@ support rich text. The default value of attribute `contentType` is
 "text/plain". If a rich text encoding is embedded in the XML document,
 appropriate XML namespaces may be required.
 
-Documentation elements may set the media type in the `contentType` attribute to any text encoding registered with IANA.
+Documentation elements may set the media type in the `contentType` attribute to any text encoding registered with IANA (see [https://www.iana.org/assignments/media-types/media-types.xhtml#text](https://www.iana.org/assignments/media-types/media-types.xhtml#text) for details).
 
 **Example:** Documentation as markdown.
 
 ```xml
 	<fixr:annotation>
 		<fixr:documentation purpose="SYNOPSIS" contentType="text/markdown">
-**Account mnemonic** as agreed between buy and sell sides, e.g. broker and institution or investor/intermediary and fund manager.
+          **Account mnemonic** as agreed between buy and sell sides, e.g. broker
+          and institution or investor/intermediary and fund manager.
 		</fixr:documentation>
 	</fixr:annotation>
 ```
@@ -516,7 +563,7 @@ collisions, names and IDs of deprecated elements should never be reused.
 
 ## Scenarios
 
-A scenario may be used to distinguish multiple use cases of a single message, group, component, field, code set or datatype. The respective element may be referenced more than once in the XML schema by adding `scenario` and/or `scenarioId` attributes in addition to the `id` and/or `name` attributes of the element. Scenarios in the context of the different elements are explained in more detail within the respective sections below.
+A scenario may be used to distinguish multiple use cases of a single message, group, component, field, code set or datatype. The respective element may be defined more than once in the XML schema by adding `scenarioId` and (optionally) `scenario` attributes in addition to the `id` and (optionally) `name` attributes of the element. Scenarios for messages, groups, components or code sets may reference another scenario of the same element by adding `scenarioRefId` and (optionally) `scenarioRef` attributes when it is restricted by the elements in the referenced message, group, component or code set. The referencing scenario must not contain any elements or codes that are not present in the referenced scenario. In the case of messages, this is equivalent to the ISO 20022 concept of variants (see [https://www.iso20022.org/catalogue-messages/additional-content-messages/variants](https://www.iso20022.org/catalogue-messages/additional-content-messages/variants) for details). It may contain the same elements, e.g. when one or more elements themselves use a different scenario. Scenarios in the context of the different elements are explained in more detail within the respective sections below. The order of elements should be identical to the referenced scenario. The order must be identical when using a presentation protocol with related rules, e.g. repeating groups in FIX tag=value encoding have a defined order to enable correct message parsing.
 
 Each scenario is described by a `<scenario>` element, a child of `<scenarios>`.
 
@@ -569,7 +616,7 @@ corresponding to any number of type systems. Type systems include XML,
 SBE, GPB, JSON, and ISO 11404, a generic type taxonomy. An XML schema
 mapping is obviously needed by FIXML.
 
-The `standard` attribute of `<datatype>` tells which type system the
+The `standard` attribute of `<mappedDatatype>` tells which type system the
 mapping is for. Its `base` attribute tells what the FIX datatype maps to
 in the particular standard. For example, FIX datatype "Qty" maps to XML schema
 type xs:decimal.
@@ -583,6 +630,8 @@ of programming language-independent types and enumerates their
 characteristics. One of the benefits of following this standard is that
 it will be easier to map FIX datatypes to other message standards, such
 as ISO 20022 (SWIFT).
+
+*The following paragraph is non-normative.*
 
 Rather than creating numerous one-off mappings to
 other type systems, is it likely more efficient to map each to ISO 11404
@@ -676,10 +725,12 @@ Codes may be documented with an `<annotation>` element tree.
 
 Code sets may have different supported codes in different scenarios. For
 example, outbound FIX ExecutionReport(35=8) messages may have a more enriched view
-of PartyRole(452) than is required on inbound order messages. Therefore, a
+of PartyRole(452) than is required on inbound FIX NewOrderSingle(35=D) messages. Therefore, a
 `<codeSet>` may be qualified by its `scenario` and/or `scenarioId` attribute. The default
 values of `scenario` and `scenarioId` are "base" and 1, respectively, so the attributes need not be supplied if
 there is only one form of a code set.
+
+A code set may reference another scenario of the same code set with the `scenarioRefId` and (optionally) `scenarioRef` attribute when it does not need to contain all of the codes of the referenced code set scenario. It may contain the same codes, e.g. when one or more codes require different annotations. The order of codes in the referencing scenario should be identical to the referenced scenario.
 
 Uniqueness of code set scenarios is enforced by the XML schema, both as
 the combination of `name` + `scenario` as well as `id` + `scenarioId`.
@@ -883,7 +934,7 @@ Individual `<component>` elements are contained by the `<components>` parent ele
 Like the messages that contain them, components and groups may be
 overloaded for slightly different layouts for different scenarios.
 
-#### Component identifiers
+#### Component identifiers and scenarios
 
 Like a field, a component has a numeric `id` attribute and a
 string `name` attribute. The schema enforces uniqueness of the `id` and `name`
@@ -896,6 +947,8 @@ The `scenario` and `scenarioId` attributes of a component identify a use case; m
 components may have the same name, but the combination of name and
 scenario must be unique. Scenario name and ID have default values of "base" and 1, respectively, so if a
 component only has one variation, there is no need to qualify it.
+
+A component may reference another scenario of the same component with the `scenarioRefId` and (optionally) `scenarioRef` attribute when it does not need to contain all of the elements of the referenced component scenario. It may contain the same elements, e.g. when one or more elements use a different scenario. The order of elements in the referencing scenario should be identical to the referenced scenario.
 
 A component is designed to be specified once in detail but
 reused in multiple message types by reference. An example of a FIX component
@@ -1140,6 +1193,8 @@ category="MarketStructureReferenceData" section="PreTrade">
 
 A single message type is often reused for multiple use cases. Each of the variations of a single message type can have a slightly different message structure. For example, a FIX ExecutionReport(35=8) message is overloaded for acceptance, rejection, execution, cancel confirmation of an order. The attributes that name a use case are `scenario` and `scenarioId`. If no scenario name or ID is explicitly given, they default to "base" and 1. The combination of `id`, `scenario`, and `scenarioId` attributes must be unique.
 
+A message may reference another scenario of the same message with the `scenarioRefId` and (optionally) `scenarioRef` attribute when it does not need to contain all of the elements of the referenced message scenario. It may contain the same elements, e.g. when one or more elements use a different scenario. The order of elements in the referencing scenario should be identical to the referenced scenario.
+
 An optional `when` element allows to provide an expression to describe the condition under which a scenario is valid. The contents of `<when>` is a Score DSL expression. It is a predicate (Boolean expression) that tells if the scenario applies, i.e. if the expression evaluates to true. This can be used to determine the scenario for the validation of an incoming message or for the generation of an outgoing message. The expression can reference one or more elements of the message, e.g. specific field and its value(s).
 
 **Example:** A message scenario with a condition.
@@ -1341,9 +1396,9 @@ originator or receiver of a message.
 ### Workflows with message scenarios
 
 A message scenario is one use case of a specific message type, as identified by
-key attributes `name` and `msgType` in the `messageAttribGrp` attribute group
-supported by `<message>`. A scenario name is stored in the `scenario`
-attribute of `<message>`. If there is only one use case for a message
+key attributes `msgType` of the `<message>` element and `name` in the attribute group
+`oidGrp` supported by `<message>`.  A scenario name is stored in the `scenario`
+attribute of `oidGrp`. If there is only one use case for a message
 type, then scenario need not be populated. It defaults to "base".
 Scenarios must be unique per message type and it is an error to have
 more than one `<message>` element of the same type without a scenario
@@ -1360,10 +1415,13 @@ own message contents in its `<structure>` child element and its own
 
 *This section is non-normative.*
 
-The task of mapping an actual received FIX message to a scenario declaration
-in Orchestra is left to implementations. The first level of matching is
-on the `msgType` attribute with the FIX MsgType(35) field. However, that message type may have
-several scenarios. Pattern matching strategies might include comparing a
+The task of mapping an actual received message to a scenario declaration
+in Orchestra is left to implementations. The first level of matching may be
+on the `msgType` attribute, e.g. by comparing it with the FIX MsgType(35) field.
+However, that message type may have several scenarios. The `<when>` element as
+part of a `<message>` element can be used to define an expression that references
+specific fields in the received message.
+Pattern matching strategies might include comparing a
 message to expected required fields, mapping values of a distinguishing
 field like ExecType(150) to its code set literals, and so forth.
 
@@ -1395,12 +1453,12 @@ repeating groups.
 A state variable can be tested in a conditional expression or set by an
 assignment expression.
 
-**Example:** An actor with state variables for TradingSession(336) and TradeDate(75).
+**Example:** An actor with state variables for TradingSessionID(336) and TradeDate(75).
 
 ```xml
 <fixr:actor name="Market">
-	<fixr:fieldRef id="336"/>
-	<fixr:fieldRef id="75"/>
+	<fixr:fieldRef id="336" name="TradingSessionID"/>
+	<fixr:fieldRef id="75" name ="TradeDate"/>
 </fixr:actor>
 ```
 
@@ -1493,11 +1551,11 @@ messages on the flow. It takes one of these values:
 	<fixr:actor name="BuySide"/>
 	<fixr:actor name="SellSide"/>
 	<fixr:flow name="OrderEntry" source="BuySide" destination="SellSide"
-messageCast="unicast" reliability="idempotent"/>
+             messageCast="unicast" reliability="idempotent"/>
 	<fixr:flow name="Executions" source="SellSide" destination="BuySide"
-messageCast="unicast" reliability="recoverable"/>
+             messageCast="unicast" reliability="recoverable"/>
 	<fixr:flow name="MarketData" source="SellSide" destination="BuySide"
-messageCast="multicast" reliability="bestEffort"/>
+             messageCast="multicast" reliability="bestEffort"/>
 </fixr:actors>
 ```
 
@@ -1535,7 +1593,9 @@ a common identifier is assumed to be in the same field in the message
 and its response. If it is in different fields, then the `id` attribute
 applies to the response message and sourceId applies to original
 message. Also, it is possible to assign new identifiers in the response
-message. The element `<assign>` is used to describe that case.
+message. The element `<assign>` is used to describe that case. An optional
+`name` attribute is provided alongside the mandatory `id` attribute for both
+the `<correlate>` and the `<assign>` element.
 
 **Example:** Send a response message and show correlated and new identifiers.
 
@@ -1544,12 +1604,12 @@ message. The element `<assign>` is used to describe that case.
 	<fixr:messageRef
     name="ExecutionReport" msgType="8" implMaxOccurs="1" id="9" implMinOccurs="1">
 		<fixr:identifiers>
-			<fixr:correlate id="11"/>
-			<fixr:correlate id="2422"/>
-			<fixr:assign id="37"/>
+			<fixr:correlate id="11" name="ClOrdID"/>
+			<fixr:correlate id="2422" name="OrderRequestID"/>
+			<fixr:assign id="37" name="OrderID"/>
 			<fixr:annotation>
 				<fixr:documentation>
-				      ExecutionReport(35=8) echoes ClOrdId(11) and OrderRequestID(2422)
+				      ExecutionReport(35=8) echoes ClOrdID(11) and OrderRequestID(2422)
               from order message and assigns OrderID(37).
 				</fixr:documentation>
 			</fixr:annotation>

@@ -1,11 +1,3 @@
-::: {custom-style="TOC Heading"}
-Table of Tables
-:::
-
-::: {custom-style="TOC Heading"}
-Table of Figures
-:::
-
 ::: {custom-style=Disclaimer}
 DISCLAIMER
 :::
@@ -23,7 +15,7 @@ AND RATIFICATION, AN OFFICIAL STATUS ("APPROVED") OF/FOR THE PROPOSAL AND A RELE
 
 No proprietary or ownership interest of any kind is granted with respect to the FIX Protocol (or any rights therein), except as expressly set out in FIX Protocol Limited's Copyright and Acceptable Use Policy.
 
-© Copyright 2011-2023 FIX Protocol Limited, all rights reserved
+© Copyright 2011-2024 FIX Protocol Limited, all rights reserved
 
 \
 

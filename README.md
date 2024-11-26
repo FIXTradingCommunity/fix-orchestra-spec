@@ -14,8 +14,13 @@ Issues may be entered here in GitHub or in a discussion forum on the [FIX Tradin
 
 ## Standards Versions
 
+### Version 1.1 Release Candidate 2
+Version 1.1 RC2 is currently work in progress. The work is managed by the [Orchestra Subcommittee](https://www.fixtrading.org/groups/fixorchestra/) of the FIX Trading Community.
+
 ### Version 1.1 Release Candidate 1
-Version 1.1 RC1 is currently work in progress. Release Candidates and Draft Standard no longer use their own folders. Instead, there is only one folder per minor version of FIX Orchestra and GitHub tags will be used to identify them. Public review comments continue to be applied to the next Release Candidate or Draft Standard, i.e. do not require to make changes to the previous Release Candidate.
+Version 1.1 RC1 has been completed on November 15, 2023 and [published](https://forum.fixtrading.org/t/public-comment-period-orchestra-version-1-1-rc1/17408). The 90-day public comment period ends on February 16, 2024.
+
+Release Candidates and Beta Versions (previously called Draft Standards) no longer use their own folders. Instead, there is only one folder per minor version of FIX Orchestra and GitHub tags will be used to identify them. Public review comments continue to be applied to the next Release Candidate or Beta Version, i.e. do not require to make changes to the previous Release Candidate.
 
 ### Version 1.0 Technical Standard
 
