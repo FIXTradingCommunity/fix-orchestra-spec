@@ -1838,7 +1838,7 @@ protocol settings, such as a transport address.
 
 A session has one or more identifiers in child `<identifier>` elements.
 The value of `<identifier>` is a simple name, e.g. the value of SenderCompID(49)
-and TargetCompID(56) when using the FIX Protocol.
+or TargetCompID(56) when using the FIX Protocol.
 
 #### Security keys
 
