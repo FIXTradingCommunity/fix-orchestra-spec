@@ -924,9 +924,7 @@ A combination of fields defines scope of uniqueness.
 <fixr:fieldRef>
 ```
 
-## Message structures
-
-### Components
+## Components
 
 A component is a sequence of fields and nested components or [repeating groups](#repeating-groups).
 Individual `<component>` elements are contained by the `<components>` parent element.
@@ -934,7 +932,7 @@ Individual `<component>` elements are contained by the `<components>` parent ele
 Like the messages that contain them, components and groups may be
 overloaded for slightly different layouts for different scenarios.
 
-#### Component identifiers and scenarios
+### Component identifiers and scenarios
 
 Like a field, a component has a numeric `id` attribute and a
 string `name` attribute. The schema enforces uniqueness of the `id` and `name`
@@ -978,7 +976,7 @@ order on the wire.
 </fixr:component>
 ```
 
-#### Component members
+### Component members
 
 A component may contain reference elements of three types in any
 combination. A component must contain at least one member.
@@ -1018,9 +1016,9 @@ combination. A component must contain at least one member.
 </fixr:component>
 ```
 
-### Repeating groups
+## Groups
 
-A repeating group is like a component but with one additional
+A group (a.k.a. repeating group) is like a component but with one additional
 feature: it represents an *array of* components to be sent on the wire.
 
 A repeating group is specified by a `<group>` element and the `<group>`
@@ -1048,7 +1046,73 @@ present, then the repeating group has unbounded size.
 </fixr:group>
 ```
 
-### Member presence
+## Messages
+
+A message in an Orchestra file describes a unit to be sent on the wire
+between counterparties.
+
+Like a `<component>`, a `<message>` element has `id` and `name` attributes.
+It also has an `msgType` attribute, a short name defining the message type. In FIX,
+`msgType` is used for the value of the FIX field MsgType(35).
+
+Another attribute of `<message>` called `flow` ties a message to an
+exchange of messages between actors.
+
+### Message structure
+
+The `<messages>` element contains any number of child `<message>`
+elements. From the perspective of the XML schema, a `<message>` is very
+similar to a `<component>`; they contain the same member types and share
+most attributes. However, `<message>` is a top-level entity only; it
+cannot be contained by other message parts, nor can messages be nested.
+
+Unlike `<component>`, the parts of a message are contained by a an optional child
+`<structure>` element, which in turn holds `<fieldRef>`,
+`<componentRef>` and `<groupRef>` elements.
+
+**Example:** A message structure with a field, nested components, and a nested repeating group.
+
+```xml
+<fixr:message name="TradingSessionList" id="100" msgType="BJ"
+category="MarketStructureReferenceData" section="PreTrade">
+	<fixr:structure>
+		<fixr:componentRef id="1024" name="StandardHeader" presence="required"/>
+		<fixr:componentRef id="1057" name="ApplicationSequenceControl"/>
+		<fixr:fieldRef id="335" name="TradSesReqID"/>
+		<fixr:groupRef id="2099" name="TrdSessLstGrp" presence="required"/>
+		<fixr:componentRef id="1025" name="StandardTrailer" presence="required"/>
+	</fixr:structure>
+</fixr:message>
+```
+
+### Message scenarios
+
+A single message type is often reused for multiple use cases. Each of the variations of a single message type can have a slightly different message structure. For example, a FIX ExecutionReport(35=8) message is overloaded for acceptance, rejection, execution, cancel confirmation of an order. The attributes that name a use case are `scenario` and `scenarioId`. If no scenario name or ID is explicitly given, they default to "base" and 1. The combination of `id`, `scenario`, and `scenarioId` attributes must be unique.
+
+A message may reference another scenario of the same message with the `scenarioRefId` and (optionally) `scenarioRef` attribute when it does not need to contain all of the elements of the referenced message scenario. It may contain the same elements, e.g. when one or more elements use a different scenario. The order of elements in the referencing scenario should be identical to the referenced scenario.
+
+An optional `when` element allows to provide an expression to describe the condition under which a scenario is valid. The contents of `<when>` is a Score DSL expression. It is a predicate (Boolean expression) that tells if the scenario applies, i.e. if the expression evaluates to true. This can be used to determine the scenario for the validation of an incoming message or for the generation of an outgoing message. The expression can reference one or more elements of the message, e.g. specific field and its value(s).
+
+**Example:** A message scenario with a condition.
+
+```xml
+<fixr:scenario name="Execution" id="6"/>
+...
+<fixr:message msgType="8" id="9" name="ExecutionReport" scenarioId="6">
+	<fixr:structure>
+		<fixr:componentRef presence="required" id="1024" name="StandardHeader"/>
+		...
+		<fixr:componentRef presence="required" id="1025" name="StandardTrailer"/>
+	</fixr:structure>
+	<fixr:when>ExecType == ^Trade/>
+</fixr:message>
+```
+
+### Message responses
+
+Aside from `<structure>`, `<message>` has another optional child element called `<responses>`. It can be used to define messages that are used to respond to a given message supporting the definition of complete workflows. See section [Workflow](#workflow) for details.
+
+## Member presence
 
 Each of the members of a component, group or message, namely `<fieldRef>`, `<componentRef>` or `<groupRef>`, have a `presence` attribute. The possible values of presence are:
 
@@ -1066,7 +1130,7 @@ Each of the members of a component, group or message, namely `<fieldRef>`, `<com
 
 The receiver of a message with a forbidden element or lacking a required element may reject it using appropriate actions defined by the rules of engagement.
 
-#### Constant field value
+### Constant field value
 
 A field may be set to a constant value. A specific value of a field is
 often useful to distinguish scenarios or use cases for a message type.
@@ -1080,7 +1144,7 @@ constant field need not be transmitted on the wire.
 <fixr:fieldRef id="22" name="SecurityIDSource" presence="constant" value="1"/>
 ```
 
-#### Default value of an optional field
+### Default value of an optional field
 
 For an optional field, a default value may be specified if the sender
 does not provide the field.
@@ -1091,7 +1155,7 @@ does not provide the field.
 <fixr:fieldRef id="59" name="TimeInForce" presence="optional" value="0"/>
 ```
 
-#### Conditionally required field
+### Conditionally required field
 
 The presence of a conditionally required field depends upon other fields
 in a component or message. For example, StopPx(99) is required when OrdType(40)
@@ -1121,7 +1185,7 @@ override such as `presence=″required″` attribute is applied to the
 </fixr:fieldRef>
 ```
 
-#### Mutually exclusive component members
+### Mutually exclusive component members
 
 Sometimes members of a component or group are intended to be mutually exclusive. This is expressed by adding the attribute `which="oneOf"` to a `<component>` or `<group>` element. In a message that contains the component or group, *one and only one* of its mutually exclusive members must be present.
 
@@ -1149,72 +1213,6 @@ Sometimes members of a component or group are intended to be mutually exclusive.
 Similarly, the attribute `which="anyOf"` indicates that *at least one* of the members of a component must be present.
 
 To require *all* of the members to be present, set `presence="required"` on each member.
-
-### Message
-
-A message in an Orchestra file describes a unit to be sent on the wire
-between counterparties.
-
-Like a `<component>`, a `<message>` element has `id` and `name` attributes.
-It also has an `msgType` attribute, a short name defining the message type. In FIX,
-`msgType` is used for the value of the FIX field MsgType(35).
-
-Another attribute of `<message>` called `flow` ties a message to an
-exchange of messages between actors.
-
-#### Message structure
-
-The `<messages>` element contains any number of child `<message>`
-elements. From the perspective of the XML schema, a `<message>` is very
-similar to a `<component>`; they contain the same member types and share
-most attributes. However, `<message>` is a top-level entity only; it
-cannot be contained by other message parts, nor can messages be nested.
-
-Unlike `<component>`, the parts of a message are contained by a an optional child
-`<structure>` element, which in turn holds `<fieldRef>`,
-`<componentRef>` and `<groupRef>` elements.
-
-**Example:** A message structure with a field, nested components, and a nested repeating group.
-
-```xml
-<fixr:message name="TradingSessionList" id="100" msgType="BJ"
-category="MarketStructureReferenceData" section="PreTrade">
-	<fixr:structure>
-		<fixr:componentRef id="1024" name="StandardHeader" presence="required"/>
-		<fixr:componentRef id="1057" name="ApplicationSequenceControl"/>
-		<fixr:fieldRef id="335" name="TradSesReqID"/>
-		<fixr:groupRef id="2099" name="TrdSessLstGrp" presence="required"/>
-		<fixr:componentRef id="1025" name="StandardTrailer" presence="required"/>
-	</fixr:structure>
-</fixr:message>
-```
-
-#### Message scenarios
-
-A single message type is often reused for multiple use cases. Each of the variations of a single message type can have a slightly different message structure. For example, a FIX ExecutionReport(35=8) message is overloaded for acceptance, rejection, execution, cancel confirmation of an order. The attributes that name a use case are `scenario` and `scenarioId`. If no scenario name or ID is explicitly given, they default to "base" and 1. The combination of `id`, `scenario`, and `scenarioId` attributes must be unique.
-
-A message may reference another scenario of the same message with the `scenarioRefId` and (optionally) `scenarioRef` attribute when it does not need to contain all of the elements of the referenced message scenario. It may contain the same elements, e.g. when one or more elements use a different scenario. The order of elements in the referencing scenario should be identical to the referenced scenario.
-
-An optional `when` element allows to provide an expression to describe the condition under which a scenario is valid. The contents of `<when>` is a Score DSL expression. It is a predicate (Boolean expression) that tells if the scenario applies, i.e. if the expression evaluates to true. This can be used to determine the scenario for the validation of an incoming message or for the generation of an outgoing message. The expression can reference one or more elements of the message, e.g. specific field and its value(s).
-
-**Example:** A message scenario with a condition.
-
-```xml
-<fixr:scenario name="Execution" id="6"/>
-...
-<fixr:message msgType="8" id="9" name="ExecutionReport" scenarioId="6">
-	<fixr:structure>
-		<fixr:componentRef presence="required" id="1024" name="StandardHeader"/>
-		...
-		<fixr:componentRef presence="required" id="1025" name="StandardTrailer"/>
-	</fixr:structure>
-	<fixr:when>ExecType == ^Trade/>
-</fixr:message>
-```
-
-#### Message responses
-
-Aside from `<structure>`, `<message>` has another optional child element called `<responses>`. It can be used to define messages that are used to respond to a given message supporting the definition of complete workflows. See section [Workflow](#workflow) for details.
 
 ## Expressions
 
