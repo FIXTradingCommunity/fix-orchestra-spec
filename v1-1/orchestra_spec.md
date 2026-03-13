@@ -1835,8 +1835,8 @@ A `<session>` inherits services and protocols from its parent
 protocol settings, such as a transport address.
 
 A session has one or more identifiers in child `<identifier>` elements.
-The `<value>` child of `<identifier>` may be of any XML type, even an
-element tree.
+The value of `<identifier>` is a simple name, e.g. the value of SenderCompID(49)
+or TargetCompID(56) when using the FIX Protocol.
 
 #### Security keys
 
