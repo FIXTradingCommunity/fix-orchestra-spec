@@ -472,11 +472,11 @@ The XML schema retains features that have long been used to generate FIX documen
 
 ### Categories
 
-The `<categories>` element tree is used to associate elements to business areas for documentation generation. For example, FIX defines categories such as "SingleGeneralOrderHandling", "MarketData", and "SecuritiesReferenceData". FIX also uses category information (attributes `FIXMLFileName`, `componentType`, `includeFile`) to organize FIXML schema files. The `<categories>` element has a number of attributes, including the `entityAttribGrp` attribute group that supports pedigree attributes (see [Pedigree](#pedigree) for details). Categories must be grouped by sections and hence have a `name` and a `section` attribute.
+The `<categories>` element tree is used to associate elements to business areas for documentation generation. For example, FIX defines categories such as "SingleGeneralOrderHandling", "MarketData", and "SecuritiesReferenceData". The `<categories>` element has a number of attributes, including the `entityAttribGrp` attribute group that supports pedigree attributes (see [Pedigree](#pedigree) for details). Categories must be grouped by sections and hence have a `name` and a `section` attribute.
 
 ### Sections
 
-The `<sections>` element tree names higher level business processes and requires the `name` attribute. Typically, a section contains multiple categories. Traditionally, they have been organized around pre-trade, trade, and post-trade information flows. A single message can only belong to a single section and category. The `displayOrder`attribute may be used to define the ordering of sections in the documentation. FIX uses the section attribute `FIXMLFileName` to organize FIXML schema files.
+The `<sections>` element tree names higher level business processes and requires the `name` attribute. Typically, a section contains multiple categories. Traditionally, they have been organized around pre-trade, trade, and post-trade information flows. A single message can only belong to a single section and category. The `displayOrder`attribute may be used to define the ordering of sections in the documentation.
 
 ### Metadata about any element
 
@@ -613,8 +613,7 @@ Datatype definitions may optionally create different subsets of permitted values
 
 A `<datatype>` element may contain `<mappedDatatype>` elements
 corresponding to any number of type systems. Type systems include XML,
-SBE, GPB, JSON, and ISO 11404, a generic type taxonomy. An XML schema
-mapping is obviously needed by FIXML.
+SBE, GPB, JSON, and ISO 11404, a generic type taxonomy.
 
 The `standard` attribute of `<mappedDatatype>` tells which type system the
 mapping is for. Its `base` attribute tells what the FIX datatype maps to
@@ -715,9 +714,9 @@ Codes may be documented with an `<annotation>` element tree.
 
 ```xml
 <fixr:codeSet type="char" id="165" name="SettlInstSourceCodeSet">
-	<fixr:code value="1" added="FIX.4.1" id="165001" name="BrokerCredit"/>
-	<fixr:code value="2" added="FIX.4.1" id="165002" name="Institution"/>
-	<fixr:code value="3" added="FIX.4.3" id="165003" name="Investor"/>
+	<fixr:code value="1" id="165001" name="BrokerCredit"/>
+	<fixr:code value="2" id="165002" name="Institution"/>
+	<fixr:code value="3" id="165003" name="Investor"/>
 </fixr:codeSet>
 ```
 
@@ -743,7 +742,7 @@ Since Orchestra supports both FIX and non-FIX protocols, rules for the validatio
 
 Code sets may have a second datatype to extend the list of values defined as codes with the underlying datatype given by the `type` attribute. Orchestra supports this by means of the `unionDataType` attribute of the `<codeSet>` element. The underlying datatype of a code set may be combined with any other datatype. Both datatypes need to be defined as separate `<datatype>` elements in the XML file. It is not recommended to use string datatypes as second datatype of a field with a numerical datatype. Both datatypes should share the same value space.
 
-For example, FIX uses a "Reserved100Plus" datatype to support a range of user-defined numerical values in addition to the standard numerical values that have a reserved range below 100. 
+For example, FIX uses a "Reserved100Plus" datatype to support a range of user-defined numerical values in addition to the standard numerical values that have a reserved range below 100.
 
 ### External code sets
 
@@ -1007,6 +1006,7 @@ combination. A component must contain at least one member.
     <fixr:fieldRef id="55" name="Symbol" added="FIX.4.3" updated="FIX.Latest" updatedEP="277">
     <fixr:fieldRef id="48" name="SecurityID" added="FIX.4.3">
     <fixr:fieldRef id="22" name="SecurityIDSource" added="FIX.4.3" updatedEP="161" updated="FIX.5.0SP2">
+    <fixr:groupRef id="2071" name="SecAltIDGrp" added="FIX.4.4" >
 </fixr:component>
 ```
 
@@ -1015,13 +1015,7 @@ combination. A component must contain at least one member.
 A group (a.k.a. repeating group) is like a component but with one additional
 feature: it represents an *array of* components to be sent on the wire.
 
-A repeating group is specified by a `<group>` element and the `<group>`
-elements are contained by the `<groups>` parent element. The `<group>` element
-has a child element to specify the associated cardinality field by id,
-`<numInGroup>`, and optionally by name. In
-FIX tag=value encoding, a cardinality field of FIX datatype NumInGroup precedes the
-array when transmitted. In other encodings, such as FIXML, the array is
-implicit in the presentation protocol.
+A repeating group is specified by a `<group>` element and the `<group>` elements are contained by the `<groups>` parent element. The `<group>` element has a child element to specify the associated cardinality field by id (attribute `<numInGroup>`), and optionally by name. In some encodings, such as FIX tag=value, a cardinality field precedes the array when transmitted. In other encodings, such as FIXML, the array is implicit in the presentation protocol.
 
 Limits on the size of a repeating group may optionally be specified with
 `implMinOccurs` and `implMaxOccurs` attributes. If those attributes are not
@@ -1030,13 +1024,13 @@ present, then the repeating group has unbounded size.
 **Example:** A repeating group with member fields and a reference to the cardinality field.
 
 ```xml
-<fixr:group added="FIX.4.3" category="Common" abbrName="Pty" id="1012" name="Parties">
-    <fixr:numInGroup id="453" name="NoPartyIDs" added="FIX.4.3"/>
-    <fixr:fieldRef id="448" name="PartyID" added="FIX.4.3" updatedEP="204" updated="FIX.5.0SP2"/>
-    <fixr:fieldRef id="447" name="PartyIDSource" added="FIX.4.3" updatedEP="204" updated="FIX.5.0SP2"/>
-    <fixr:fieldRef id="452" name="PartyRole" added="FIX.4.3" updatedEP="204" updated="FIX.5.0SP2"/>
-    <fixr:fieldRef id="2376" name="PartyRoleQualifier" added="FIX.5.0SP2" addedEP="179"/>
-    <fixr:groupRef id="2077" name="PtysSubGrp" added="FIX.4.4"/>
+<fixr:group category="Common" abbrName="Pty" id="1012" name="Parties">
+    <fixr:numInGroup id="453" name="NoPartyIDs"/>
+    <fixr:fieldRef id="448" name="PartyID"/>
+    <fixr:fieldRef id="447" name="PartyIDSource"/>
+    <fixr:fieldRef id="452" name="PartyRole"/>
+    <fixr:fieldRef id="2376" name="PartyRoleQualifier"/>
+    <fixr:groupRef id="2077" name="PtysSubGrp"/>
 </fixr:group>
 ```
 
