@@ -741,15 +741,9 @@ Since Orchestra supports both FIX and non-FIX protocols, rules for the validatio
 
 #### Union datatypes for code sets {#union-datatype}
 
-Code sets may have a second datatype to extend the list of values defined as codes with the underlying datatype given by the `type` attribute. Orchestra supports this by means of the `unionDataType` attribute of the `<codeSet>` element. The underlying datatype of a code set may be combined with the following union datatypes defined in the XML schema that also need to be defined as separate `<datatype>` elements in the XML file.
+Code sets may have a second datatype to extend the list of values defined as codes with the underlying datatype given by the `type` attribute. Orchestra supports this by means of the `unionDataType` attribute of the `<codeSet>` element. The underlying datatype of a code set may be combined with any other datatype. Both datatypes need to be defined as separate `<datatype>` elements in the XML file. It is not recommended to use string datatypes as second datatype of a field with a numerical datatype. Both datatypes should share the same value space.
 
-- Reserved100Plus: integer values of 100 and above,
-- Reserved1000Plus: integer values of 1000 and above
-- Reserved4000Plus: integer values of 4000 and above
-- Qty: decimal values, supporting unions of strings and explicit numeric values
-- Tenor: string values, supporting unions of explicit code sets with flexible patterns
-
-FIX uses the ReservedXXXPlus datatypes to support a range of user-defined values as a union with standard FIX values that have a reserved range below a certain threshold. The Qty datatype is used by FIX for backward compatibility to combine the legacy approach for IOI quantities (e.g. "S" for a small quantity) with explicit numeric values. FIX uses the Tenor datatype to express standard settlement types (e.g. 2=Next Day) together with FX standard tenors (e.g. "Dx" for x number of days).
+For example, FIX uses a "Reserved100Plus" datatype to support a range of user-defined numerical values in addition to the standard numerical values that have a reserved range below 100. 
 
 ### External code sets
 
