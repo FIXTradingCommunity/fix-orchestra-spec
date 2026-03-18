@@ -664,20 +664,20 @@ mappings to fixed-length encodings such as SBE.
 
 ## Code sets
 
-A code set contains a finite collection of valid values of a data
-element. Each unique valid value is called a code. In the terminology of
+A code set contains a finite collection of values of a data
+element. Each unique value is called a code. In the terminology of
 ISO 11404, such a data element is called a "state". (This is
 distinguished from an enumeration, in which the order of values matters.
 In a state, each of the values must be unique, but order is not
 significant. Hence, the values collection is a set.)
 
 In FIX and other protocols, many fields may share a code set. For
-example, the SecurityIDSource(22) and UnderlyingSecurityIDSource(305) fields
-share the same valid values, or code set.
+example, the FIX fields SecurityIDSource(22) and UnderlyingSecurityIDSource(305)
+share the same values, or code set.
 
 A code set has an underlying datatype to tell its domain of possible
 values. Codes may legally be of any type listed in the `<datatypes>`
-section, but typically are int, char or String datatypes in FIX. In an
+section, but typically are simple datatypes, e.g. "int", "char" or "String" in FIX. In an
 Orchestra file, a code value is presented as a string, but it should be
 actually transmitted in the correct encoding for the datatype of the
 code set. For example, if the datatype of a code set was "int", value
@@ -686,11 +686,7 @@ as character "2" and then character "7".
 
 A `<codeSets>` element contains any number of `<codeSet>` child
 elements. The schema allows zero or more instances of `<codeSet>`
-elements, each with a unique `name` attribute.
-
-The names of code sets and datatypes share a common namespace and must
-be unique within a schema. This constraint is enforced by the XML
-schema.
+elements, each with a unique `name` and `id` attribute.
 
 ### Internal code sets
 
@@ -743,7 +739,7 @@ Since Orchestra supports both FIX and non-FIX protocols, rules for the validatio
 
 Code sets may have a second datatype to extend the list of values defined as codes with the underlying datatype given by the `type` attribute. Orchestra supports this by means of the `unionDataType` attribute of the `<codeSet>` element. The underlying datatype of a code set may be combined with any other datatype. Both datatypes need to be defined as separate `<datatype>` elements in the XML file. It is not recommended to use string datatypes as second datatype of a field with a numerical datatype. Both datatypes should share the same value space.
 
-For example, FIX uses a "Reserved100Plus" datatype to support a range of user-defined numerical values in addition to the standard numerical values that have a reserved range below 100. 
+For example, FIX uses a "Reserved100Plus" datatype to support a range of user-defined numerical values in addition to the standard numerical values that have a reserved range below 100.
 
 ### External code sets
 
