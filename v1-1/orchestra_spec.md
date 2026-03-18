@@ -199,22 +199,22 @@ The repository metamodel is a conceptual view of message structures.
 
 ### Message structure abstractions
 
-**Field**–carries a specific business meaning (semantics) as described in FIX specifications or other protocol. A pointer to a field is a **fieldRef**. The data domain of a field is either a datatype or a code set.
+**Field** – carries a specific business meaning (semantics) as described in FIX specifications or other protocol. A pointer to a field is a **fieldRef**. The data domain of a field is either a datatype or a code set.
 
-**Datatype**–the value space of a class of fields. For example, FIX tag=value encoding has about 20
+**Datatype** – the value space of a class of fields. For example, FIX tag=value encoding has about 20
 datatypes.
 
-**Code set**–a set of valid values of a field. They must all be of the
+**Code set** – a set of valid values of a field. They must all be of the
 same datatype.
 
-**Component**–a sequence of fields and nested components and/or groups. A
+**Component** – a sequence of fields and nested components and/or groups. A
 component is designed to be specified once in detail but reused in
 multiple message types by reference. A pointer to a component is a **componentRef**.
 
-**Group, or repeating group**–an *array of* components to be sent on the
+**Group, or repeating group** – an *array of* components to be sent on the
 wire. A pointer to a group is a **groupRef**.
 
-**Message**–a unit of information sent on the wire between
+**Message** – a unit of information sent on the wire between
 counterparties. A message is composed of components, groups, and fields. A
 pointer to a message is a **messageRef**.
 
@@ -320,6 +320,38 @@ By default, the language for conditional expressions is the Score DSL
 (See section [Score DSL](#score-dsl)). However, this may be overridden by setting a value
 to the attribute `expressionLanguage`.
 
+### Top-level elements
+
+The root element contains a number of child elements, a.k.a. top-level elements. With the exception of the `<metadata>` element, none of these elements are required. The element itself is optional and can contain zero or more child elements, i.e. it can be empty to support the incremental generation of an Orchestra file without violating the schema.
+
+**metadata** – Element containing the provenance of the Orchestra repository file (see [here](#dcterms)).
+
+**categories** – Element defining business areas for documentation generation (see [here](#categories)).
+
+**sections** – Element defining higher level business processes (see [here](#sections)).
+
+**concepts** – Element defining semantic concepts (see [here](#concepts)).
+
+**actors** – Element defining entities and state machines (see [here](#actors)).
+
+**scenarios** – Element defining scenarios for various element types (see [here](#scenarios)).
+
+**messages** – Element defining messages and their workflows (see [here](#messages)).
+
+**groups** – Element defining repeating groups (see [here](#groups)).
+
+**components** – Element defining components (see [here](#components)).
+
+**fields** – Element defining individual data elements (see [here](#fields)).
+
+**code sets** – Element defining value sets for field types (see [here](#codesets)).
+
+**datatypes** – Element defining simple datatypes for field values (see [here](#datatypes)).
+
+**annotations** – Element with documentation for the repository as a whole or application specific information.
+
+Annotations are available at every level of the repository, down to an individual code of a code set, by means of `<documentation>` elements (see [here](#documentation) for details).
+
 ### Support for XInclude
 
 Many of the elements in the schema (actors, concepts, sections, categories, messages, groups, components, fields, code sets, datatypes, scenarios) support XML Inclusions (XInclude). This allows assembly of an Orchestra XML infoset from multiple, reusable XML files. For example, several service offerings may share datatypes, fields, and even common message types.
@@ -338,7 +370,7 @@ Usage should be supported for all phases of financial industry workflows, includ
 
 ## Content ownership and history
 
-### Provenance
+### Provenance{#dcterms}
 The `<metadata>` element is used to identify a particular Orchestra file
 and the creator of that file. It can contain any of the elements defined
 by the Dublin Core XML schema. Recommended elements include title,
@@ -470,11 +502,11 @@ Since Orchestra supports both FIX and non-FIX protocols, naming rules are relaxe
 
 The XML schema retains features that have long been used to generate FIX documentation and other outputs. These elements are optional but may be used to group messages for non-FIX protocols on two levels, i.e. sections containing categories.
 
-### Categories
+### Categories{#categories}
 
 The `<categories>` element tree is used to associate elements to business areas for documentation generation. For example, FIX defines categories such as "SingleGeneralOrderHandling", "MarketData", and "SecuritiesReferenceData". The `<categories>` element has a number of attributes, including the `entityAttribGrp` attribute group that supports pedigree attributes (see [Pedigree](#pedigree) for details). Categories must be grouped by sections and hence have a `name` and a `section` attribute.
 
-### Sections
+### Sections{#sections}
 
 The `<sections>` element tree names higher level business processes and requires the `name` attribute. Typically, a section contains multiple categories. Traditionally, they have been organized around pre-trade, trade, and post-trade information flows. A single message can only belong to a single section and category. The `displayOrder`attribute may be used to define the ordering of sections in the documentation.
 
@@ -484,7 +516,7 @@ The schema provides features to provide metadata about almost any element. All s
 
 Introductory documentation can be provided to the element trees `<categories>`, `<sections>`, `<messages>`, `<groups>`, `<components>`, `<fields>`, `<codeSets>`, `<datatypes>`, `<scenarios>` to describe their child elements in their entirety.
 
-#### Documentation
+#### Documentation{documentation}
 
 A `<documentation>` element can carry any description of its ancestor
 element. The content (text node) may be of any format, such as XHTML,
@@ -561,13 +593,13 @@ numeric `id` attribute or both. These values must be unique within their
 respective element types within a given Orchestra file. To avoid
 collisions, names and IDs of deprecated elements should never be reused.
 
-## Scenarios
+## Scenarios{#scenarios}
 
 A scenario may be used to distinguish multiple use cases of a single message, group, component, field, code set or datatype. The respective element may be defined more than once in the XML schema by adding `scenarioId` and (optionally) `scenario` attributes in addition to the `id` and (optionally) `name` attributes of the element. Scenarios for messages, groups, components or code sets may reference another scenario of the same element by adding `scenarioRefId` and (optionally) `scenarioRef` attributes when it is restricted by the elements in the referenced message, group, component or code set. The referencing scenario must not contain any elements or codes that are not present in the referenced scenario. In the case of messages, this is equivalent to the ISO 20022 concept of variants (see [https://www.iso20022.org/catalogue-messages/additional-content-messages/variants](https://www.iso20022.org/catalogue-messages/additional-content-messages/variants) for details). It may contain the same elements, e.g. when one or more elements themselves use a different scenario. Scenarios in the context of the different elements are explained in more detail within the respective sections below. The order of elements should be identical to the referenced scenario. The order must be identical when using a presentation protocol with related rules, e.g. repeating groups in FIX tag=value encoding have a defined order to enable correct message parsing.
 
 Each scenario is described by a `<scenario>` element, a child of `<scenarios>`.
 
-## Datatypes
+## Datatypes{#datatypes}
 
 A datatype is a context-free value space. That is, a domain of possible
 values relatively free of business semantics. For a specific message
@@ -661,7 +693,7 @@ mappings to fixed-length encodings such as SBE.
 </fixr:datatype>
 ```
 
-## Code sets
+## Code sets{#codesets}
 
 A code set contains a finite collection of values of a data
 element. Each unique value is called a code. In the terminology of
@@ -753,7 +785,7 @@ In the case of an external code set, `<code>` elements are not listed in the Orc
 http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=64758">
 ```
 
-## Fields
+## Fields{#fields}
 
 A field carries a specific business meaning (semantic) as described in
 FIX specifications or another protocol. In the schema, a `<field>` element
@@ -913,7 +945,7 @@ A combination of fields defines scope of uniqueness.
 <fixr:fieldRef>
 ```
 
-## Components
+## Components{#components}
 
 A component is a sequence of fields and nested components or [repeating groups](#repeating-groups).
 Individual `<component>` elements are contained by the `<components>` parent element.
@@ -1006,7 +1038,7 @@ combination. A component must contain at least one member.
 </fixr:component>
 ```
 
-## Groups
+## Groups{#groups}
 
 A group (a.k.a. repeating group) is like a component but with one additional
 feature: it represents an *array of* components to be sent on the wire.
@@ -1030,7 +1062,7 @@ present, then the repeating group has unbounded size.
 </fixr:group>
 ```
 
-## Messages
+## Messages{#messages}
 
 A message in an Orchestra file describes a unit to be sent on the wire
 between counterparties.
@@ -1407,7 +1439,7 @@ Pattern matching strategies might include comparing a
 message to expected required fields, mapping values of a distinguishing
 field like ExecType(150) to its code set literals, and so forth.
 
-### Actors
+### Actors{#actors}
 
 An `<actor>` element represents either a counterparty to a FIX session
 or an external entity that holds state relevant to application and
@@ -1653,7 +1685,7 @@ operation="START" interval="PT120S">
 </fixr:timerSchedule>
 ```
 
-## Semantic Concepts
+## Semantic Concepts{#concepts}
 
 Optionally, semantic concepts may be identified by name, even when the
 representation of such a concept changes across versions of a protocol.
