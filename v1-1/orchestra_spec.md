@@ -639,14 +639,6 @@ mappings to fixed-length encodings such as SBE.
 </fixr:datatype>
 ```
 
-**Example:** A datatype scenario with a mapping to SBE.
-
-```xml
-<fixr:datatype name="String" scenario="MIC">
-	<fixr:mappedDatatype standard="SBE" base="String" size="4"/>
-</fixr:datatype>
-```
-
 ## Code sets
 
 A code set contains a finite collection of valid values of a data
