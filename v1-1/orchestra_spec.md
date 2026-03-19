@@ -201,8 +201,7 @@ The repository metamodel is a conceptual view of message structures.
 
 **Field** – carries a specific business meaning (semantics) as described in FIX specifications or other protocol. A pointer to a field is a **fieldRef**. The data domain of a field is either a datatype or a code set.
 
-**Datatype** – the value space of a class of fields. For example, FIX tag=value encoding has about 20
-datatypes.
+**Datatype** – the value space of a class of fields. For example, the FIX Protocol has about 20 datatypes.
 
 **Code set** – a set of valid values of a field. They must all be of the
 same datatype.
@@ -348,6 +347,8 @@ The root element contains a number of child elements, a.k.a. top-level elements.
 
 **datatypes** – Element defining simple datatypes for field values (see [here](#datatypes)).
 
+**encoding standards** – Element containing general of defualt encoding information (see [here](#encoding-information)).
+
 **annotations** – Element with documentation for the repository as a whole or application specific information.
 
 Annotations are available at every level of the repository, down to an individual code of a code set, by means of `<documentation>` elements (see [here](#documentation) for details).
@@ -362,11 +363,39 @@ For example, `<fixr:datatypes>` element can be replaced with the path to the XML
 
 See the separate document "repository.html" in [GitHub](https://github.com/FIXTradingCommunity/fix-orchestra-spec/tree/master/v1-1/informative) for a detailed technical reference for the Repository XML schema. The remainder of this section serves as an overview and explains motivations for the design.
 
-### Protocol relationship
+### Protocol interoperability
 
-The schema was primarily designed to describe metadata about the FIX Protocol. However, it is generic enough to work with other common financial industry protocols, especially when FIX is used in combination with other protocols, or a translation must be performed between protocols.
+The schema was initially designed to describe metadata about the FIX Protocol. However, it is generic and equally supports other common financial industry protocols such as ISO 20022 or FpML. This is especially important in multi-protocol environments, i.e. for protocol interoperability to support transformation between protocols on a logical as well as physical level.
 
-Usage should be supported for all phases of financial industry workflows, including pre-trade, trade, and post-trade flows.
+Usage is supported for all phases of financial industry workflows, including pre-trade, trade, and post-trade flows.
+
+### Encoding information{#encoding-information}
+
+Orchestra is not limited to metadata regarding the logical message model of an electronic interface. It can be used to capture encoding information required to generate schemas for any number of encodings. For example, the FIXML and Simple Binary Encoding (SBE) standards define their own schema for parsing of physical messages.
+
+Orchestra defines a generic framework to support multiple encodings in a single Orchestra file together with the logical model. The logical definitions of messages, components, fields, etc. are encoding-agnostic, but each of the different element types may need information related to one or more encodings.
+
+The framework supports the attachment of optional elements to the definitions of various element types. These will be shown in detail in the respective sections. The elements and/or attributes used as encoding information is intentionally not part of the Orchestra standard itself. Otherwise, any new encoding or enhancement of an existing one would require a new version of the Orchestra standard.
+
+Encoding information may not be specific to an element type, e.g. the byte order of a binary encoding (a.k.a. endianness) can be big-endian or little-endian and pertains to all numerical values in a message. Another use case for encoding information that is not attached to a specific element type is the definition of defaults. For example, null values in fixed length binary encodings require reserving a specific value to represent the null value. This could be the lowest or highest value in the range permitted by the datatype.
+
+The `<repository>` element has a child element `<encodingStandards>` that has zero or more child elements `<encodingStandard>`. Each of the latter must have a unique attribute `name` but Orchestra does not define a list of such names. For example, FIXML and ISO 20022 XML are both XML encodings but the rules to generate the respective XML schemas may be quite different. The second attribute `displayName` can be used to define an alternate name for display purposes.
+
+The element `<encodingStandard>` has only one child element `<encoding>` for the actual encoding information and one child element `annotation` for documentation. The `<encoding>` element may contain elements and values from external namespaces. These namespaces must be defined as attributes of the `<repository>` element. When using external namespaces, these must be provided together with the Orchestra file to allow its complete validation.
+
+**Example:** General encoding information for Simple Binary Encoding
+
+```xml
+<fixr:encodingStandards>
+    <fixr:encodingStandard name="SBE" displayName="Simple Binary Encoding">
+        <fixr:encoding>
+            ...
+        </fixr:encoding>
+    </fixr:encodingStandard>
+</fixr:encodingStandards>
+```
+
+See Section [Encoding information with external schemas](#encoding-examples) for detailed examples using external namespaces.
 
 ## Content ownership and history
 
@@ -656,11 +685,36 @@ The `<mappedDatatype>` element allows any snippet of well-formed XML to
 be pasted in as a child element that is a meaningful specification to an
 encoding protocol.
 
+The `<mappedDatatype>` element may contain a single `<encoding>` element to provide encoding information related to the `standard` attribute.
+
+**Example:** Encoding information for a datatype and two encoding standards
+
+```xml
+<fixr:datatype name="uint32">
+	<fixr:mappedDatatype standard="SBE">
+    <fixr:encoding>
+      <orchEncoding:nullValue>4294967295</orchEncoding>
+    </fixr:encoding>
+  </fixr:mappedDatatype>
+  <fixr:mappedDatatype standard="FAST">
+    <fixr:encoding>
+      <orchEncoding:nullValue>0</orchEncoding>
+    </fixr:encoding>
+  </fixr:mappedDatatype>
+</fixr:datatype>
+```
+
+Note that `orchEncoding` is the name of an external namespace in the example above. The attribute `nullValue` is not part of the Orchestra standard. There must be a related external schema that defines the attribute `nullValue` and its type, for example as follows:
+
+```xml
+<xs:element name="nullValue" type="xs:integer"/>
+```
+
 The ISO/IEC 11404 General Purpose Datatypes standard contains a taxonomy
 of programming language-independent types and enumerates their
 characteristics. One of the benefits of following this standard is that
-it will be easier to map FIX datatypes to other message standards, such
-as ISO 20022 (SWIFT).
+it will be easier to map datatypes to other encoding standards, such
+as ISO 20022 XML.
 
 *The following paragraph is non-normative.*
 
@@ -676,11 +730,11 @@ The lower and upper bounds of a bounded datatype may be set with
 used to define the field length in the target encoding, e.g. to support
 mappings to fixed-length encodings such as SBE.
 
-**Example:** A datatype using a base type with mappings to XML schema and General-Purpose Datatypes.
+**Example:** A datatype using a base type with mappings to FIXML schema and General-Purpose Datatypes.
 
 ```xml
 <fixr:datatype name="SeqNum" baseType="int">
-	<fixr:mappedDatatype standard="XML" base="xs:positiveInteger"/>
+	<fixr:mappedDatatype standard="FIXML" base="xs:positiveInteger"/>
 	<fixr:mappedDatatype standard="ISO11404" base="Ordinal"/>
 </fixr:datatype>
 ```
@@ -2244,7 +2298,14 @@ Implementations should throw an exception in these cases:
 Example Orchestra files are provided in the GitHub project
 [FIXTradingCommunity/fix-orchestra](https://github.com/FIXTradingCommunity/fix-orchestra).
 
+The Orchestra files for FIX 4.2, FIX 4.4 and FIX Latest are provided in the GitHub project
+[FIXTradingCommunity/orchestrations/FIX Standard](https://github.com/FIXTradingCommunity/orchestrations/tree/master/FIX%20Standard).
+
 # Appendix
+
+## Encoding information with external schemas{#encoding-examples}
+
+TBD
 
 ## Compliance
 
