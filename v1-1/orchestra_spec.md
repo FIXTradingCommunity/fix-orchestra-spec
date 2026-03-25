@@ -98,7 +98,7 @@ platforms.
 
 **Release** – incremental extension of a version of an interface application, e.g. a FIX extension Pack (EP).
 
-**Scenario** — a use case of a message, component, field, code set or datatype.
+**Scenario** — a use case of a message, component, field or code set.
 
 **Semantic** — pertaining to the meaning of a message element, regardless
 of its representation.
@@ -624,9 +624,12 @@ collisions, names and IDs of deprecated elements should never be reused.
 
 ## Scenarios{#scenarios}
 
-A scenario may be used to distinguish multiple use cases of a single message, group, component, field, code set or datatype. The respective element may be defined more than once in the XML schema by adding `scenarioId` and (optionally) `scenario` attributes in addition to the `id` and (optionally) `name` attributes of the element. Scenarios for messages, groups, components or code sets may reference another scenario of the same element by adding `scenarioRefId` and (optionally) `scenarioRef` attributes when it is restricted by the elements in the referenced message, group, component or code set. The referencing scenario must not contain any elements or codes that are not present in the referenced scenario. In the case of messages, this is equivalent to the ISO 20022 concept of variants (see [https://www.iso20022.org/catalogue-messages/additional-content-messages/variants](https://www.iso20022.org/catalogue-messages/additional-content-messages/variants) for details). It may contain the same elements, e.g. when one or more elements themselves use a different scenario. Scenarios in the context of the different elements are explained in more detail within the respective sections below. The order of elements should be identical to the referenced scenario. The order must be identical when using a presentation protocol with related rules, e.g. repeating groups in FIX tag=value encoding have a defined order to enable correct message parsing.
+A scenario may be used to distinguish multiple use cases of a single message, group, component, field or code set. The respective element may be defined more than once in the XML schema by adding the `scenario` attribute in addition to the mandatory `id` and `name` attributes of the element. Scenarios in the context of the different elements are explained in more detail within the respective sections below.
 
-Each scenario is described by a `<scenario>` element, a child of `<scenarios>`.
+Each scenario is defined by a `<scenario>` element, a child of `<scenarios>`, with a name that is unique across all scenarios and using `<annotation>` elements for its description. The definition of a scenario is optional, i.e. the `scenario` attribute of an element may contain the name of a scenario that is not defined. However, it is recommended to either define all scenarios or none at all. Defining scenarios allows validation of names used for the `scenario` attribute of an element. The default name of `scenario` is "base", so the attribute need not be supplied if there is only one form of a given element.
+
+### Scenario Relationships
+Scenarios for messages, groups, components or code sets may reference another scenario of the same element by adding the `scenarioRef` attribute when it is restricted by the elements in the referenced message, group, component or code set. The referencing scenario must not contain any elements or codes that are not present in the referenced scenario. In the case of messages, this is equivalent to the ISO 20022 concept of variants (see [https://www.iso20022.org/catalogue-messages/additional-content-messages/variants](https://www.iso20022.org/catalogue-messages/additional-content-messages/variants) for details). It may contain the same elements, e.g. when one or more elements themselves use a different scenario. The order of elements should be identical to the referenced scenario. The order must be identical when using a presentation protocol with related rules, e.g. repeating groups in FIX tag=value encoding have a defined order to enable correct message parsing.
 
 ## Datatypes{#datatypes}
 
@@ -651,24 +654,6 @@ OrderQty(38), has `baseType` of float, a more generic FIX datatype.
 Generally, FIX datatypes for FIX protocols need to be defined only once and
 are copied from the baseline standard. However, the datatypes section
 may contain different definitions for non-FIX protocols.
-
-### Datatype scenarios
-
-Datatype definitions may optionally create different subsets of permitted values by means of the `scenario` and `scenarioId` attributes. In addition to the base datatype, for example integer, one may define different scenarios for 8-, 16-, 32-, or 64-bit and signed or unsigned integers. The `baseType` attribute is not needed when using datatype scenarios and may be deprecated in a future version of Orchestra.
-
-**Example:** An integer datatype with an additional scenario for sequence numbers.
-
-```xml
-<fixr:datatype name="int" scenario="base">
-	<fixr:mappedDatatype standard="XML" base="xs:integer"/>
-	<fixr:mappedDatatype standard="ISO11404" base="Integer"/>
-</fixr:datatype>
-
-<fixr:datatype name="int" scenario="SeqNum">
-	<fixr:mappedDatatype standard="XML" base="xs:positiveInteger"/>
-	<fixr:mappedDatatype standard="ISO11404" base="Ordinal"/>
-</fixr:datatype>
-```
 
 ### Datatype mappings
 
@@ -739,14 +724,6 @@ mappings to fixed-length encodings such as SBE.
 </fixr:datatype>
 ```
 
-**Example:** A datatype scenario with a mapping to SBE.
-
-```xml
-<fixr:datatype name="String" scenario="MIC">
-	<fixr:mappedDatatype standard="SBE" base="String" size="4"/>
-</fixr:datatype>
-```
-
 ## Code sets{#codesets}
 
 A code set contains a finite collection of values of a data
@@ -807,14 +784,11 @@ Codes may be documented with an `<annotation>` element tree.
 Code sets may have different supported codes in different scenarios. For
 example, outbound FIX ExecutionReport(35=8) messages may have a more enriched view
 of PartyRole(452) than is required on inbound FIX NewOrderSingle(35=D) messages. Therefore, a
-`<codeSet>` may be qualified by its `scenario` and/or `scenarioId` attribute. The default
-values of `scenario` and `scenarioId` are "base" and 1, respectively, so the attributes need not be supplied if
-there is only one form of a code set.
+`<codeSet>` may be qualified by its `scenario` attribute.
 
-A code set may reference another scenario of the same code set with the `scenarioRefId` and (optionally) `scenarioRef` attribute when it does not need to contain all of the codes of the referenced code set scenario. It may contain the same codes, e.g. when one or more codes require different annotations. The order of codes in the referencing scenario should be identical to the referenced scenario.
+A code set may reference another scenario of the same code set with the `scenarioRef` attribute when it does not need to contain all of the codes of the referenced code set scenario. It may contain the same codes, e.g. when one or more codes require different annotations. The order of codes in the referencing scenario should be identical to the referenced scenario.
 
-Uniqueness of code set scenarios is enforced by the XML schema, both as
-the combination of `name` + `scenario` as well as `id` + `scenarioId`.
+Uniqueness of code set scenarios is enforced by the XML schema as the combination of `name` or `id` and `scenario`.
 
 #### Code name validation
 
@@ -858,21 +832,9 @@ attribute may be used to categorize fields. There are several more
 optional attributes which are described in the message structure section
 below.
 
-### Field scenarios
-
-Fields may have different scenarios when any of the attributes need to differ, for example to vary annotations or to use different code set scenarios for different use cases. Scenarios also support different field lengths when using the `implLength` attribute. The default
-values of `scenario` and `scenarioId` are "base" and 1, respectively, so the attribute need not be supplied if there is only one form of a field.
-
-Uniqueness of field scenarios is enforced by the XML schema, both as the
-combination of `name` + `scenario` as well as `id` + `scenarioId`.
-
 ### Data domain of a field
 
 Every field must have a data domain of either a datatype name or more specifically, a collection of valid values specified by a code set reference. The domain of a field is specified in its `type` attribute in case of a datatype and in its `codeSet` attribute in case of a code set. The attribute `type` refers to a `<datatype>` element and the `codeSet` attribute refers to a `<codeSet>` element by the respective `name` attribute. In the case of a `<codeSet>`, there is a level of indirection to its `codeSet` attribute to arrive at a `<datatype>`.
-
-Since `<codeSet>` is also qualified by scenario, a field will link to
-the code set of the same scenario. By default, "base" scenario field
-links to "base" code set.
 
 **Example:** A field with a code set and another with a datatype domain.
 
@@ -884,6 +846,35 @@ links to "base" code set.
 #### Union datatypes for fields
 
 Fields may have a second datatype to extend the values supported by the `type` or `codeSet` attribute. Orchestra supports this by means of the `unionDataType` attribute of the `<field>` element. The available union datatypes are defined by Orchestra, see [Union datatypes for code sets](#union-datatype) for details. It is recommended to use the `unionDataType` attribute of the `<codeSet>` element rather than the one of the `<field>` element. The latter is available for backward compatibility.
+
+### Field and field reference scenarios
+
+Fields may have different scenarios when one or more of the attributes need to differ, for example to vary annotations, field lengths or to use different code set scenarios for different use cases. The datatype or code set of a field must be identical across all of its scenarios. However, it is not recommended to use multiple scenarios for a field as the differentiation may also be done on the level of a field reference, e.g. in a message or component, by means of the attribute groups `fieldAttribGrp` and `entityAttribGrp`. Avoiding field scenarios in favor of field reference scenarios simplifies the logical design. Field scenarios are available for backward compatibility.
+
+Uniqueness of field scenarios is enforced by the XML schema as the combination of `name` or `id` and `scenario`.
+
+Since `<codeSet>` is also qualified by scenario, a field will link to the code set of the same scenario. By default, "base" scenario field links to "base" code set. The code set scenario of a field may be overridden by a different scenario in a field reference (see [Overridable and fixed field attributes](#override-field-attributes)). It is not required to have multiple field scenarios when there are multiple code set scenarios. It is recommended to only define a "base" scenario of a field with a complete code set and to use the `scenario` attribute in the field references to limit the values to a subset in the given usage context. Using the `scenario` attribute in a field reference means that the data domain of the field is a code set and that there must be a code set with the same scenario name.
+
+**Example:** Multiple code set scenarios with a single field definition.
+
+```xml
+<!-- Base scenario contains values for all asset classes -->
+<fixr:codeSet id="167" name="SecurityTypeCodeSet" .../>
+<!-- Values for equities -->
+<fixr:codeSet id="167" name="SecurityTypeCodeSet" scenario="Equity" .../>
+<!-- Values for bonds -->
+<fixr:codeSet id="167" name="SecurityTypeCodeSet" scenario="Bond" .../>
+
+<fixr:field id="167" name="SecurityType" codeSet="SecurityTypeCodeSet"/>
+
+<fixr:component id="1003" name="Instrument" scenario="Equity">
+  <fixr:fieldRef id="167" name="SecurityType" scenario="Equity"/>
+</fixr:message>
+
+<fixr:component id="1003" name="Instrument" scenario="Bond">
+  <fixr:fieldRef id="167" name="SecurityType" scenario="Bond"/>
+</fixr:message>
+```
 
 ### Data fields
 
@@ -937,14 +928,14 @@ abbrName="ID" discriminatorId="22">
 </fixr:field>
 ```
 
-### Overridable and fixed field attributes
+### Overridable and fixed field attributes {#override-field-attributes}
 
 Some attributes of a field, such as minimum and maximum values and
 length, may be overridden for a particular usage in the message
 structure that contains a field reference. However, the key identifiers
-id and name as well as type attribute may not be overridden. It is
+`id` and `name` as well as `type` and `codeSet` attribute may not be overridden. It is
 possible to override which codes of a code set are supported in a
-particular scenario, however. See section [Message structures](#message-structures) below.
+particular scenario, however.
 
 ### Field value uniqueness
 
@@ -1016,12 +1007,9 @@ attributes among components.
 Like a field, a component can be annotated for documentation
 and carries pedigree attributes of attribute group `entityAttribGrp`.
 
-The `scenario` and `scenarioId` attributes of a component identify a use case; multiple
-components may have the same name, but the combination of name and
-scenario must be unique. Scenario name and ID have default values of "base" and 1, respectively, so if a
-component only has one variation, there is no need to qualify it.
+The optional `scenario` attribute of a component identifies a use case and its absence represents a scenario called "base". Multiple components may have the same name, but the combination of `name` or `id` and `scenario` must be unique.
 
-A component may reference another scenario of the same component with the `scenarioRefId` and (optionally) `scenarioRef` attribute when it does not need to contain all of the elements of the referenced component scenario. It may contain the same elements, e.g. when one or more elements use a different scenario. The order of elements in the referencing scenario should be identical to the referenced scenario.
+A component may reference another scenario of the same component with the `scenarioRef` attribute when it does not need to contain all of the elements of the referenced component scenario. It may contain the same elements, e.g. when one or more elements use a different scenario. The order of elements in the referencing scenario should be identical to the referenced scenario.
 
 A component is designed to be specified once in detail but
 reused in multiple message types by reference. An example of a FIX component
@@ -1058,7 +1046,7 @@ combination. A component must contain at least one member.
 
   - A `<fieldRef>` element represents a field in a block or repeating
     group. It is a reference to a `<field>` element within the
-    `<fields>` container by its `id` and `scenarioId` attributes.
+    `<fields>` container by its `id` and `scenario` attributes.
     A `name` attribute for display purposes may optionally be provided.
     A `baseFieldId` attribute is used to link the referenced field to another
     field reference inside the same component, e.g. to link an encoded version
@@ -1071,11 +1059,11 @@ combination. A component must contain at least one member.
     no limit in the schema to the level of nesting, although a
     presentation protocol may have rules about it, and there may be
     practical limits. The reference must match the referenced
-    `<component>` on both `id` and `scenarioId` attributes.
+    `<component>` on both `id` and `scenario` attributes.
     A `name` attribute for display purposes may optionally be provided.
 
   - A `<groupRef>` element similarly refers to a nested `<group>`
-    element (see [below](#repeating-groups)) by its `id` and `scenarioId` attributes. Limits of
+    element (see [below](#repeating-groups)) by its `id` and `scenario` attributes. Limits of
     the size of a particular instance of a repeating group may be
     overridden by setting `implMinOccurs` and `implMaxOccurs` attributes on
     the `<groupRef>` element.
@@ -1157,7 +1145,7 @@ category="MarketStructureReferenceData" section="PreTrade">
 
 ### Message scenarios
 
-A single message type is often reused for multiple use cases. Each of the variations of a single message type can have a slightly different message structure. For example, a FIX ExecutionReport(35=8) message is overloaded for acceptance, rejection, execution, cancel confirmation of an order. The attributes that name a use case are `scenario` and `scenarioId`. If no scenario name or ID is explicitly given, they default to "base" and 1. The combination of `id`, `scenario`, and `scenarioId` attributes must be unique.
+A single message type is often reused for multiple use cases. Each of the variations of a single message type can have a slightly different message structure. For example, a FIX ExecutionReport(35=8) message is overloaded for acceptance, rejection, execution, cancel confirmation of an order. The optional `scenario` attribute of a message identifies a use case and its absence represents a scenario called "base". The combination of `id` and `scenario` attributes must be unique.
 
 A message may reference another scenario of the same message with the `scenarioRefId` and (optionally) `scenarioRef` attribute when it does not need to contain all of the elements of the referenced message scenario. It may contain the same elements, e.g. when one or more elements use a different scenario. The order of elements in the referencing scenario should be identical to the referenced scenario.
 
@@ -1166,9 +1154,9 @@ An optional `when` element allows to provide an expression to describe the condi
 **Example:** A message scenario with a condition.
 
 ```xml
-<fixr:scenario name="Execution" id="6"/>
+<fixr:scenario name="Trades"/>
 ...
-<fixr:message msgType="8" id="9" name="ExecutionReport" scenarioId="6">
+<fixr:message msgType="8" id="9" name="ExecutionReport" scenario="Trades">
 	<fixr:structure>
 		<fixr:componentRef presence="required" id="1024" name="StandardHeader"/>
 		...
