@@ -567,7 +567,7 @@ See the [Appendix](#category-example) for an example of a category with encoding
 
 ### Sections{#sections}
 
-The `<sections>` element tree names higher level business processes and requires the `name` attribute. Typically, a section contains multiple categories. Traditionally, they have been organized around pre-trade, trade, and post-trade information flows. A single message can only belong to a single section and category. The `displayOrder`attribute may be used to define the ordering of sections in the documentation.
+The `<sections>` element tree names higher level business processes and requires the `name` attribute. Typically, a section contains multiple categories. Traditionally, they have been organized around pre-trade, trade, and post-trade information flows. A single message can only belong to a single section and category. The `displayOrder` attribute may be used to define the ordering of sections in the documentation. The `<section>` element has the attribute group `entityAttribGrp` that supports pedigree attributes (see [Pedigree](#pedigree) for details).
 
 #### Encoding information for sections
 
@@ -678,6 +678,8 @@ A scenario may be used to distinguish multiple use cases of a single message, gr
 
 Each scenario is defined by a `<scenario>` element, a child of `<scenarios>`, with a name that is unique across all scenarios and using `<annotation>` elements for its description. The definition of a scenario is optional, i.e. the `scenario` attribute of an element may contain the name of a scenario that is not defined. However, it is recommended to either define all scenarios or none at all. Defining scenarios allows validation of names used for the `scenario` attribute of an element. The default name of `scenario` is "base", so the attribute need not be supplied if there is only one form of a given element.
 
+The `<scenario>` element has the attribute group `entityAttribGrp` that supports pedigree attributes (see [Pedigree](#pedigree) for details).
+
 ### Scenario Relationships
 Scenarios for messages, groups, components or code sets may reference another scenario of the same element by adding the `scenarioRef` attribute when it is restricted by the elements in the referenced message, group, component or code set. The referencing scenario must not contain any elements or codes that are not present in the referenced scenario. In the case of messages, this is equivalent to the ISO 20022 concept of variants (see [https://www.iso20022.org/catalogue-messages/additional-content-messages/variants](https://www.iso20022.org/catalogue-messages/additional-content-messages/variants) for details). It may contain the same elements, e.g. when one or more elements themselves use a different scenario. The order of elements should be identical to the referenced scenario. The order must be identical when using a presentation protocol with related rules, e.g. repeating groups in FIX TagValue encoding have a defined order to enable correct message parsing.
 
@@ -691,7 +693,8 @@ syntax of that encoding, also known as lexical space.
 Some fields are specified as a set of valid values. This is known as
 *code set*, and it can be thought of as a specialized datatype (see the [Code sets](#code-sets) section below).
 
-Each datatype is described by a `<datatype>` element, a child of `<datatypes>`.
+Each datatype is described by a `<datatype>` element, a child of `<datatypes>`. The `<datatype>` element has the attribute group `entityAttribGrp` that supports pedigree attributes (see [Pedigree](#pedigree) for details).
+
 
 ### FIX datatypes
 
