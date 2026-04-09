@@ -383,7 +383,7 @@ The `<repository>` element has a child element `<encodingStandards>` that has ze
 
 The element `<encodingStandard>` has only one child element `<encoding>` for the actual encoding information and one child element `annotation` for documentation. The `<encoding>` element may contain elements and values from external namespaces. These namespaces must be defined as attributes of the `<repository>` element. When using external namespaces, these must be provided together with the Orchestra file to allow its complete validation.
 
-General encoding information for the entire repository can be provided as follows.
+General encoding information for the entire repository can be provided as follows. The element `<encoding>` must not have the attribute `standard` as the encoding is already identified by the parent element `encodingStandard`.
 
 ```xml
 <fixr:repository name="MyRepository" version="1.0">
@@ -545,9 +545,49 @@ The XML schema retains features that have long been used to generate FIX documen
 
 The `<categories>` element tree is used to associate elements to business areas for documentation generation. For example, FIX defines categories such as "SingleGeneralOrderHandling", "MarketData", and "SecuritiesReferenceData". The `<categories>` element has a number of attributes, including the `entityAttribGrp` attribute group that supports pedigree attributes (see [Pedigree](#pedigree) for details). Categories must be grouped by sections and hence have a `name` and a `section` attribute.
 
+#### Encoding information for categories
+
+Encodings such as FIXML use the Orchestra element `<category>` when generating a schema by grouping elements from the same category in a single schema file. Encoding information can be added as follows to each category, e.g. the rules for the generation of file names for the schema. The element `<encoding>` must have the attribute `standard` to identify the encoding.
+
+```xml
+<fixr:category name="MyCategory">
+  <fixr:encodings>
+      <fixr:encoding standard="Standard1">
+          ...
+      </fixr:encoding>
+      <fixr:encoding standard="Standard2">
+          ...
+      </fixr:encoding>
+      ...
+  </fixr:encodings>
+</fixr:category>
+```
+
+See the [Appendix](#category-example) for an example of a category with encoding information for FIXML.
+
 ### Sections{#sections}
 
 The `<sections>` element tree names higher level business processes and requires the `name` attribute. Typically, a section contains multiple categories. Traditionally, they have been organized around pre-trade, trade, and post-trade information flows. A single message can only belong to a single section and category. The `displayOrder`attribute may be used to define the ordering of sections in the documentation.
+
+#### Encoding information for sections
+
+Encodings such as FIXML use the Orchestra element `<section>` when generating a schema by grouping elements from multiple categories in a single schema file. Encoding information can be added as follows to each section, e.g. the rules for the generation of file names for the schema. The element `<encoding>` must have the attribute `standard` to identify the encoding.
+
+```xml
+<fixr:section name="MySection">
+  <fixr:encodings>
+      <fixr:encoding standard="Standard1">
+          ...
+      </fixr:encoding>
+      <fixr:encoding standard="Standard2">
+          ...
+      </fixr:encoding>
+      ...
+  </fixr:encodings>
+</fixr:section>
+```
+
+See the [Appendix](#section-example) for an example of a section with encoding information for FIXML.
 
 ### Metadata about any element
 
@@ -680,7 +720,7 @@ The `<mappedDatatype>` element allows any snippet of well-formed XML to
 be pasted in as a child element that is a meaningful specification to an
 encoding protocol.
 
-The `<mappedDatatype>` element may contain a single `<encoding>` element to provide encoding information related to the `standard` attribute.
+The `<mappedDatatype>` element may contain a single `<encoding>` element to provide encoding information related to the `standard` attribute. The element `<encoding>` must not have the attribute `standard` as the encoding is already identified by the parent element `mappedDatatype`.
 
 ```xml
 <fixr:datatype name="MyDatatype">
@@ -821,12 +861,12 @@ http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=647
 
 Code sets can be encoded differently by using the attributes of the `<code>` element one way or another. For example, FIX Protocol uses the attribute `value` for TagValue encoding. Other encodings may prefer to use the attribute `name` if legibility of the wire format is an objective. Binary protocols such as SBE favor numeric values that are as short as possible, i.e. the attribute `id`. Wire formats across encodings may hence be quite different, but they all carry the same semantic.
 
-Encoding information for a code set can be provided as follows.
+Encoding information for a code set can be provided as follows. The element `<encoding>` must have the attribute `standard` to identify the encoding.
 
 ```xml
-<fixr:codeSet type="MyType" id="12345" name="MyCodeSet">
-  <fixr:code ... />
-  <fixr:code ... />
+<fixr:codeSet type="MyType" id="123" name="MyCodeSet">
+  <fixr:code id="12301" name="MyCode1" value="X"/>
+  <fixr:code id="12302" name="MyCode2" value="Y"/>
   ...
   <fixr:encodings>
       <fixr:encoding standard="Standard1">
@@ -840,7 +880,7 @@ Encoding information for a code set can be provided as follows.
 </fixr:codeSet>
 ```
 
-See the [Appendix](#general-encoding-example) for an example of a field and code set with encoding information for multiple encodings.
+See the [Appendix](#codeSet-example) for an example of a code set with encoding information.
 
 ## Fields{#fields}
 
@@ -1023,7 +1063,7 @@ A combination of fields defines scope of uniqueness.
 
 Fields can be encoded differently by using the attributes of the `<field>` element one way or another. For example, FIX Protocol uses the attribute `id` for TagValue encoding. Other encodings may prefer to use the attribute `name` if legibility of the wire format is an objective. Wire formats across encodings may hence be quite different, but they all carry the same semantic.
 
-Encoding information for a field can be provided as follows.
+Encoding information for a field can be provided as follows. The element `<encoding>` must have the attribute `standard` to identify the encoding.
 
 ```xml
 <fixr:field type="MyType" id="12345" name="MyField">
@@ -1039,7 +1079,7 @@ Encoding information for a field can be provided as follows.
 </fixr:field>
 ```
 
-See the [Appendix](#general-encoding-example) for an example of a field with encoding information for multiple encodings.
+See the [Appendix](#field-example) for an example of a field with encoding information for multiple encodings.
 
 ## Components{#components}
 
@@ -1137,7 +1177,7 @@ Components can be encoded differently by using the attributes of the `<component
 
 Components may reference any number of fields, components, and groups as elements. Each reference may have its own encoding information, e.g. to define an explicit offset of a member from the start of the component in a fixed-length encoding such as SBE.
 
-Encoding information for a component and its members can be provided as follows.
+Encoding information for a component and its members can be provided as follows. The element `<encoding>` must have the attribute `standard` to identify the encoding.
 
 ```xml
 <fixr:component id="12345" name="MyComponent" abbrName="MyComp">
@@ -2411,24 +2451,30 @@ This example illustrates the use of the `<encodingStandards>` element as a child
 
 ```xml
 <fixr:repository name="MyRepository" version="1.0"
-  xmlns:fixr="http://fixprotocol.io/2024/orchestra/repository"
+  xmlns:fixr="http://fixprotocol.io/2026/orchestra/repository"
   xmlns:orchEncoding="http://fixprotocol.io/2026/orchestra/encoding"
   xmlns:orchSbe="http://fixprotocol.io/2026/orchestra/encoding/sbe">
   ...
   <fixr:encodingStandards>
-      <fixr:encoding standard="TagValue">
+    <fixr:encodingStandard name="TagValue" displayName="FIX TagValue Encoding">
           <orchEncoding:fieldIdentifier>id</orchEncoding:fieldIdentifier>
           <orchEncoding:codeValue>value</orchEncoding:codeValue>
-      </fixr:encoding>
-      <fixr:encoding standard="FIXML">
+    </fixr:encodingStandard>
+    <fixr:encodingStandard name="FIXML" displayName="FIX Markup Language">
           <orchEncoding:fieldIdentifier>abbrName</orchEncoding:fieldIdentifier>
           <orchEncoding:codeValue>value</orchEncoding:codeValue>
-      </fixr:encoding>
-      <fixr:encoding standard="JSON">
+    </fixr:encodingStandard>
+    <!-- The first flavor of JSON is of general nature -->
+    <fixr:encodingStandard name="JSON1" displayName="JavaScript Object Notation">
         <orchEncoding:fieldIdentifier>name</orchEncoding:fieldIdentifier>
         <orchEncoding:codeValue>name</orchEncoding:codeValue>
-      </fixr:encoding>
-      <fixr:encodingStandard name="SBE" displayName="Simple Binary Encoding">
+    </fixr:encodingStandard>
+    <!-- The second flavor of JSON is specific to ISO 20022:2026 -->
+    <fixr:encodingStandard name="JSON2" displayName="ISO 20022 JSON">
+        <orchEncoding:fieldIdentifier>abbrName</orchEncoding:fieldIdentifier>
+        <orchEncoding:codeValue>value</orchEncoding:codeValue>
+    </fixr:encodingStandard>
+    <fixr:encodingStandard name="SBE" displayName="Simple Binary Encoding">
           <fixr:encoding>
             <orchEncoding:fieldIdentifier>none</orchEncoding:fieldIdentifier>
             <orchEncoding:codeValue>value</orchEncoding:codeValue>
@@ -2443,11 +2489,13 @@ This example illustrates the use of the `<encodingStandards>` element as a child
 </fixr:repository>
 ```
 
-The following sections explain the different attributes iin detail and show how they can be used to generate encoding-specific schemas.
+The following sections explain the different elements in detail and show how they can be used to generate encoding-specific schemas.
 
-### Attributes applicable to all encodings
+### Elements applicable to all encodings
 
-Note that the example uses an external schema (not shown here) with the namespace "orchEncoding", containing attributes `fieldIdentifier` and `codeValue`, applicable to multiple encodings. The purpose of the first attribute is to identify the field attribute in the metadata that contains the value used for the wire format of fields ("none" means that field identification metadata is not part of the wire format). There must be an external schema that defines these attribute and their values, for example:
+Note that the example uses an external schema (not shown here) with the namespace "orchEncoding", containing elements `fieldIdentifier` and `codeValue`, applicable to multiple encodings. The purpose of the first element is to identify the field attribute in the metadata that contains the value used for the wire format of fields ("none" means that field identification metadata is not part of the wire format). The purpose of the second element is to identify whether the value or the name of a code should be used. For example, the FIX field Side(54) has values "1" and "2" with names "Buy" and "Sell".
+
+There must be an external schema that defines these elements and their values, for example:
 
 ```xml
 <!-- Defines how fields are identified in the wire format  -->
@@ -2466,16 +2514,16 @@ Note that the example uses an external schema (not shown here) with the namespac
 <xs:element name="codeValue">
   <xs:simpleType>
     <xs:restriction base="xs:string">
-      <xs:enumeration value="id"/>
+      <xs:enumeration value="value"/>
       <xs:enumeration value="name"/>
     </xs:restriction>
   </xs:simpleType>
 </xs:element>
 ```
 
-### Attributes applicable to binary encodings
+### Elements applicable to binary encodings
 
-The example uses the two attributes `byteOrder`, `defaultByteAlignment`, and `defaultNullValueBehavior` from the same external schema that are only applicable to binary encodings such as SBE. The first is used to determine the endianess of all numric values (e.g. Big Endian) and the other two define defaults that may be overriden by encoding information at the level of a single message, group or component. They refer to the byte alignment (e.g. 4-byte boundaries for all fields) and the special value reserved for null. Here is a snippet from an external schema that defines these two attributes.
+The example uses the elements `byteOrder`, `defaultByteAlignment`, and `defaultNullValueBehavior` from the same external schema that are only applicable to binary encodings such as SBE. The first is used to determine the endianess of all numric values (e.g. Big Endian) and the other two define defaults that may be overriden by encoding information at the level of a single message, group or component. They refer to the byte alignment (e.g. 4-byte boundaries for all fields) and the special value reserved for null. Here is a snippet from an external schema that defines these two elements.
 
 ```xml
 <!-- Defines endianess of numeric fields in the wire format  -->
@@ -2503,9 +2551,9 @@ The example uses the two attributes `byteOrder`, `defaultByteAlignment`, and `de
 </xs:element>
 ```
 
-### Attributes applicable to a single encoding
+### Elements applicable to a single encoding
 
-The example uses the the attribute `presenceAttribute` from the an external schema that is only applicable to SBE. Orchestra has a presence attribute to define whether an element in a message, group or component is required or not. The SBE schema allows to use the attribute in two different places, either as part of the field definition in a message or as part of a type definition, which is a level of abstraction offered by SBE to use the same type for different fields. Here is a snippet from an external schema for SBE that defines this attribute.
+The example uses the element `presenceAttribute` from the an external schema that is only applicable to SBE. Orchestra has a presence attribute to define whether an element in a message, group or component is required or not. The SBE schema allows to use the attribute in two different places, either as part of the field definition in a message or as part of a type definition, which is a level of abstraction offered by SBE to use the same type for different fields. Here is a snippet from an external schema for SBE that defines this element.
 
 ```xml
 <!-- Defines the place to generate presence attribute  -->
@@ -2521,20 +2569,38 @@ The example uses the the attribute `presenceAttribute` from the an external sche
 
 ### Generation of encoding-specific schemas
 
-Schemas for the different encodings can then be generated from the field and code set definitions in the Orchestra file, for example for the FIX fields Account(1) and SettlInstSource(165). The latter supports a limited set of pre-defined values to express different sources for settlement instructions.
+Schemas for the different encodings can then be generated from the field and code set definitions in the Orchestra file, for example for the FIX fields Account(1) and PartyRole(452). The latter supports a set of pre-defined values to express different types of actors or accounts.
 
-The following shows schema snippets for FIXML, JSON, and SBE that can be generated from the general encoding information above and the Orchestra field and code set definitions. The resulting encoding-specific schemas can then be used to validate or generate physical messages, whilst there is only one semantic definition with annotations in the Orchestra file.
+The following shows schema snippets for FIXML, JSON (two flavors), and SBE that can be generated from the general encoding information above and the Orchestra field and code set definitions. The resulting encoding-specific schemas can then be used to validate or generate physical messages, whilst there is only one semantic definition with annotations in the Orchestra file.
 
 Definitions in the Orchestra file:
 
 ```xml
-<fixr:field id="1" name="Account" type="String" abbrName="Acct"/>
-<fixr:field id="165" name="SettlInstSource" type="SettlInstSourceCodeSet" abbrName="InstSrc"/>
+<fixr:encodingStandards>
+  <!-- see general encoding information above -->
+</fixr:encodingStandards>
 
-<fixr:codeSet type="char" id="165" name="SettlInstSourceCodeSet">
-  <fixr:code value="1" id="165001" name="BrokerCredit"/>
-	<fixr:code value="2" id="165002" name="Institution"/>
-	<fixr:code value="3" id="165003" name="Investor"/>
+<fixr:datatype name="String">
+  <fixr:mappedDatatype standard="FIXML" builtin="true" base="xs:string"/>
+  <fixr:mappedDatatype standard="JSON1" builtin="true" base="string"/>
+  <fixr:mappedDatatype standard="JSON2" builtin="true" base="string"/>
+  <fixr:mappedDatatype standard="SBE" builtin="true" base="char"/>
+</fixr:datatype>
+
+<fixr:datatype name="int">
+  <fixr:mappedDatatype standard="FIXML" builtin="true" base="xs:integer"/>
+  <fixr:mappedDatatype standard="JSON1" builtin="true" base="integer"/>
+  <fixr:mappedDatatype standard="JSON2" builtin="true" base="integer"/>
+  <fixr:mappedDatatype standard="SBE" builtin="true" base="uint8"/>
+</fixr:datatype>
+
+<fixr:field id="1" name="Account" type="String" abbrName="Acct" implMaxLength="30"/>
+<fixr:field id="452" name="PartyRole" type="PartyRoleCodeSet" abbrName="R"/>
+
+<fixr:codeSet type="int" id="452" name="PartyRoleCodeSet">
+  <fixr:code value="1" id="165001" name="ExecutingFirm"/>
+	<fixr:code value="2" id="165002" name="BrokerOfCredit"/>
+	<fixr:code value="3" id="165003" name="ClientID"/>
 </fixr:codeSet>
 ```
 
@@ -2550,25 +2616,36 @@ Definitions in the FIXML schema generated from Orchestra:
     <xs:restriction base="xs:string"/>
 </xs:simpleType>
 
-<xs:simpleType name="SettlInstSource_enum_t">
+<xs:simpleType name="PartyRole_enum_t">
     <xs:appinfo>
-        <fm:Xref Protocol="FIX" name="SettlInstSource" ComponentType="Field" Tag="165" Type="char" AbbrName="InstSrc"/>
+        <fm:Xref Protocol="FIX" name="PartyRole" ComponentType="Field" Tag="452" Type="int" AbbrName="R"/>
     </xs:appinfo>
-    <xs:restriction base="char">
-        <xs:enumeration value="1"/>
-        <xs:enumeration value="2"/>
-        <xs:enumeration value="3"/>
+    <xs:restriction base="xs:integer">
+       <xs:enumeration value="1"/>
+       <xs:enumeration value="2"/>
+       <xs:enumeration value="3"/>
     </xs:restriction>
 </xs:simpleType>
 ```
 
-Definitions in a JSON schema generated from Orchestra:
+Definitions in a general JSON schema (JSON1) generated from Orchestra:
+
+```json
+{
+  "properties": {
+    "Account": {"type": "string", "maxLength": 30},
+    "PartyRole": {"type": "string", "enum": ["ExecutingFirm", "BrokerOfCredit", "ClientID"]}
+  }
+}
+```
+
+Definitions in the JSON schema for ISO 20022 (JSON2) generated from Orchestra:
 
 ```json
 {
   "properties": {
     "Account": {"type": "string"},
-    "SettlInstSource": {"type": "string", "enum": ["BrokerCredit", "Institution", "Investor"]}
+    "PartyRole": {"type": "integer", "enum": [1, 2, 3]}
   }
 }
 ```
@@ -2578,15 +2655,15 @@ Definitions in an SBE schema generated from Orchestra:
 ```xml
 <type name="String30" length="30" primitiveType="char" semanticType="String"/>
 
-<enum name="SettlInstSourceCodeSet" encodingType="char">
-  <validValue name="BrokerCredit">1</validValue>
-  <validValue name="Institution">2</validValue>
-  <validValue name="Investor">3</validValue>
+<enum name="PartyRoleCodeSet" encodingType="uint8">
+  <validValue name="ExecutingFirm">1</validValue>
+  <validValue name="BrokerOfCredit">2</validValue>
+  <validValue name="ClientID">3</validValue>
 </enum>
 
-<message name="MyMessage" id="">
+<message name="MyMessage" id="1">
   <field name="Account" id="1" type="String30" presence="required"/>
-  <field name="SettlInstSource" id="165" type="SettlInstSourceCodeSet"/>
+  <field name="PartyRole" id="452" type="PartyRoleCodeSet"/>
   ...
 </message>
 ```
@@ -2597,11 +2674,13 @@ This example shows how to define explicit null values for a specific datatype. T
 
 ```xml
 <fixr:datatype name="UnsignedInteger32">
+  <!-- Note that builtin datatype in SBE has lowercase "i"-->
 	<fixr:mappedDatatype standard="SBE" builtin="true" base="uint32">
     <fixr:encoding>
       <orchEncoding:nullValue>4294967295</orchEncoding:nullValue>
     </fixr:encoding>
   </fixr:mappedDatatype>
+  <!-- Note that builtin datatype in FAST has uppercase "I"-->
   <fixr:mappedDatatype standard="FAST" builtin="true" base="uInt32">
     <fixr:encoding>
       <orchEncoding:nullValue>0</orchEncoding:nullValue>
@@ -2610,10 +2689,60 @@ This example shows how to define explicit null values for a specific datatype. T
 </fixr:datatype>
 ```
 
-Note that `orchEncoding` is the name of an external namespace in the example above. The attribute `nullValue` is not part of the Orchestra standard. There must be an external schema that defines the attribute `nullValue` and its XML type.
+Note that `orchEncoding` is the name of an external namespace in the example above. The element `nullValue` is not part of the Orchestra standard. There must be an external schema that defines the element `nullValue` and its XML type.
 
 ```xml
 <xs:element name="nullValue" type="xs:integer"/>
+```
+
+## Example of encoding information for a code set{#codeSet-example}
+
+This example shows how general encoding information (see example [above](#general-encoding-information)) for code values can be overriden at the level of an individual code set. The example is for ISO 20022:2026 JSON encoding and only for illustration purposes.
+
+```xml
+<fixr:codeSet type="String" id="1" name="SecurityStatus1Code">
+  <fixr:code id="1" name="Active" value="ACTV"/>
+  <fixr:code id="2" name="Inactive" value="INAC"/>
+  ...
+  <fixr:encodings>
+    <fixr:encoding standard="JSON2">
+      <!-- General setting is to use the value -->
+      <orchEncoding:codeValue>name</orchEncoding:codeValue>
+    </fixr:encoding>
+  </fixr:encodings>
+</fixr:codeSet>
+```
+
+## Example of encoding information for a field{#field-example}
+
+This example shows how to identify fields of the FIX Protocol that are not required for FIXML encoding.
+
+```xml
+<fixr:field type="NumInGroup" id="453" name="NoPartyIDs">
+  <fixr:encodings>
+      <fixr:encoding standard="FIXML">
+        <orchFixml:notReqXML>true</orchFixml:notReqXML>
+      </fixr:encoding>
+  </fixr:encodings>
+</fixr:field>
+```
+
+Here is a snippet from an external schema specifically for FIXML that defines this element.
+
+```xml
+<xs:element name="notReqXML" type="xs:boolean"/>
+```
+
+Note that this may also be defined in general for all fields with datatype `NumInGroup` as follows.
+
+```xml
+<fixr:datatype name="NumInGroup" baseType="int">
+	<fixr:mappedDatatype standard="FIXML">
+      <fixr:encoding>
+        <orchFixml:notReqXML>true</orchFixml:notReqXML>
+      </fixr:encoding>
+  </fixr:mappedDatatype>
+</fixr:datatype>
 ```
 
 ## Example of encoding information for a component{#component-example}
@@ -2635,7 +2764,7 @@ This example uses the FIX component "Instrument" to show how to define the compo
 </fixr:component>
 ```
 
-Here is a snippet from an external schema specifically for FIXML that defines this attribute.
+Here is a snippet from an external schema specifically for FIXML that defines this element.
 
 ```xml
 <xs:element name="componentType">
@@ -2686,7 +2815,7 @@ This example uses the FIX repeating group "Parties" to show how to define the fi
 </fixr:group>
 ```
 
-Here is a snippet from an external schema that defines this attribute. This is not specific to FIX TagValue and can be defined in a general external schema, avoiding the need for a schema specific to FIX TagValue. Using encoding information for cardinality fields instead of an explicit field provides a cleaner logical design, especially when some of the encodings used do not require such an element.
+Here is a snippet from an external schema that defines this element. This is not specific to FIX TagValue and can be defined in a general external schema, avoiding the need for a schema specific to FIX TagValue. Using encoding information for cardinality fields instead of an explicit field provides a cleaner logical design, especially when some of the encodings used do not require such an element.
 
 ```xml
 <xs:element name="numInGroup">
@@ -2741,7 +2870,7 @@ The example below assumes OrderID(37) to be limited to 10 characters and ClOrdID
 </fixr:message>
 ```
 
-Here is a snippet from an external schema that defines the two attributes used above.
+Here is a snippet from an external schema that defines the two elements used above.
 
 ```xml
 <xs:element name="blockLength" type="xs:nonNegativeInteger"/>
@@ -2767,6 +2896,56 @@ The information can then be used to create the following in an SBE schema. In th
   </group>
 </message>
 ```
+
+## Example of encoding information for a category{#category-example}
+
+This example uses the FIX category "SingleGeneralOrderHandling" to show how FIXML can use encoding information for schema generation.
+
+```xml
+<fixr:category name="SingleGeneralOrderHandling">
+  <fixr:encodings>
+      <fixr:encoding standard="FIXML">
+        <orchFixml:FIXMLFileName>order</orchFixml:FIXMLFileName>
+      </fixr:encoding>
+  </fixr:encodings>
+</fixr:category>
+```
+
+Here is a snippet from an external schema specifically for FIXML that defines this element and possible values. It includes values that are applicable to sections, see example [below](#section-example).
+
+```xml
+<xs:element name="FIXMLFileName">
+  <xs:simpleType>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="session"/>  <!-- Both a section and a category -->
+      <xs:enumeration value="pretrade"/>       	<!-- Section -->
+      <xs:enumeration value="trade"/>          	<!-- Section -->
+      <xs:enumeration value="posttrade"/>       <!-- Section -->
+      <xs:enumeration value="infrastructure"/> 	<!-- Section -->
+      <xs:enumeration value="indications"/>    	<!-- Category -->
+      <xs:enumeration value="order"/>	      	  <!-- Category -->
+      <xs:enumeration value="newsevents"/>     	<!-- Category -->
+	    ...
+    </xs:restriction>
+  </xs:simpleType>
+</xs:element>
+```
+
+## Example of encoding information for a section{#section-example}
+
+This example uses the FIX section "PreTrade" to show how FIXML can use encoding information for schema generation.
+
+```xml
+<fixr:section name="PreTrade">
+  <fixr:encodings>
+      <fixr:encoding standard="FIXML">
+        <orchFixml:FIXMLFileName>pretrade</orchFixml:FIXMLFileName>
+      </fixr:encoding>
+  </fixr:encodings>
+</fixr:section>
+```
+
+The same element `<FIXMLFileName>` is used for schema file names for sections, see the example [above](#category-example).
 
 ## Compliance
 
