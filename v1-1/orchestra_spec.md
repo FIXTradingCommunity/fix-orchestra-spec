@@ -45,7 +45,7 @@ nor does it obsolete existing FIX engines or tools.
 The features of Orchestra are intended to be generic and capable of
 covering both FIX and non-FIX messaging protocols. One of the
 foundational features to support non-FIX protocols is the ability to
-describe any set of datatypes, not just FIX tag=value datatypes
+describe any set of datatypes, not just FIX TagValue datatypes
 (see section [Datatypes](#datatypes)).
 
 ## Design principles
@@ -98,7 +98,7 @@ platforms.
 
 **Release** – incremental extension of a version of an interface application, e.g. a FIX extension Pack (EP).
 
-**Scenario** — a use case of a message, component, field, code set or datatype.
+**Scenario** — a use case of a message, component, field or code set.
 
 **Semantic** — pertaining to the meaning of a message element, regardless
 of its representation.
@@ -199,22 +199,21 @@ The repository metamodel is a conceptual view of message structures.
 
 ### Message structure abstractions
 
-**Field**–carries a specific business meaning (semantics) as described in FIX specifications or other protocol. A pointer to a field is a **fieldRef**. The data domain of a field is either a datatype or a code set.
+**Field** – carries a specific business meaning (semantics) as described in FIX specifications or other protocol. A pointer to a field is a **fieldRef**. The data domain of a field is either a datatype or a code set.
 
-**Datatype**–the value space of a class of fields. For example, FIX tag=value encoding has about 20
-datatypes.
+**Datatype** – the value space of a class of fields. For example, the FIX Protocol has about 20 datatypes.
 
-**Code set**–a set of valid values of a field. They must all be of the
+**Code set** – a set of valid values of a field. They must all be of the
 same datatype.
 
-**Component**–a sequence of fields and nested components and/or groups. A
+**Component** – a sequence of fields and nested components and/or groups. A
 component is designed to be specified once in detail but reused in
 multiple message types by reference. A pointer to a component is a **componentRef**.
 
-**Group, or repeating group**–an *array of* components to be sent on the
+**Group, or repeating group** – an *array of* components to be sent on the
 wire. A pointer to a group is a **groupRef**.
 
-**Message**–a unit of information sent on the wire between
+**Message** – a unit of information sent on the wire between
 counterparties. A message is composed of components, groups, and fields. A
 pointer to a message is a **messageRef**.
 
@@ -291,16 +290,16 @@ protocol. The name should remain stable over minor revisions. The
 `version` attribute should, on the other hand, be unique for any
 substantive change to the protocol.
 
-This snippet shows that element with required namespaces and attributes:
+For example, this snippet shows that element with required namespaces and attributes for an Orchestra file representing FIX Latest as of Extension Pack 300:
 
 ```xml
-<fixr:repository name="FIX.Latest" version="FIX.Latest_EP284"
+<fixr:repository name="FIX.Latest" version="FIX.Latest_EP300"
 xmlns="http://purl.org/dc/elements/1.1/"
-xmlns:fixr="http://fixprotocol.io/2023/orchestra/repository"
+xmlns:fixr="http://fixprotocol.io/2026/orchestra/repository"
 xmlns:dc="http://purl.org/dc/terms/"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xmlns:xi="http://www.w3.org/2001/XInclude"
-xsi:schemaLocation="https://fixprotocol.io/2023/orchestra/repository repository.xsd">
+xsi:schemaLocation="https://fixprotocol.io/2026/orchestra/repository repository.xsd">
 ```
 
 #### Repository attributes
@@ -320,6 +319,40 @@ By default, the language for conditional expressions is the Score DSL
 (See section [Score DSL](#score-dsl)). However, this may be overridden by setting a value
 to the attribute `expressionLanguage`.
 
+### Top-level elements
+
+The root element contains a number of child elements, a.k.a. top-level elements. With the exception of the `<metadata>` element, none of these elements are required. The element itself is optional and can contain zero or more child elements, i.e. it can be empty to support the incremental generation of an Orchestra file without violating the schema.
+
+**metadata** – Element containing the provenance of the Orchestra repository file (see [here](#dcterms)).
+
+**categories** – Element defining business areas for documentation generation (see [here](#categories)).
+
+**sections** – Element defining higher level business processes (see [here](#sections)).
+
+**concepts** – Element defining semantic concepts (see [here](#concepts)).
+
+**actors** – Element defining entities and state machines (see [here](#actors)).
+
+**scenarios** – Element defining scenarios for various element types (see [here](#scenarios)).
+
+**messages** – Element defining messages and their workflows (see [here](#messages)).
+
+**groups** – Element defining repeating groups (see [here](#groups)).
+
+**components** – Element defining components (see [here](#components)).
+
+**fields** – Element defining individual data elements (see [here](#fields)).
+
+**code sets** – Element defining value sets for field types (see [here](#codesets)).
+
+**datatypes** – Element defining simple datatypes for field values (see [here](#datatypes)).
+
+**encoding standards** – Element containing general of defualt encoding information (see [here](#encoding-information)).
+
+**annotations** – Element with documentation for the repository as a whole or application specific information.
+
+Annotations are available at every level of the repository, down to an individual code of a code set, by means of `<documentation>` elements (see [here](#documentation) for details).
+
 ### Support for XInclude
 
 Many of the elements in the schema (actors, concepts, sections, categories, messages, groups, components, fields, code sets, datatypes, scenarios) support XML Inclusions (XInclude). This allows assembly of an Orchestra XML infoset from multiple, reusable XML files. For example, several service offerings may share datatypes, fields, and even common message types.
@@ -330,15 +363,53 @@ For example, `<fixr:datatypes>` element can be replaced with the path to the XML
 
 See the separate document "repository.html" in [GitHub](https://github.com/FIXTradingCommunity/fix-orchestra-spec/tree/master/v1-1/informative) for a detailed technical reference for the Repository XML schema. The remainder of this section serves as an overview and explains motivations for the design.
 
-### Protocol relationship
+### Protocol interoperability
 
-The schema was primarily designed to describe metadata about the FIX Protocol. However, it is generic enough to work with other common financial industry protocols, especially when FIX is used in combination with other protocols, or a translation must be performed between protocols.
+The schema was initially designed to describe metadata about the FIX Protocol. However, it is generic and equally supports other common financial industry protocols such as ISO 20022 or FpML. This is especially important in multi-protocol environments, i.e. for protocol interoperability to support transformation between protocols on a logical as well as physical level.
 
-Usage should be supported for all phases of financial industry workflows, including pre-trade, trade, and post-trade flows.
+Usage is supported for all phases of financial industry workflows, including pre-trade, trade, and post-trade flows.
+
+### Encoding information{#encoding-information}
+
+Orchestra is not limited to metadata regarding the logical message model of an electronic interface. It can be used to capture encoding information required to generate encoding-specific schemas. For example, the FIXML, Simple Binary Encoding (SBE), and ISO 20022 XML have their own schema for parsing of physical messages. They can all be generated from The encoding information can also be used for encodings that do not use a separate schema, e.g. FIX TagValue. In such cases, the Orchestra file itself can be used to validate or generate messages.
+
+Orchestra defines a generic framework to support multiple encodings in a single Orchestra file together with the logical model. The logical definitions of messages, components, fields, etc. are encoding-agnostic, but each of the different element types may need information related to one or more encodings.
+
+The framework supports the attachment of optional elements to the definitions of various element types. These will be shown in detail in the respective sections. The elements and/or attributes used as encoding information is intentionally not part of the Orchestra standard itself. Otherwise, any new encoding or enhancement of an existing one would require a new version of the Orchestra standard.
+
+Encoding information may not be specific to an element type, e.g. the byte order of a binary encoding (a.k.a. endianness) can be big-endian or little-endian and pertains to all numerical values in a message. Another use case for encoding information that is not attached to a specific element type is the definition of defaults. For example, null values in fixed length binary encodings require reserving a specific value to represent the null value. This could be the lowest or highest value in the range permitted by the datatype.
+
+The `<repository>` element has a child element `<encodingStandards>` that has zero or more child elements `<encodingStandard>`. Each of the latter must have a unique attribute `name` but Orchestra does not define a list of such names. For example, FIXML and ISO 20022 XML are both XML encodings but the rules to generate the respective XML schemas may be quite different. The second attribute `displayName` can be used to define an alternate name for display purposes.
+
+The element `<encodingStandard>` has only one child element `<encoding>` for the actual encoding information and one child element `annotation` for documentation. The `<encoding>` element may contain elements and values from external namespaces. These namespaces must be defined as attributes of the `<repository>` element. When using external namespaces, these must be provided together with the Orchestra file to allow its complete validation.
+
+General encoding information for the entire repository can be provided as follows. The element `<encoding>` must not have the attribute `standard` as the encoding is already identified by the parent element `encodingStandard`.
+
+```xml
+<fixr:repository name="MyRepository" version="1.0">
+  ...
+  <fixr:encodingStandards>
+      <fixr:encodingStandard name="Standard1">
+          <fixr:encoding>
+              ...
+          </fixr:encoding>
+      </fixr:encodingStandard>
+      <fixr:encodingStandard name="Standard2">
+          <fixr:encoding>
+              ...
+          </fixr:encoding>
+      </fixr:encodingStandard>
+      ...
+  </fixr:encodingStandards>
+  ...
+</fixr:repository>
+```
+
+See Section [Appendix](#general-encoding-example) for an example of general encoding information.
 
 ## Content ownership and history
 
-### Provenance
+### Provenance{#dcterms}
 The `<metadata>` element is used to identify a particular Orchestra file
 and the creator of that file. It can contain any of the elements defined
 by the Dublin Core XML schema. Recommended elements include title,
@@ -470,13 +541,53 @@ Since Orchestra supports both FIX and non-FIX protocols, naming rules are relaxe
 
 The XML schema retains features that have long been used to generate FIX documentation and other outputs. These elements are optional but may be used to group messages for non-FIX protocols on two levels, i.e. sections containing categories.
 
-### Categories
+### Categories{#categories}
 
-The `<categories>` element tree is used to associate elements to business areas for documentation generation. For example, FIX defines categories such as "SingleGeneralOrderHandling", "MarketData", and "SecuritiesReferenceData". FIX also uses category information (attributes `FIXMLFileName`, `componentType`, `includeFile`) to organize FIXML schema files. The `<categories>` element has a number of attributes, including the `entityAttribGrp` attribute group that supports pedigree attributes (see [Pedigree](#pedigree) for details). Categories must be grouped by sections and hence have a `name` and a `section` attribute.
+The `<categories>` element tree is used to associate elements to business areas for documentation generation. For example, FIX defines categories such as "SingleGeneralOrderHandling", "MarketData", and "SecuritiesReferenceData". The `<categories>` element has a number of attributes, including the `entityAttribGrp` attribute group that supports pedigree attributes (see [Pedigree](#pedigree) for details). Categories must be grouped by sections and hence have a `name` and a `section` attribute.
 
-### Sections
+#### Encoding information for categories
 
-The `<sections>` element tree names higher level business processes and requires the `name` attribute. Typically, a section contains multiple categories. Traditionally, they have been organized around pre-trade, trade, and post-trade information flows. A single message can only belong to a single section and category. The `displayOrder`attribute may be used to define the ordering of sections in the documentation. FIX uses the section attribute `FIXMLFileName` to organize FIXML schema files.
+Encodings such as FIXML use the Orchestra element `<category>` when generating a schema by grouping elements from the same category in a single schema file. Encoding information can be added as follows to each category, e.g. the rules for the generation of file names for the schema. The element `<encoding>` must have the attribute `standard` to identify the encoding.
+
+```xml
+<fixr:category name="MyCategory">
+  <fixr:encodings>
+      <fixr:encoding standard="Standard1">
+          ...
+      </fixr:encoding>
+      <fixr:encoding standard="Standard2">
+          ...
+      </fixr:encoding>
+      ...
+  </fixr:encodings>
+</fixr:category>
+```
+
+See the [Appendix](#category-example) for an example of a category with encoding information for FIXML.
+
+### Sections{#sections}
+
+The `<sections>` element tree names higher level business processes and requires the `name` attribute. Typically, a section contains multiple categories. Traditionally, they have been organized around pre-trade, trade, and post-trade information flows. A single message can only belong to a single section and category. The `displayOrder` attribute may be used to define the ordering of sections in the documentation. The `<section>` element has the attribute group `entityAttribGrp` that supports pedigree attributes (see [Pedigree](#pedigree) for details).
+
+#### Encoding information for sections
+
+Encodings such as FIXML use the Orchestra element `<section>` when generating a schema by grouping elements from multiple categories in a single schema file. Encoding information can be added as follows to each section, e.g. the rules for the generation of file names for the schema. The element `<encoding>` must have the attribute `standard` to identify the encoding.
+
+```xml
+<fixr:section name="MySection">
+  <fixr:encodings>
+      <fixr:encoding standard="Standard1">
+          ...
+      </fixr:encoding>
+      <fixr:encoding standard="Standard2">
+          ...
+      </fixr:encoding>
+      ...
+  </fixr:encodings>
+</fixr:section>
+```
+
+See the [Appendix](#section-example) for an example of a section with encoding information for FIXML.
 
 ### Metadata about any element
 
@@ -484,7 +595,7 @@ The schema provides features to provide metadata about almost any element. All s
 
 Introductory documentation can be provided to the element trees `<categories>`, `<sections>`, `<messages>`, `<groups>`, `<components>`, `<fields>`, `<codeSets>`, `<datatypes>`, `<scenarios>` to describe their child elements in their entirety.
 
-#### Documentation
+#### Documentation{documentation}
 
 A `<documentation>` element can carry any description of its ancestor
 element. The content (text node) may be of any format, such as XHTML,
@@ -561,13 +672,18 @@ numeric `id` attribute or both. These values must be unique within their
 respective element types within a given Orchestra file. To avoid
 collisions, names and IDs of deprecated elements should never be reused.
 
-## Scenarios
+## Scenarios{#scenarios}
 
-A scenario may be used to distinguish multiple use cases of a single message, group, component, field, code set or datatype. The respective element may be defined more than once in the XML schema by adding `scenarioId` and (optionally) `scenario` attributes in addition to the `id` and (optionally) `name` attributes of the element. Scenarios for messages, groups, components or code sets may reference another scenario of the same element by adding `scenarioRefId` and (optionally) `scenarioRef` attributes when it is restricted by the elements in the referenced message, group, component or code set. The referencing scenario must not contain any elements or codes that are not present in the referenced scenario. In the case of messages, this is equivalent to the ISO 20022 concept of variants (see [https://www.iso20022.org/catalogue-messages/additional-content-messages/variants](https://www.iso20022.org/catalogue-messages/additional-content-messages/variants) for details). It may contain the same elements, e.g. when one or more elements themselves use a different scenario. Scenarios in the context of the different elements are explained in more detail within the respective sections below. The order of elements should be identical to the referenced scenario. The order must be identical when using a presentation protocol with related rules, e.g. repeating groups in FIX tag=value encoding have a defined order to enable correct message parsing.
+A scenario may be used to distinguish multiple use cases of a single message, group, component, field or code set. The respective element may be defined more than once in the XML schema by adding the `scenario` attribute in addition to the mandatory `id` and `name` attributes of the element. Scenarios in the context of the different elements are explained in more detail within the respective sections below.
 
-Each scenario is described by a `<scenario>` element, a child of `<scenarios>`.
+Each scenario is defined by a `<scenario>` element, a child of `<scenarios>`, with a name that is unique across all scenarios and using `<annotation>` elements for its description. The definition of a scenario is optional, i.e. the `scenario` attribute of an element may contain the name of a scenario that is not defined. However, it is recommended to either define all scenarios or none at all. Defining scenarios allows validation of names used for the `scenario` attribute of an element. The default name of `scenario` is "base", so the attribute need not be supplied if there is only one form of a given element.
 
-## Datatypes
+The `<scenario>` element has the attribute group `entityAttribGrp` that supports pedigree attributes (see [Pedigree](#pedigree) for details).
+
+### Scenario Relationships
+Scenarios for messages, groups, components or code sets may reference another scenario of the same element by adding the `scenarioRef` attribute when it is restricted by the elements in the referenced message, group, component or code set. The referencing scenario must not contain any elements or codes that are not present in the referenced scenario. In the case of messages, this is equivalent to the ISO 20022 concept of variants (see [https://www.iso20022.org/catalogue-messages/additional-content-messages/variants](https://www.iso20022.org/catalogue-messages/additional-content-messages/variants) for details). It may contain the same elements, e.g. when one or more elements themselves use a different scenario. The order of elements should be identical to the referenced scenario. The order must be identical when using a presentation protocol with related rules, e.g. repeating groups in FIX TagValue encoding have a defined order to enable correct message parsing.
+
+## Datatypes{#datatypes}
 
 A datatype is a context-free value space. That is, a domain of possible
 values relatively free of business semantics. For a specific message
@@ -577,11 +693,12 @@ syntax of that encoding, also known as lexical space.
 Some fields are specified as a set of valid values. This is known as
 *code set*, and it can be thought of as a specialized datatype (see the [Code sets](#code-sets) section below).
 
-Each datatype is described by a `<datatype>` element, a child of `<datatypes>`.
+Each datatype is described by a `<datatype>` element, a child of `<datatypes>`. The `<datatype>` element has the attribute group `entityAttribGrp` that supports pedigree attributes (see [Pedigree](#pedigree) for details).
+
 
 ### FIX datatypes
 
-The term "FIX datatype" is used to refer to a datatype in the context of the FIX tag=value encoding. FIX supports a number of encodings such as FIXML, SBE, GPB, and JSON. FIX fields are categorized into roughly 20 FIX datatypes. A datatype should be defined in terms of its value space, the range of its possible values, not in terms of its lexical space, its encoding format. In fact, a FIX datatype may be mapped to any number of wire formats (see the [datatype mappings](#datatype-mappings) section below).
+The term "FIX datatype" is used to refer to a datatype in the context of the FIX TagValue encoding. FIX supports a number of encodings such as FIXML, SBE, GPB, and JSON. FIX fields are categorized into roughly 20 FIX datatypes. A datatype should be defined in terms of its value space, the range of its possible values, not in terms of its lexical space, its encoding format. In fact, a FIX datatype may be mapped to any number of wire formats (see the [datatype mappings](#datatype-mappings) section below).
 
 A datatype may optionally inherit properties from a type specified by
 the `baseType` attribute. For example, FIX datatype "Qty", used by fields like
@@ -591,30 +708,11 @@ Generally, FIX datatypes for FIX protocols need to be defined only once and
 are copied from the baseline standard. However, the datatypes section
 may contain different definitions for non-FIX protocols.
 
-### Datatype scenarios
-
-Datatype definitions may optionally create different subsets of permitted values by means of the `scenario` and `scenarioId` attributes. In addition to the base datatype, for example integer, one may define different scenarios for 8-, 16-, 32-, or 64-bit and signed or unsigned integers. The `baseType` attribute is not needed when using datatype scenarios and may be deprecated in a future version of Orchestra.
-
-**Example:** An integer datatype with an additional scenario for sequence numbers.
-
-```xml
-<fixr:datatype name="int" scenario="base">
-	<fixr:mappedDatatype standard="XML" base="xs:integer"/>
-	<fixr:mappedDatatype standard="ISO11404" base="Integer"/>
-</fixr:datatype>
-
-<fixr:datatype name="int" scenario="SeqNum">
-	<fixr:mappedDatatype standard="XML" base="xs:positiveInteger"/>
-	<fixr:mappedDatatype standard="ISO11404" base="Ordinal"/>
-</fixr:datatype>
-```
-
 ### Datatype mappings
 
 A `<datatype>` element may contain `<mappedDatatype>` elements
 corresponding to any number of type systems. Type systems include XML,
-SBE, GPB, JSON, and ISO 11404, a generic type taxonomy. An XML schema
-mapping is obviously needed by FIXML.
+SBE, GPB, JSON, and ISO 11404, a generic type taxonomy.
 
 The `standard` attribute of `<mappedDatatype>` tells which type system the
 mapping is for. Its `base` attribute tells what the FIX datatype maps to
@@ -625,11 +723,30 @@ The `<mappedDatatype>` element allows any snippet of well-formed XML to
 be pasted in as a child element that is a meaningful specification to an
 encoding protocol.
 
+The `<mappedDatatype>` element may contain a single `<encoding>` element to provide encoding information related to the `standard` attribute. The element `<encoding>` must not have the attribute `standard` as the encoding is already identified by the parent element `mappedDatatype`.
+
+```xml
+<fixr:datatype name="MyDatatype">
+	<fixr:mappedDatatype standard="Standard1">
+    <fixr:encoding>
+      ...
+    </fixr:encoding>
+  </fixr:mappedDatatype>
+  <fixr:mappedDatatype standard="Standard2">
+    <fixr:encoding>
+      ...
+    </fixr:encoding>
+  </fixr:mappedDatatype>
+  ...
+</fixr:datatype>
+```
+See the [Appendix](#datatype-example) for an example of a datatype with encoding information for multiple encodings.
+
 The ISO/IEC 11404 General Purpose Datatypes standard contains a taxonomy
 of programming language-independent types and enumerates their
 characteristics. One of the benefits of following this standard is that
-it will be easier to map FIX datatypes to other message standards, such
-as ISO 20022 (SWIFT).
+it will be easier to map datatypes to other encoding standards, such
+as ISO 20022 XML.
 
 *The following paragraph is non-normative.*
 
@@ -645,39 +762,31 @@ The lower and upper bounds of a bounded datatype may be set with
 used to define the field length in the target encoding, e.g. to support
 mappings to fixed-length encodings such as SBE.
 
-**Example:** A datatype using a base type with mappings to XML schema and General-Purpose Datatypes.
+**Example:** A datatype using a base type with mappings to FIXML schema and General-Purpose Datatypes.
 
 ```xml
 <fixr:datatype name="SeqNum" baseType="int">
-	<fixr:mappedDatatype standard="XML" base="xs:positiveInteger"/>
+	<fixr:mappedDatatype standard="FIXML" base="xs:positiveInteger"/>
 	<fixr:mappedDatatype standard="ISO11404" base="Ordinal"/>
 </fixr:datatype>
 ```
 
-**Example:** A datatype scenario with a mapping to SBE.
+## Code sets{#codesets}
 
-```xml
-<fixr:datatype name="String" scenario="MIC">
-	<fixr:mappedDatatype standard="SBE" base="String" size="4"/>
-</fixr:datatype>
-```
-
-## Code sets
-
-A code set contains a finite collection of valid values of a data
-element. Each unique valid value is called a code. In the terminology of
+A code set contains a finite collection of values of a data
+element. Each unique value is called a code. In the terminology of
 ISO 11404, such a data element is called a "state". (This is
 distinguished from an enumeration, in which the order of values matters.
 In a state, each of the values must be unique, but order is not
 significant. Hence, the values collection is a set.)
 
 In FIX and other protocols, many fields may share a code set. For
-example, the SecurityIDSource(22) and UnderlyingSecurityIDSource(305) fields
-share the same valid values, or code set.
+example, the FIX fields SecurityIDSource(22) and UnderlyingSecurityIDSource(305)
+share the same values, or code set.
 
 A code set has an underlying datatype to tell its domain of possible
 values. Codes may legally be of any type listed in the `<datatypes>`
-section, but typically are int, char or String datatypes in FIX. In an
+section, but typically are simple datatypes, e.g. "int", "char" or "String" in FIX. In an
 Orchestra file, a code value is presented as a string, but it should be
 actually transmitted in the correct encoding for the datatype of the
 code set. For example, if the datatype of a code set was "int", value
@@ -686,11 +795,7 @@ as character "2" and then character "7".
 
 A `<codeSets>` element contains any number of `<codeSet>` child
 elements. The schema allows zero or more instances of `<codeSet>`
-elements, each with a unique `name` attribute.
-
-The names of code sets and datatypes share a common namespace and must
-be unique within a schema. This constraint is enforced by the XML
-schema.
+elements, each with a unique `name` and `id` attribute.
 
 ### Internal code sets
 
@@ -715,9 +820,9 @@ Codes may be documented with an `<annotation>` element tree.
 
 ```xml
 <fixr:codeSet type="char" id="165" name="SettlInstSourceCodeSet">
-	<fixr:code value="1" added="FIX.4.1" id="165001" name="BrokerCredit"/>
-	<fixr:code value="2" added="FIX.4.1" id="165002" name="Institution"/>
-	<fixr:code value="3" added="FIX.4.3" id="165003" name="Investor"/>
+	<fixr:code value="1" id="165001" name="BrokerCredit"/>
+	<fixr:code value="2" id="165002" name="Institution"/>
+	<fixr:code value="3" id="165003" name="Investor"/>
 </fixr:codeSet>
 ```
 
@@ -726,14 +831,11 @@ Codes may be documented with an `<annotation>` element tree.
 Code sets may have different supported codes in different scenarios. For
 example, outbound FIX ExecutionReport(35=8) messages may have a more enriched view
 of PartyRole(452) than is required on inbound FIX NewOrderSingle(35=D) messages. Therefore, a
-`<codeSet>` may be qualified by its `scenario` and/or `scenarioId` attribute. The default
-values of `scenario` and `scenarioId` are "base" and 1, respectively, so the attributes need not be supplied if
-there is only one form of a code set.
+`<codeSet>` may be qualified by its `scenario` attribute.
 
-A code set may reference another scenario of the same code set with the `scenarioRefId` and (optionally) `scenarioRef` attribute when it does not need to contain all of the codes of the referenced code set scenario. It may contain the same codes, e.g. when one or more codes require different annotations. The order of codes in the referencing scenario should be identical to the referenced scenario.
+A code set may reference another scenario of the same code set with the `scenarioRef` attribute when it does not need to contain all of the codes of the referenced code set scenario. It may contain the same codes, e.g. when one or more codes require different annotations. The order of codes in the referencing scenario should be identical to the referenced scenario.
 
-Uniqueness of code set scenarios is enforced by the XML schema, both as
-the combination of `name` + `scenario` as well as `id` + `scenarioId`.
+Uniqueness of code set scenarios is enforced by the XML schema as the combination of `name` or `id` and `scenario`.
 
 #### Code name validation
 
@@ -741,15 +843,9 @@ Since Orchestra supports both FIX and non-FIX protocols, rules for the validatio
 
 #### Union datatypes for code sets {#union-datatype}
 
-Code sets may have a second datatype to extend the list of values defined as codes with the underlying datatype given by the `type` attribute. Orchestra supports this by means of the `unionDataType` attribute of the `<codeSet>` element. The underlying datatype of a code set may be combined with the following union datatypes defined in the XML schema that also need to be defined as separate `<datatype>` elements in the XML file.
+Code sets may have a second datatype to extend the list of values defined as codes with the underlying datatype given by the `type` attribute. Orchestra supports this by means of the `unionDataType` attribute of the `<codeSet>` element. The underlying datatype of a code set may be combined with any other datatype. Both datatypes need to be defined as separate `<datatype>` elements in the XML file. It is not recommended to use string datatypes as second datatype of a field with a numerical datatype. Both datatypes should share the same value space.
 
-- Reserved100Plus: integer values of 100 and above,
-- Reserved1000Plus: integer values of 1000 and above
-- Reserved4000Plus: integer values of 4000 and above
-- Qty: decimal values, supporting unions of strings and explicit numeric values
-- Tenor: string values, supporting unions of explicit code sets with flexible patterns
-
-FIX uses the ReservedXXXPlus datatypes to support a range of user-defined values as a union with standard FIX values that have a reserved range below a certain threshold. The Qty datatype is used by FIX for backward compatibility to combine the legacy approach for IOI quantities (e.g. "S" for a small quantity) with explicit numeric values. FIX uses the Tenor datatype to express standard settlement types (e.g. 2=Next Day) together with FX standard tenors (e.g. "Dx" for x number of days).
+For example, FIX uses a "Reserved100Plus" datatype to support a range of user-defined numerical values in addition to the standard numerical values that have a reserved range below 100.
 
 ### External code sets
 
@@ -764,7 +860,32 @@ In the case of an external code set, `<code>` elements are not listed in the Orc
 http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=64758">
 ```
 
-## Fields
+### Encoding information for code sets
+
+Code sets can be encoded differently by using the attributes of the `<code>` element one way or another. For example, FIX Protocol uses the attribute `value` for TagValue encoding. Other encodings may prefer to use the attribute `name` if legibility of the wire format is an objective. Binary protocols such as SBE favor numeric values that are as short as possible, i.e. the attribute `id`. Wire formats across encodings may hence be quite different, but they all carry the same semantic.
+
+Encoding information for a code set can be provided as follows. The element `<encoding>` must have the attribute `standard` to identify the encoding.
+
+```xml
+<fixr:codeSet type="MyType" id="123" name="MyCodeSet">
+  <fixr:code id="12301" name="MyCode1" value="X"/>
+  <fixr:code id="12302" name="MyCode2" value="Y"/>
+  ...
+  <fixr:encodings>
+      <fixr:encoding standard="Standard1">
+          ...
+      </fixr:encoding>
+      <fixr:encoding standard="Standard2">
+          ...
+      </fixr:encoding>
+      ...
+  </fixr:encodings>
+</fixr:codeSet>
+```
+
+See the [Appendix](#codeSet-example) for an example of a code set with encoding information.
+
+## Fields{#fields}
 
 A field carries a specific business meaning (semantic) as described in
 FIX specifications or another protocol. In the schema, a `<field>` element
@@ -783,21 +904,9 @@ attribute may be used to categorize fields. There are several more
 optional attributes which are described in the message structure section
 below.
 
-### Field scenarios
-
-Fields may have different scenarios when any of the attributes need to differ, for example to vary annotations or to use different code set scenarios for different use cases. Scenarios also support different field lengths when using the `implLength` attribute. The default
-values of `scenario` and `scenarioId` are "base" and 1, respectively, so the attribute need not be supplied if there is only one form of a field.
-
-Uniqueness of field scenarios is enforced by the XML schema, both as the
-combination of `name` + `scenario` as well as `id` + `scenarioId`.
-
 ### Data domain of a field
 
 Every field must have a data domain of either a datatype name or more specifically, a collection of valid values specified by a code set reference. The domain of a field is specified in its `type` attribute in case of a datatype and in its `codeSet` attribute in case of a code set. The attribute `type` refers to a `<datatype>` element and the `codeSet` attribute refers to a `<codeSet>` element by the respective `name` attribute. In the case of a `<codeSet>`, there is a level of indirection to its `codeSet` attribute to arrive at a `<datatype>`.
-
-Since `<codeSet>` is also qualified by scenario, a field will link to
-the code set of the same scenario. By default, "base" scenario field
-links to "base" code set.
 
 **Example:** A field with a code set and another with a datatype domain.
 
@@ -810,9 +919,38 @@ links to "base" code set.
 
 Fields may have a second datatype to extend the values supported by the `type` or `codeSet` attribute. Orchestra supports this by means of the `unionDataType` attribute of the `<field>` element. The available union datatypes are defined by Orchestra, see [Union datatypes for code sets](#union-datatype) for details. It is recommended to use the `unionDataType` attribute of the `<codeSet>` element rather than the one of the `<field>` element. The latter is available for backward compatibility.
 
+### Field and field reference scenarios
+
+Fields may have different scenarios when one or more of the attributes need to differ, for example to vary annotations, field lengths or to use different code set scenarios for different use cases. The datatype or code set of a field must be identical across all of its scenarios. However, it is not recommended to use multiple scenarios for a field as the differentiation may also be done on the level of a field reference, e.g. in a message or component, by means of the attribute groups `fieldAttribGrp` and `entityAttribGrp`. Avoiding field scenarios in favor of field reference scenarios simplifies the logical design. Field scenarios are available for backward compatibility.
+
+Uniqueness of field scenarios is enforced by the XML schema as the combination of `name` or `id` and `scenario`.
+
+Since `<codeSet>` is also qualified by scenario, a field will link to the code set of the same scenario. By default, "base" scenario field links to "base" code set. The code set scenario of a field may be overridden by a different scenario in a field reference (see [Overridable and fixed field attributes](#override-field-attributes)). It is not required to have multiple field scenarios when there are multiple code set scenarios. It is recommended to only define a "base" scenario of a field with a complete code set and to use the `scenario` attribute in the field references to limit the values to a subset in the given usage context. Using the `scenario` attribute in a field reference means that the data domain of the field is a code set and that there must be a code set with the same scenario name.
+
+**Example:** Multiple code set scenarios with a single field definition.
+
+```xml
+<!-- Base scenario contains values for all asset classes -->
+<fixr:codeSet id="167" name="SecurityTypeCodeSet" .../>
+<!-- Values for equities -->
+<fixr:codeSet id="167" name="SecurityTypeCodeSet" scenario="Equity" .../>
+<!-- Values for bonds -->
+<fixr:codeSet id="167" name="SecurityTypeCodeSet" scenario="Bond" .../>
+
+<fixr:field id="167" name="SecurityType" codeSet="SecurityTypeCodeSet"/>
+
+<fixr:component id="1003" name="Instrument" scenario="Equity">
+  <fixr:fieldRef id="167" name="SecurityType" scenario="Equity"/>
+</fixr:message>
+
+<fixr:component id="1003" name="Instrument" scenario="Bond">
+  <fixr:fieldRef id="167" name="SecurityType" scenario="Bond"/>
+</fixr:message>
+```
+
 ### Data fields
 
-A field of datatype "data" is variable length. In FIX tag=value encoding,
+A field of datatype "data" is variable length. In FIX TagValue encoding,
 the length of such a field is prefixed by a separate field of type
 Length. In other encodings, the length is implicit in the presentation
 protocol. Where needed explicitly for data fields, the associated length field is referenced by the
@@ -827,9 +965,9 @@ protocol. Where needed explicitly for data fields, the associated length field i
 
 ### Encoded fields
 
-A field may have an encoded version represented by two other fields. A `nonEncodedFieldId` attribute is used to link the encoded version of a field to the non-encoded version. Additionally, a `lengthId` attribute is used for encoded fields to link it to the field that contains the length of the encoded field.
+A field may have an encoded version represented by two other fields. A `nonEncodedFieldId` attribute is used to link the encoded version of a field to the non-encoded version. Additionally, a `lengthId` attribute is used for encoded fields to link it to the field that contains the length of the encoded field. The FIX Protocol uses the term "Encoding" as prefix of the respective field names, but this is only a convention and not part of the Orchestra standard.
 
-**Example:** A data field and its corresponding length field.
+**Example:** An encoded field and its corresponding length field.
 
 ```xml
 <fixr:field id="106" name="Issuer" type="Length"/>
@@ -862,14 +1000,14 @@ abbrName="ID" discriminatorId="22">
 </fixr:field>
 ```
 
-### Overridable and fixed field attributes
+### Overridable and fixed field attributes {#override-field-attributes}
 
 Some attributes of a field, such as minimum and maximum values and
 length, may be overridden for a particular usage in the message
 structure that contains a field reference. However, the key identifiers
-id and name as well as type attribute may not be overridden. It is
+`id` and `name` as well as `type` and `codeSet` attribute may not be overridden. It is
 possible to override which codes of a code set are supported in a
-particular scenario, however. See section [Message structures](#message-structures) below.
+particular scenario, however.
 
 ### Field value uniqueness
 
@@ -924,9 +1062,29 @@ A combination of fields defines scope of uniqueness.
 <fixr:fieldRef>
 ```
 
-## Message structures
+### Encoding information for fields
 
-### Components
+Fields can be encoded differently by using the attributes of the `<field>` element one way or another. For example, FIX Protocol uses the attribute `id` for TagValue encoding. Other encodings may prefer to use the attribute `name` if legibility of the wire format is an objective. Wire formats across encodings may hence be quite different, but they all carry the same semantic.
+
+Encoding information for a field can be provided as follows. The element `<encoding>` must have the attribute `standard` to identify the encoding.
+
+```xml
+<fixr:field type="MyType" id="12345" name="MyField">
+  <fixr:encodings>
+      <fixr:encoding standard="Standard1">
+          ...
+      </fixr:encoding>
+      <fixr:encoding standard="Standard2">
+          ...
+      </fixr:encoding>
+      ...
+  </fixr:encodings>
+</fixr:field>
+```
+
+See the [Appendix](#field-example) for an example of a field with encoding information for multiple encodings.
+
+## Components{#components}
 
 A component is a sequence of fields and nested components or [repeating groups](#repeating-groups).
 Individual `<component>` elements are contained by the `<components>` parent element.
@@ -934,7 +1092,7 @@ Individual `<component>` elements are contained by the `<components>` parent ele
 Like the messages that contain them, components and groups may be
 overloaded for slightly different layouts for different scenarios.
 
-#### Component identifiers and scenarios
+### Component identifiers and scenarios
 
 Like a field, a component has a numeric `id` attribute and a
 string `name` attribute. The schema enforces uniqueness of the `id` and `name`
@@ -943,12 +1101,9 @@ attributes among components.
 Like a field, a component can be annotated for documentation
 and carries pedigree attributes of attribute group `entityAttribGrp`.
 
-The `scenario` and `scenarioId` attributes of a component identify a use case; multiple
-components may have the same name, but the combination of name and
-scenario must be unique. Scenario name and ID have default values of "base" and 1, respectively, so if a
-component only has one variation, there is no need to qualify it.
+The optional `scenario` attribute of a component identifies a use case and its absence represents a scenario called "base". Multiple components may have the same name, but the combination of `name` or `id` and `scenario` must be unique.
 
-A component may reference another scenario of the same component with the `scenarioRefId` and (optionally) `scenarioRef` attribute when it does not need to contain all of the elements of the referenced component scenario. It may contain the same elements, e.g. when one or more elements use a different scenario. The order of elements in the referencing scenario should be identical to the referenced scenario.
+A component may reference another scenario of the same component with the `scenarioRef` attribute when it does not need to contain all of the elements of the referenced component scenario. It may contain the same elements, e.g. when one or more elements use a different scenario. The order of elements in the referencing scenario should be identical to the referenced scenario.
 
 A component is designed to be specified once in detail but
 reused in multiple message types by reference. An example of a FIX component
@@ -978,14 +1133,14 @@ order on the wire.
 </fixr:component>
 ```
 
-#### Component members
+### Component members
 
 A component may contain reference elements of three types in any
 combination. A component must contain at least one member.
 
   - A `<fieldRef>` element represents a field in a block or repeating
     group. It is a reference to a `<field>` element within the
-    `<fields>` container by its `id` and `scenarioId` attributes.
+    `<fields>` container by its `id` and `scenario` attributes.
     A `name` attribute for display purposes may optionally be provided.
     A `baseFieldId` attribute is used to link the referenced field to another
     field reference inside the same component, e.g. to link an encoded version
@@ -998,11 +1153,11 @@ combination. A component must contain at least one member.
     no limit in the schema to the level of nesting, although a
     presentation protocol may have rules about it, and there may be
     practical limits. The reference must match the referenced
-    `<component>` on both `id` and `scenarioId` attributes.
+    `<component>` on both `id` and `scenario` attributes.
     A `name` attribute for display purposes may optionally be provided.
 
   - A `<groupRef>` element similarly refers to a nested `<group>`
-    element (see [below](#repeating-groups)) by its `id` and `scenarioId` attributes. Limits of
+    element (see [below](#repeating-groups)) by its `id` and `scenario` attributes. Limits of
     the size of a particular instance of a repeating group may be
     overridden by setting `implMinOccurs` and `implMaxOccurs` attributes on
     the `<groupRef>` element.
@@ -1012,43 +1167,167 @@ combination. A component must contain at least one member.
 
 ```xml
 <fixr:component added="FIX.4.3" category="Common" abbrName="Instrmt" id="1003" name="Instrument">
-    <fixr:fieldRef id="55" name="Symbol" added="FIX.4.3" updated="FIX.Latest" updatedEP="277">
-    <fixr:fieldRef id="48" name="SecurityID" added="FIX.4.3">
-    <fixr:fieldRef id="22" name="SecurityIDSource" added="FIX.4.3" updatedEP="161" updated="FIX.5.0SP2">
+    <fixr:fieldRef id="55" name="Symbol" added="FIX.4.3" updated="FIX.Latest" updatedEP="277"/>
+    <fixr:fieldRef id="48" name="SecurityID" added="FIX.4.3"/>
+    <fixr:fieldRef id="22" name="SecurityIDSource" added="FIX.4.3" updatedEP="161" updated="FIX.5.0SP2"/>
+    <fixr:groupRef id="2071" name="SecAltIDGrp" added="FIX.4.4"/>
 </fixr:component>
 ```
 
-### Repeating groups
+### Encoding information for components
 
-A repeating group is like a component but with one additional
+Components can be encoded differently by using the attributes of the `<component>` element one way or another. For example, FIX Protocol uses the attribute `abbrName` for FIXML encoding. Other encodings may prefer to use the attribute `name` if legibility of the wire format is an objective. Wire formats across encodings may hence be quite different, but they all identify the same component.
+
+Components may reference any number of fields, components, and groups as elements. Each reference may have its own encoding information, e.g. to define an explicit offset of a member from the start of the component in a fixed-length encoding such as SBE.
+
+Encoding information for a component and its members can be provided as follows. The element `<encoding>` must have the attribute `standard` to identify the encoding.
+
+```xml
+<fixr:component id="12345" name="MyComponent" abbrName="MyComp">
+  <fixr:fieldRef id="1" name="MyField">
+    <!-- Encoding information for field 1 -->
+    <fixr:encodings>
+        <fixr:encoding standard="Standard1">
+            ...
+        </fixr:encoding>
+        <fixr:encoding standard="Standard2">
+            ...
+        </fixr:encoding>
+        ...
+    </fixr:encodings>
+  </fixr:fieldRef>
+  <fixr:groupRef id="1" name="MyGroup">
+    <!-- Encoding information for group 1 -->
+    <fixr:encodings>
+        <fixr:encoding standard="Standard1">
+            ...
+        </fixr:encoding>
+        <fixr:encoding standard="Standard2">
+            ...
+        </fixr:encoding>
+        ...
+    </fixr:encodings>
+  </fixr:fieldRef>
+  <!-- Encoding information for the entire component is below -->
+  <fixr:encodings>
+      <fixr:encoding standard="Standard1">
+          ...
+      </fixr:encoding>
+      <fixr:encoding standard="Standard2">
+          ...
+      </fixr:encoding>
+      ...
+  </fixr:encodings>
+</fixr:component>
+```
+
+See the [Appendix](#component-example) for an example of a component with encoding information.
+
+## Groups{#groups}
+
+A group (a.k.a. repeating group) is like a component but with one additional
 feature: it represents an *array of* components to be sent on the wire.
 
-A repeating group is specified by a `<group>` element and the `<group>`
-elements are contained by the `<groups>` parent element. The `<group>` element
-has a child element to specify the associated cardinality field by id,
-`<numInGroup>`, and optionally by name. In
-FIX tag=value encoding, a cardinality field of FIX datatype NumInGroup precedes the
-array when transmitted. In other encodings, such as FIXML, the array is
-implicit in the presentation protocol.
+A repeating group is specified by a `<group>` element and the `<group>` elements are contained by the `<groups>` parent element. The `<group>` element has an optional child element to specify the associated cardinality field by id (attribute `<numInGroup>`), and optionally by name. In some encodings, such as FIX TagValue, a cardinality field precedes the array when transmitted. In other encodings, such as FIXML, the array is implicit in the presentation protocol.
 
 Limits on the size of a repeating group may optionally be specified with
 `implMinOccurs` and `implMaxOccurs` attributes. If those attributes are not
 present, then the repeating group has unbounded size.
 
-**Example:** A repeating group with member fields and a reference to the cardinality field.
+**Example:** FIX Parties group limited to 5 instances, each with at most one party sub-group instance.
 
 ```xml
-<fixr:group added="FIX.4.3" category="Common" abbrName="Pty" id="1012" name="Parties">
-    <fixr:numInGroup id="453" name="NoPartyIDs" added="FIX.4.3"/>
-    <fixr:fieldRef id="448" name="PartyID" added="FIX.4.3" updatedEP="204" updated="FIX.5.0SP2"/>
-    <fixr:fieldRef id="447" name="PartyIDSource" added="FIX.4.3" updatedEP="204" updated="FIX.5.0SP2"/>
-    <fixr:fieldRef id="452" name="PartyRole" added="FIX.4.3" updatedEP="204" updated="FIX.5.0SP2"/>
-    <fixr:fieldRef id="2376" name="PartyRoleQualifier" added="FIX.5.0SP2" addedEP="179"/>
-    <fixr:groupRef id="2077" name="PtysSubGrp" added="FIX.4.4"/>
+<fixr:group category="Common" abbrName="Pty" id="1012" name="Parties" implMaxOccurs="5">
+    <fixr:numInGroup id="453" name="NoPartyIDs"/>
+    <fixr:fieldRef id="448" name="PartyID"/>
+    <fixr:fieldRef id="447" name="PartyIDSource"/>
+    <fixr:fieldRef id="452" name="PartyRole"/>
+    <fixr:fieldRef id="2376" name="PartyRoleQualifier"/>
+    <fixr:groupRef id="2077" name="PtysSubGrp" implMaxOccurs="1"/>
 </fixr:group>
 ```
 
-### Member presence
+### Encoding information for groups
+
+Encoding information for groups is identical to that for components, i.e. it is available for the entire group and for each of its members. There is an additional use case for groups that does not exist for components. There can be multiple instances of a repeating group in the wire format. Some encodings such as FIX TagValue explicitly require the cardinality of the group as a field in the wire format. Other encodings such as SBE require the length of a single instance as well as the length of the entire group to precede the group in the wire format. All of this can be expressed as encoding information for the group.
+
+The field for the cardinality of a repeating group can also be seen as part of the encoding information for a group. It does not add to the semantic of the group itself, but may be required for parsing. This is supported by Orchestra and can be defined by adding encoding information at the level of an individual group.
+
+See the [Appendix](#group-example) for an example of a group with encoding information for the cardinality field.
+
+## Messages{#messages}
+
+A message in an Orchestra file describes a unit to be sent on the wire
+between counterparties.
+
+Like a `<component>`, a `<message>` element has `id` and `name` attributes.
+It also has an `msgType` attribute, a short name defining the message type. In FIX,
+`msgType` is used for the value of the FIX field MsgType(35).
+
+Another attribute of `<message>` called `flow` ties a message to an
+exchange of messages between actors.
+
+### Message structure
+
+The `<messages>` element contains any number of child `<message>`
+elements. From the perspective of the XML schema, a `<message>` is very
+similar to a `<component>`; they contain the same member types and share
+most attributes. However, `<message>` is a top-level entity only; it
+cannot be contained by other message parts, nor can messages be nested.
+
+Unlike `<component>`, the parts of a message are contained by a an optional child
+`<structure>` element, which in turn holds `<fieldRef>`,
+`<componentRef>` and `<groupRef>` elements.
+
+**Example:** A message structure with a field, nested components, and a nested repeating group.
+
+```xml
+<fixr:message name="TradingSessionList" id="100" msgType="BJ"
+category="MarketStructureReferenceData" section="PreTrade">
+	<fixr:structure>
+		<fixr:componentRef id="1024" name="StandardHeader" presence="required"/>
+		<fixr:componentRef id="1057" name="ApplicationSequenceControl"/>
+		<fixr:fieldRef id="335" name="TradSesReqID"/>
+		<fixr:groupRef id="2099" name="TrdSessLstGrp" presence="required"/>
+		<fixr:componentRef id="1025" name="StandardTrailer" presence="required"/>
+	</fixr:structure>
+</fixr:message>
+```
+
+### Message scenarios
+
+A single message type is often reused for multiple use cases. Each of the variations of a single message type can have a slightly different message structure. For example, a FIX ExecutionReport(35=8) message is overloaded for acceptance, rejection, execution, cancel confirmation of an order. The optional `scenario` attribute of a message identifies a use case and its absence represents a scenario called "base". The combination of `id` and `scenario` attributes must be unique.
+
+A message may reference another scenario of the same message with the `scenarioRefId` and (optionally) `scenarioRef` attribute when it does not need to contain all of the elements of the referenced message scenario. It may contain the same elements, e.g. when one or more elements use a different scenario. The order of elements in the referencing scenario should be identical to the referenced scenario.
+
+An optional `when` element allows to provide an expression to describe the condition under which a scenario is valid. The contents of `<when>` is a Score DSL expression. It is a predicate (Boolean expression) that tells if the scenario applies, i.e. if the expression evaluates to true. This can be used to determine the scenario for the validation of an incoming message or for the generation of an outgoing message. The expression can reference one or more elements of the message, e.g. specific field and its value(s).
+
+**Example:** A message scenario with a condition.
+
+```xml
+<fixr:scenario name="Trades"/>
+...
+<fixr:message msgType="8" id="9" name="ExecutionReport" scenario="Trades">
+	<fixr:structure>
+		<fixr:componentRef presence="required" id="1024" name="StandardHeader"/>
+		...
+		<fixr:componentRef presence="required" id="1025" name="StandardTrailer"/>
+	</fixr:structure>
+	<fixr:when>ExecType == ^Trade/>
+</fixr:message>
+```
+
+### Message responses
+
+Aside from `<structure>`, `<message>` has another optional child element called `<responses>`. It can be used to define messages that are used to respond to a given message supporting the definition of complete workflows. See section [Workflow](#workflow) for details.
+
+### Encoding information for messages
+
+Encoding information for messages is identical to that for components and groups, i.e. it is available for the entire message and for each of its members.
+
+See the [Appendix](#message-example) for an example of a message with encoding information.
+
+## Member presence
 
 Each of the members of a component, group or message, namely `<fieldRef>`, `<componentRef>` or `<groupRef>`, have a `presence` attribute. The possible values of presence are:
 
@@ -1066,7 +1345,7 @@ Each of the members of a component, group or message, namely `<fieldRef>`, `<com
 
 The receiver of a message with a forbidden element or lacking a required element may reject it using appropriate actions defined by the rules of engagement.
 
-#### Constant field value
+### Constant field value
 
 A field may be set to a constant value. A specific value of a field is
 often useful to distinguish scenarios or use cases for a message type.
@@ -1080,7 +1359,7 @@ constant field need not be transmitted on the wire.
 <fixr:fieldRef id="22" name="SecurityIDSource" presence="constant" value="1"/>
 ```
 
-#### Default value of an optional field
+### Default value of an optional field
 
 For an optional field, a default value may be specified if the sender
 does not provide the field.
@@ -1091,7 +1370,7 @@ does not provide the field.
 <fixr:fieldRef id="59" name="TimeInForce" presence="optional" value="0"/>
 ```
 
-#### Conditionally required field
+### Conditionally required field
 
 The presence of a conditionally required field depends upon other fields
 in a component or message. For example, StopPx(99) is required when OrdType(40)
@@ -1121,7 +1400,7 @@ override such as `presence=″required″` attribute is applied to the
 </fixr:fieldRef>
 ```
 
-#### Mutually exclusive component members
+### Mutually exclusive component members
 
 Sometimes members of a component or group are intended to be mutually exclusive. This is expressed by adding the attribute `which="oneOf"` to a `<component>` or `<group>` element. In a message that contains the component or group, *one and only one* of its mutually exclusive members must be present.
 
@@ -1149,72 +1428,6 @@ Sometimes members of a component or group are intended to be mutually exclusive.
 Similarly, the attribute `which="anyOf"` indicates that *at least one* of the members of a component must be present.
 
 To require *all* of the members to be present, set `presence="required"` on each member.
-
-### Message
-
-A message in an Orchestra file describes a unit to be sent on the wire
-between counterparties.
-
-Like a `<component>`, a `<message>` element has `id` and `name` attributes.
-It also has an `msgType` attribute, a short name defining the message type. In FIX,
-`msgType` is used for the value of the FIX field MsgType(35).
-
-Another attribute of `<message>` called `flow` ties a message to an
-exchange of messages between actors.
-
-#### Message structure
-
-The `<messages>` element contains any number of child `<message>`
-elements. From the perspective of the XML schema, a `<message>` is very
-similar to a `<component>`; they contain the same member types and share
-most attributes. However, `<message>` is a top-level entity only; it
-cannot be contained by other message parts, nor can messages be nested.
-
-Unlike `<component>`, the parts of a message are contained by a an optional child
-`<structure>` element, which in turn holds `<fieldRef>`,
-`<componentRef>` and `<groupRef>` elements.
-
-**Example:** A message structure with a field, nested components, and a nested repeating group.
-
-```xml
-<fixr:message name="TradingSessionList" id="100" msgType="BJ"
-category="MarketStructureReferenceData" section="PreTrade">
-	<fixr:structure>
-		<fixr:componentRef id="1024" name="StandardHeader" presence="required"/>
-		<fixr:componentRef id="1057" name="ApplicationSequenceControl"/>
-		<fixr:fieldRef id="335" name="TradSesReqID"/>
-		<fixr:groupRef id="2099" name="TrdSessLstGrp" presence="required"/>
-		<fixr:componentRef id="1025" name="StandardTrailer" presence="required"/>
-	</fixr:structure>
-</fixr:message>
-```
-
-#### Message scenarios
-
-A single message type is often reused for multiple use cases. Each of the variations of a single message type can have a slightly different message structure. For example, a FIX ExecutionReport(35=8) message is overloaded for acceptance, rejection, execution, cancel confirmation of an order. The attributes that name a use case are `scenario` and `scenarioId`. If no scenario name or ID is explicitly given, they default to "base" and 1. The combination of `id`, `scenario`, and `scenarioId` attributes must be unique.
-
-A message may reference another scenario of the same message with the `scenarioRefId` and (optionally) `scenarioRef` attribute when it does not need to contain all of the elements of the referenced message scenario. It may contain the same elements, e.g. when one or more elements use a different scenario. The order of elements in the referencing scenario should be identical to the referenced scenario.
-
-An optional `when` element allows to provide an expression to describe the condition under which a scenario is valid. The contents of `<when>` is a Score DSL expression. It is a predicate (Boolean expression) that tells if the scenario applies, i.e. if the expression evaluates to true. This can be used to determine the scenario for the validation of an incoming message or for the generation of an outgoing message. The expression can reference one or more elements of the message, e.g. specific field and its value(s).
-
-**Example:** A message scenario with a condition.
-
-```xml
-<fixr:scenario name="Execution" id="6"/>
-...
-<fixr:message msgType="8" id="9" name="ExecutionReport" scenarioId="6">
-	<fixr:structure>
-		<fixr:componentRef presence="required" id="1024" name="StandardHeader"/>
-		...
-		<fixr:componentRef presence="required" id="1025" name="StandardTrailer"/>
-	</fixr:structure>
-	<fixr:when>ExecType == ^Trade/>
-</fixr:message>
-```
-
-#### Message responses
-
-Aside from `<structure>`, `<message>` has another optional child element called `<responses>`. It can be used to define messages that are used to respond to a given message supporting the definition of complete workflows. See section [Workflow](#workflow) for details.
 
 ## Expressions
 
@@ -1425,7 +1638,7 @@ Pattern matching strategies might include comparing a
 message to expected required fields, mapping values of a distinguishing
 field like ExecType(150) to its code set literals, and so forth.
 
-### Actors
+### Actors{#actors}
 
 An `<actor>` element represents either a counterparty to a FIX session
 or an external entity that holds state relevant to application and
@@ -1671,7 +1884,7 @@ operation="START" interval="PT120S">
 </fixr:timerSchedule>
 ```
 
-## Semantic Concepts
+## Semantic Concepts{#concepts}
 
 Optionally, semantic concepts may be identified by name, even when the
 representation of such a concept changes across versions of a protocol.
@@ -1837,8 +2050,8 @@ A `<session>` inherits services and protocols from its parent
 protocol settings, such as a transport address.
 
 A session has one or more identifiers in child `<identifier>` elements.
-The `<value>` child of `<identifier>` may be of any XML type, even an
-element tree.
+The value of `<identifier>` is a simple name, e.g. the value of SenderCompID(49)
+or TargetCompID(56) when using the FIX Protocol.
 
 #### Security keys
 
@@ -2230,7 +2443,512 @@ Implementations should throw an exception in these cases:
 Example Orchestra files are provided in the GitHub project
 [FIXTradingCommunity/fix-orchestra](https://github.com/FIXTradingCommunity/fix-orchestra).
 
-# Appendix
+The Orchestra files for FIX 4.2, FIX 4.4 and FIX Latest are provided in the GitHub project
+[FIXTradingCommunity/orchestrations/FIX Standard](https://github.com/FIXTradingCommunity/orchestrations/tree/master/FIX%20Standard).
+
+# Appendix{#appendix}
+
+## Example of general encoding information{#general-encoding-example}
+
+This example illustrates the use of the `<encodingStandards>` element as a child of the `<repository>` element. It includes encoding information that either applies to multiple or all element types or it defines default values that can be overridden at a lower level. Note the declaration of namespaces for the elements that are defined in external schemas.
+
+```xml
+<fixr:repository name="MyRepository" version="1.0"
+  xmlns:fixr="http://fixprotocol.io/2026/orchestra/repository"
+  xmlns:orchEncoding="http://fixprotocol.io/2026/orchestra/encoding"
+  xmlns:orchSbe="http://fixprotocol.io/2026/orchestra/encoding/sbe">
+  ...
+  <fixr:encodingStandards>
+    <fixr:encodingStandard name="TagValue" displayName="FIX TagValue Encoding">
+          <orchEncoding:fieldIdentifier>id</orchEncoding:fieldIdentifier>
+          <orchEncoding:codeValue>value</orchEncoding:codeValue>
+    </fixr:encodingStandard>
+    <fixr:encodingStandard name="FIXML" displayName="FIX Markup Language">
+          <orchEncoding:fieldIdentifier>abbrName</orchEncoding:fieldIdentifier>
+          <orchEncoding:codeValue>value</orchEncoding:codeValue>
+    </fixr:encodingStandard>
+    <!-- The first flavor of JSON is of general nature -->
+    <fixr:encodingStandard name="JSON1" displayName="JavaScript Object Notation">
+        <orchEncoding:fieldIdentifier>name</orchEncoding:fieldIdentifier>
+        <orchEncoding:codeValue>name</orchEncoding:codeValue>
+    </fixr:encodingStandard>
+    <!-- The second flavor of JSON is specific to ISO 20022:2026 -->
+    <fixr:encodingStandard name="JSON2" displayName="ISO 20022 JSON">
+        <orchEncoding:fieldIdentifier>abbrName</orchEncoding:fieldIdentifier>
+        <orchEncoding:codeValue>value</orchEncoding:codeValue>
+    </fixr:encodingStandard>
+    <fixr:encodingStandard name="SBE" displayName="Simple Binary Encoding">
+          <fixr:encoding>
+            <orchEncoding:fieldIdentifier>none</orchEncoding:fieldIdentifier>
+            <orchEncoding:codeValue>value</orchEncoding:codeValue>
+            <orchEncoding:byteOrder>BigEndian</orchEncoding:byteOrder>
+            <orchEncoding:defaultByteAlignment>4</orchEncoding:defaultByteAlignment>
+            <orchEncoding:defaultNullValueBehavior>MaxValue</orchEncoding:defaultNullValueBehavior>
+            <orchSbe:presenceAttribute>FieldDefinition</orchSbe:presenceAttribute>
+          </fixr:encoding>
+      </fixr:encodingStandard>
+  </fixr:encodingStandards>
+  ...
+</fixr:repository>
+```
+
+The following sections explain the different elements in detail and show how they can be used to generate encoding-specific schemas.
+
+### Elements applicable to all encodings
+
+Note that the example uses an external schema (not shown here) with the namespace "orchEncoding", containing elements `fieldIdentifier` and `codeValue`, applicable to multiple encodings. The purpose of the first element is to identify the field attribute in the metadata that contains the value used for the wire format of fields ("none" means that field identification metadata is not part of the wire format). The purpose of the second element is to identify whether the value or the name of a code should be used. For example, the FIX field Side(54) has values "1" and "2" with names "Buy" and "Sell".
+
+There must be an external schema that defines these elements and their values, for example:
+
+```xml
+<!-- Defines how fields are identified in the wire format  -->
+<xs:element name="fieldIdentifier">
+  <xs:simpleType>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="id"/>
+      <xs:enumeration value="abbrName"/>
+      <xs:enumeration value="name"/>
+      <xs:enumeration value="none"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:element>
+
+<!-- Defines how codes are identified in the wire format  -->
+<xs:element name="codeValue">
+  <xs:simpleType>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="value"/>
+      <xs:enumeration value="name"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:element>
+```
+
+### Elements applicable to binary encodings
+
+The example uses the elements `byteOrder`, `defaultByteAlignment`, and `defaultNullValueBehavior` from the same external schema that are only applicable to binary encodings such as SBE. The first is used to determine the endianess of all numric values (e.g. Big Endian) and the other two define defaults that may be overriden by encoding information at the level of a single message, group or component. They refer to the byte alignment (e.g. 4-byte boundaries for all fields) and the special value reserved for null. Here is a snippet from an external schema that defines these two elements.
+
+```xml
+<!-- Defines endianess of numeric fields in the wire format  -->
+<xs:element name="byteOrder">
+  <xs:simpleType>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="BigEndian"/>
+      <xs:enumeration value="LittleEndian"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:element>
+
+<!-- Defines the alignment of bytes for fields in the wire format  -->
+<xs:element name="defaultByteAlignment" type="xs:nonNegativeInteger"/>
+
+<!-- Defines the value reserved for null -->
+<xs:element name="defaultNullValueBehavior">
+  <xs:simpleType>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Unspecified"/> <!-- no default -->
+      <xs:enumeration value="MinValue"/> <!-- used by FAST -->
+      <xs:enumeration value="MaxValue"/> <!-- used by SBE -->
+    </xs:restriction>
+  </xs:simpleType>
+</xs:element>
+```
+
+### Elements applicable to a single encoding
+
+The example uses the element `presenceAttribute` from the an external schema that is only applicable to SBE. Orchestra has a presence attribute to define whether an element in a message, group or component is required or not. The SBE schema allows to use the attribute in two different places, either as part of the field definition in a message or as part of a type definition, which is a level of abstraction offered by SBE to use the same type for different fields. Here is a snippet from an external schema for SBE that defines this element.
+
+```xml
+<!-- Defines the place to generate presence attribute  -->
+<xs:element name="presenceAttribute">
+  <xs:simpleType>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="TypeDefinition"/>
+      <xs:enumeration value="FieldDefinition"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:element>
+```
+
+### Generation of encoding-specific schemas
+
+Schemas for the different encodings can then be generated from the field and code set definitions in the Orchestra file, for example for the FIX fields Account(1) and PartyRole(452). The latter supports a set of pre-defined values to express different types of actors or accounts.
+
+The following shows schema snippets for FIXML, JSON (two flavors), and SBE that can be generated from the general encoding information above and the Orchestra field and code set definitions. The resulting encoding-specific schemas can then be used to validate or generate physical messages, whilst there is only one semantic definition with annotations in the Orchestra file.
+
+Definitions in the Orchestra file:
+
+```xml
+<fixr:encodingStandards>
+  <!-- see general encoding information above -->
+</fixr:encodingStandards>
+
+<fixr:datatype name="String">
+  <fixr:mappedDatatype standard="FIXML" builtin="true" base="xs:string"/>
+  <fixr:mappedDatatype standard="JSON1" builtin="true" base="string"/>
+  <fixr:mappedDatatype standard="JSON2" builtin="true" base="string"/>
+  <fixr:mappedDatatype standard="SBE" builtin="true" base="char"/>
+</fixr:datatype>
+
+<fixr:datatype name="int">
+  <fixr:mappedDatatype standard="FIXML" builtin="true" base="xs:integer"/>
+  <fixr:mappedDatatype standard="JSON1" builtin="true" base="integer"/>
+  <fixr:mappedDatatype standard="JSON2" builtin="true" base="integer"/>
+  <fixr:mappedDatatype standard="SBE" builtin="true" base="uint8"/>
+</fixr:datatype>
+
+<fixr:field id="1" name="Account" type="String" abbrName="Acct" implMaxLength="30"/>
+<fixr:field id="452" name="PartyRole" type="PartyRoleCodeSet" abbrName="R"/>
+
+<fixr:codeSet type="int" id="452" name="PartyRoleCodeSet">
+  <fixr:code value="1" id="165001" name="ExecutingFirm"/>
+	<fixr:code value="2" id="165002" name="BrokerOfCredit"/>
+	<fixr:code value="3" id="165003" name="ClientID"/>
+</fixr:codeSet>
+```
+
+Definitions in the FIXML schema generated from Orchestra:
+
+```xml
+<xs:simpleType name="Account_t">
+    <xs:annotation>
+        <xs:appinfo>
+            <fm:Xref Protocol="FIX" name="Account" ComponentType="Field" Tag="1" Type="String" AbbrName="Acct"/>
+        </xs:appinfo>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+</xs:simpleType>
+
+<xs:simpleType name="PartyRole_enum_t">
+    <xs:appinfo>
+        <fm:Xref Protocol="FIX" name="PartyRole" ComponentType="Field" Tag="452" Type="int" AbbrName="R"/>
+    </xs:appinfo>
+    <xs:restriction base="xs:integer">
+       <xs:enumeration value="1"/>
+       <xs:enumeration value="2"/>
+       <xs:enumeration value="3"/>
+    </xs:restriction>
+</xs:simpleType>
+```
+
+Definitions in a general JSON schema (JSON1) generated from Orchestra:
+
+```json
+{
+  "properties": {
+    "Account": {"type": "string", "maxLength": 30},
+    "PartyRole": {"type": "string", "enum": ["ExecutingFirm", "BrokerOfCredit", "ClientID"]}
+  }
+}
+```
+
+Definitions in the JSON schema for ISO 20022 (JSON2) generated from Orchestra:
+
+```json
+{
+  "properties": {
+    "Account": {"type": "string"},
+    "PartyRole": {"type": "integer", "enum": [1, 2, 3]}
+  }
+}
+```
+
+Definitions in an SBE schema generated from Orchestra:
+
+```xml
+<type name="String30" length="30" primitiveType="char" semanticType="String"/>
+
+<enum name="PartyRoleCodeSet" encodingType="uint8">
+  <validValue name="ExecutingFirm">1</validValue>
+  <validValue name="BrokerOfCredit">2</validValue>
+  <validValue name="ClientID">3</validValue>
+</enum>
+
+<message name="MyMessage" id="1">
+  <field name="Account" id="1" type="String30" presence="required"/>
+  <field name="PartyRole" id="452" type="PartyRoleCodeSet"/>
+  ...
+</message>
+```
+
+## Example of encoding information for a datatype{#datatype-example}
+
+This example shows how to define explicit null values for a specific datatype. The name of the datatype is intentionally not identical to the name of the primitive type in SBE to show the difference between logical datatypes in Orchestra and the native types pre-defined by the encoding. Note that the names of the primitive types (attribute `base`)for 32-bit unsigned integers in SBE and FAST are not identical, i.e. SBE uses lowercase "i" whereas FAST uses uppercase "I".
+
+```xml
+<fixr:datatype name="UnsignedInteger32">
+  <!-- Note that builtin datatype in SBE has lowercase "i"-->
+	<fixr:mappedDatatype standard="SBE" builtin="true" base="uint32">
+    <fixr:encoding>
+      <orchEncoding:nullValue>4294967295</orchEncoding:nullValue>
+    </fixr:encoding>
+  </fixr:mappedDatatype>
+  <!-- Note that builtin datatype in FAST has uppercase "I"-->
+  <fixr:mappedDatatype standard="FAST" builtin="true" base="uInt32">
+    <fixr:encoding>
+      <orchEncoding:nullValue>0</orchEncoding:nullValue>
+    </fixr:encoding>
+  </fixr:mappedDatatype>
+</fixr:datatype>
+```
+
+Note that `orchEncoding` is the name of an external namespace in the example above. The element `nullValue` is not part of the Orchestra standard. There must be an external schema that defines the element `nullValue` and its XML type.
+
+```xml
+<xs:element name="nullValue" type="xs:integer"/>
+```
+
+## Example of encoding information for a code set{#codeSet-example}
+
+This example shows how general encoding information (see example [above](#general-encoding-information)) for code values can be overriden at the level of an individual code set. The example is for ISO 20022:2026 JSON encoding and only for illustration purposes.
+
+```xml
+<fixr:codeSet type="String" id="1" name="SecurityStatus1Code">
+  <fixr:code id="1" name="Active" value="ACTV"/>
+  <fixr:code id="2" name="Inactive" value="INAC"/>
+  ...
+  <fixr:encodings>
+    <fixr:encoding standard="JSON2">
+      <!-- General setting is to use the value -->
+      <orchEncoding:codeValue>name</orchEncoding:codeValue>
+    </fixr:encoding>
+  </fixr:encodings>
+</fixr:codeSet>
+```
+
+## Example of encoding information for a field{#field-example}
+
+This example shows how to identify fields of the FIX Protocol that are not required for FIXML encoding.
+
+```xml
+<fixr:field type="NumInGroup" id="453" name="NoPartyIDs">
+  <fixr:encodings>
+      <fixr:encoding standard="FIXML">
+        <orchFixml:notReqXML>true</orchFixml:notReqXML>
+      </fixr:encoding>
+  </fixr:encodings>
+</fixr:field>
+```
+
+Here is a snippet from an external schema specifically for FIXML that defines this element.
+
+```xml
+<xs:element name="notReqXML" type="xs:boolean"/>
+```
+
+Note that this may also be defined in general for all fields with datatype `NumInGroup` as follows.
+
+```xml
+<fixr:datatype name="NumInGroup" baseType="int">
+	<fixr:mappedDatatype standard="FIXML">
+      <fixr:encoding>
+        <orchFixml:notReqXML>true</orchFixml:notReqXML>
+      </fixr:encoding>
+  </fixr:mappedDatatype>
+</fixr:datatype>
+```
+
+## Example of encoding information for a component{#component-example}
+
+This example uses the FIX component "Instrument" to show how to define the component type needed for the generation of a FIXML schema.
+
+```xml
+<fixr:component id="1003" name="Instrument">
+    <fixr:fieldRef id="55" name="Symbol"/>
+    <fixr:fieldRef id="65" name="SymbolSfx"/>
+    <fixr:fieldRef id="48" name="SecurityID"/>
+    <fixr:fieldRef id="22" name="SecurityIDSource"/>
+    ...
+    <fixr:encodings>
+        <fixr:encoding standard="FIXML">
+            <orchFixml:componentType>Block</orchFixml:componentType>
+        </fixr:encoding>
+    </fixr:encodings>
+</fixr:component>
+```
+
+Here is a snippet from an external schema specifically for FIXML that defines this element.
+
+```xml
+<xs:element name="componentType">
+  <xs:simpleType>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Block"/>
+      <xs:enumeration value="BlockRepeating"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:element>
+```
+
+The information can then be used to create the following in a FIXML schema.
+
+```xml
+<xs:complexType name="Instrument_Block_t">
+    <xs:annotation>
+        <xs:appinfo>
+            <fm:Xref Protocol="FIX" name="Instrument" ComponentType="Block" Category="Common"/>
+        </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+        <xs:group ref="InstrumentElements"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="InstrumentAttributes"/>
+</xs:complexType>
+```
+
+## Example of encoding information for a group{#group-example}
+
+This example uses the FIX repeating group "Parties" to show how to define the field used for the cardinality of a specific group.
+
+```xml
+<fixr:datatype name="int"/>
+<fixr:datatype name="NumInGroup" baseType="int"/>
+<fixr:field id="453" name="NoPartyIDs" type="NumInGroup"/>
+
+<fixr:group id="1012" name="Parties">
+    <fixr:fieldRef id="448" name="PartyID"/>
+    <fixr:fieldRef id="447" name="PartyIDSource"/>
+    <fixr:fieldRef id="452" name="PartyRole"/>
+    ...
+    <fixr:encodings>
+        <fixr:encoding standard="TagValue">
+            <orchEncoding:numInGroup fieldId="453" fieldName="NoPartyIDs"/>
+        </fixr:encoding>
+    </fixr:encodings>
+</fixr:group>
+```
+
+Here is a snippet from an external schema that defines this element. This is not specific to FIX TagValue and can be defined in a general external schema, avoiding the need for a schema specific to FIX TagValue. Using encoding information for cardinality fields instead of an explicit field provides a cleaner logical design, especially when some of the encodings used do not require such an element.
+
+```xml
+<xs:element name="numInGroup">
+  <xs:complexType>
+    <xs:attribute name="fieldId" type="xs:nonNegativeInteger" use="required"/>
+    <xs:attribute name="fieldName" type="xs:string"/> <!-- optional -->
+  </xs:complexType>
+</xs:element>
+```
+
+## Example of encoding information for a message{#message-example}
+
+This example uses the FIX message "ExecutionReport" to show how to define explicit offsets for the message elements, applicable to any fixed-length binary encoding such as SBE. The message itself may have an explicit block length for extra spacing at the end.
+
+Note that offsets only apply to field references. The definitions of groups and components referenced in the message contain respective block length information. The Orchestra file below shows the logical order that some encodings such as FIX TagValue may also use as physical order in the wire format. Repeating groups in SBE must be positioned at the end of an SBE schema.
+
+The example below assumes OrderID(37) to be limited to 10 characters and ClOrdID(11) to have no more than 20 characters.
+
+```xml
+<fixr:message msgType="8" id="9" name="ExecutionReport">
+	<fixr:structure>
+		<fixr:componentRef presence="required" id="1024" name="StandardHeader"/>
+    <fixr:fieldRef presence="required" id="37" name="OrderID">
+      <fixr:encodings>
+        <fixr:encoding standard="SBE">
+            <orchEncoding:offset>0</orchEncoding:offset>
+        </fixr:encoding>
+      </fixr:encodings>
+    </fieldRef>
+    <fixr:fieldRef id="11" name="ClOrdID">
+      <fixr:encodings>
+        <fixr:encoding standard="SBE">
+            <orchEncoding:offset>10</orchEncoding:offset>
+        </fixr:encoding>
+      </fixr:encodings>
+    </fieldRef>
+    <fixr:fieldRef id="41" name="OrigClOrdID">
+      <fixr:encodings>
+        <fixr:encoding standard="SBE">
+            <orchEncoding:offset>30</orchEncoding:offset>
+        </fixr:encoding>
+      </fixr:encodings>
+    </fieldRef>
+    <fixr:componentRef id="1012" name="Parties"/>
+		...
+	</fixr:structure>
+  <fixr:encodings>
+    <fixr:encoding standard="SBE">
+        <orchEncoding:blockLength>123</orchEncoding:blockLength>
+    </fixr:encoding>
+  </fixr:encodings>
+</fixr:message>
+```
+
+Here is a snippet from an external schema that defines the two elements used above.
+
+```xml
+<xs:element name="blockLength" type="xs:nonNegativeInteger"/>
+<xs:element name="offset" type="xs:nonNegativeInteger"/>
+```
+
+The information can then be used to create the following in an SBE schema. In this example, the FIX components have been transformed to SBE groups that only allow a single instance. The default presence attribute for fields in SBE is "required", i.e. the opposite of Orchestra where they are optional by default.
+
+```xml
+<composite name="componentSizeEncoding">
+    <type name="blockLength" primitiveType="uint8"/>
+    <type name="numInGroup" primitiveType="uint8" maxValue="1"/>
+</composite>
+<message name="ExecutionReport" id="9" blockLength="123" semanticType="8">
+  <field name="OrderID" offset="0"/>
+  <field name="ClOrdID" offset="10" presence="optional"/>
+  <field name="OrigClOrdID" offset="30" presence="optional"/>
+  <group name="StandardHeader" id="1024" blockLength="2" dimensionType="componentSizeEncoding">
+    <field name="MsgType" id="35"/>
+  </group>
+  <group name="Parties" id="1012" blockLength="25"> <!-- default unbounded group size -->
+    ...
+  </group>
+</message>
+```
+
+## Example of encoding information for a category{#category-example}
+
+This example uses the FIX category "SingleGeneralOrderHandling" to show how FIXML can use encoding information for schema generation.
+
+```xml
+<fixr:category name="SingleGeneralOrderHandling">
+  <fixr:encodings>
+      <fixr:encoding standard="FIXML">
+        <orchFixml:FIXMLFileName>order</orchFixml:FIXMLFileName>
+      </fixr:encoding>
+  </fixr:encodings>
+</fixr:category>
+```
+
+Here is a snippet from an external schema specifically for FIXML that defines this element and possible values. It includes values that are applicable to sections, see example [below](#section-example).
+
+```xml
+<xs:element name="FIXMLFileName">
+  <xs:simpleType>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="session"/>  <!-- Both a section and a category -->
+      <xs:enumeration value="pretrade"/>       	<!-- Section -->
+      <xs:enumeration value="trade"/>          	<!-- Section -->
+      <xs:enumeration value="posttrade"/>       <!-- Section -->
+      <xs:enumeration value="infrastructure"/> 	<!-- Section -->
+      <xs:enumeration value="indications"/>    	<!-- Category -->
+      <xs:enumeration value="order"/>	      	  <!-- Category -->
+      <xs:enumeration value="newsevents"/>     	<!-- Category -->
+	    ...
+    </xs:restriction>
+  </xs:simpleType>
+</xs:element>
+```
+
+## Example of encoding information for a section{#section-example}
+
+This example uses the FIX section "PreTrade" to show how FIXML can use encoding information for schema generation.
+
+```xml
+<fixr:section name="PreTrade">
+  <fixr:encodings>
+      <fixr:encoding standard="FIXML">
+        <orchFixml:FIXMLFileName>pretrade</orchFixml:FIXMLFileName>
+      </fixr:encoding>
+  </fixr:encodings>
+</fixr:section>
+```
+
+The same element `<FIXMLFileName>` is used for schema file names for sections, see the example [above](#category-example).
 
 ## Compliance
 
